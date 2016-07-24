@@ -1,0 +1,12 @@
+useDynLib(RobustGaSP)
+import(Rcpp,methods)
+exportPattern("^[[:alpha:]]+")
+importFrom(Rcpp, evalCpp)
+importFrom(stats,qt)
+importFrom(stats,optimize)
+
+## S4
+exportClasses(rgasp) #,rgasp.RobustGaSP,summary.RobustGaSP,predict.RobustGaSP)
+exportMethods(show,predict)
+export(rgasp)
+S3method(predict,rgasp)
