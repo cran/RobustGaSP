@@ -1,0 +1,9 @@
+## RobustGaSP 0.5.2
+
+## change / RobustGaSP 0.5
+  * Implement a function ‘findInertInputs’ to identify inert inputs
+  * Implement a function ‘Sample’ to sample from the predictive distribution
+  * Modify the printing information of the function ‘rgasp’ by removing the automatic printing message from the function of ‘nloptr::lbfgs’ and adding other printing information
+  * Change the parameter ‘beta’ to ‘beta_hat’ in rgasp class
+  * Fix the bug in the function ‘predict’ of the value ‘sd’
+ 

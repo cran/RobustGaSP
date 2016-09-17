@@ -24,7 +24,7 @@ setClass("rgasp",
            q="integer",                 ## number of mean basis
            LB="vector",                  ## lower bound for inverse range parameters beta px1
            beta_initial="vector",       ###initial values of inverse range parameters px1
-           beta="vector",                ###inverse range parameters px1
+           beta_hat="vector",                ###estimated inverse range parameters px1
            log_post="numeric",           ####logarithm of marginal posterior
            R0="list",                    ##abs difference of each type of input
           ###R="matrix",                  ## correlation matrix, size nxn
@@ -81,3 +81,21 @@ setMethod("predict", "rgasp",
                           testing_trend=testing_trend , ...)
           }
 )
+
+
+
+
+if(!isGeneric("Sample")) {
+  setGeneric(name = "Sample",
+             def = function(object, ...) standardGeneric("Sample")
+  )
+}
+
+setMethod("Sample", "rgasp",
+          definition=function(object, testing_input, num_sample=1,testing_trend=matrix(1,dim(testing_input)[1],1), ...) {
+            Sample.rgasp(object = object, testing_input = testing_input, num_sample=num_sample,
+                          testing_trend=testing_trend , ...)
+          }
+)
+
+

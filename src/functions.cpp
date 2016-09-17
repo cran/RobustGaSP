@@ -446,6 +446,49 @@ List pred_rgasp(const Eigen::VectorXd beta,const double nu, const  Eigen::Map<Ei
   return pred;
    
 }
+
+
+//this is a function to for prediction, including posterior mean, lower 95, upper 95 and standard deviation
+// [[Rcpp::export]]
+List generate_predictive_mean_cov(const Eigen::VectorXd beta,const double nu, const  Eigen::Map<Eigen::MatrixXd> & input,  const Eigen::Map<Eigen::MatrixXd> & X,const Eigen::Map<Eigen::MatrixXd> & output,const Eigen::Map<Eigen::MatrixXd> & testing_input, const Eigen::Map<Eigen::MatrixXd> & X_testing, const Eigen::Map<Eigen::MatrixXd> & L , Eigen::Map<Eigen::MatrixXd> & LX, Eigen::Map<Eigen::VectorXd> & theta_hat, double sigma2_hat,List rr0, List r0,const  String kernel_type,const Eigen::VectorXd alpha){
+  List mean_var(2);
+    
+  int num_testing_input=testing_input.rows();
+  //int dim_inputs=input.cols();
+  //int num_obs=output.rows();
+  //int q=X.cols();
+
+  MatrixXd  R_inv_X=L.transpose().triangularView<Upper>().solve(L.triangularView<Lower>().solve(X));
+   
+
+  MatrixXd r= separable_kernel(r0,beta, kernel_type,alpha); // looks this is num_testing_input x num_obs
+
+  MatrixXd rr= separable_kernel(rr0,beta, kernel_type,alpha);
+
+
+  MatrixXd rt_R_inv= (L.transpose().triangularView<Upper>().solve(L.triangularView<Lower>().solve(r.transpose()))).transpose();
+  MatrixXd  rtR_inv_r= rt_R_inv*r.transpose();
+  MatrixXd  X_testing_X_R_inv_r=X_testing-r*R_inv_X;
+  MatrixXd  diff2=X_testing_X_R_inv_r*(LX.transpose().triangularView<Upper>().solve(LX.triangularView<Lower>().solve(X_testing_X_R_inv_r.transpose())));
+
+  MatrixXd  C_star_star= rr+nu*MatrixXd::Identity(num_testing_input,num_testing_input)-rtR_inv_r+diff2;
+  VectorXd MU_testing=X_testing*theta_hat+rt_R_inv*(output-X*theta_hat);
+
+  mean_var[0]=MU_testing;
+
+
+  LLT<MatrixXd> lltOfC_star_star(C_star_star);
+  MatrixXd LC_star_star = lltOfC_star_star.matrixL();
+
+  mean_var[1]=sqrt(sigma2_hat)*LC_star_star;
+  
+  //  mean_var[0]=r;
+  //mean_var[1]=rr;
+
+  return mean_var;
+   
+}
+
  
 //sourceCpp(file='src/matern.cpp')
 // Test the execution with

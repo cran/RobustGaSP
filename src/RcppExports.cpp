@@ -227,3 +227,28 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// generate_predictive_mean_cov
+List generate_predictive_mean_cov(const Eigen::VectorXd beta, const double nu, const Eigen::Map<Eigen::MatrixXd>& input, const Eigen::Map<Eigen::MatrixXd>& X, const Eigen::Map<Eigen::MatrixXd>& output, const Eigen::Map<Eigen::MatrixXd>& testing_input, const Eigen::Map<Eigen::MatrixXd>& X_testing, const Eigen::Map<Eigen::MatrixXd>& L, Eigen::Map<Eigen::MatrixXd>& LX, Eigen::Map<Eigen::VectorXd>& theta_hat, double sigma2_hat, List rr0, List r0, const String kernel_type, const Eigen::VectorXd alpha);
+RcppExport SEXP RobustGaSP_generate_predictive_mean_cov(SEXP betaSEXP, SEXP nuSEXP, SEXP inputSEXP, SEXP XSEXP, SEXP outputSEXP, SEXP testing_inputSEXP, SEXP X_testingSEXP, SEXP LSEXP, SEXP LXSEXP, SEXP theta_hatSEXP, SEXP sigma2_hatSEXP, SEXP rr0SEXP, SEXP r0SEXP, SEXP kernel_typeSEXP, SEXP alphaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< const Eigen::VectorXd >::type beta(betaSEXP);
+    Rcpp::traits::input_parameter< const double >::type nu(nuSEXP);
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd>& >::type input(inputSEXP);
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd>& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd>& >::type output(outputSEXP);
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd>& >::type testing_input(testing_inputSEXP);
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd>& >::type X_testing(X_testingSEXP);
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd>& >::type L(LSEXP);
+    Rcpp::traits::input_parameter< Eigen::Map<Eigen::MatrixXd>& >::type LX(LXSEXP);
+    Rcpp::traits::input_parameter< Eigen::Map<Eigen::VectorXd>& >::type theta_hat(theta_hatSEXP);
+    Rcpp::traits::input_parameter< double >::type sigma2_hat(sigma2_hatSEXP);
+    Rcpp::traits::input_parameter< List >::type rr0(rr0SEXP);
+    Rcpp::traits::input_parameter< List >::type r0(r0SEXP);
+    Rcpp::traits::input_parameter< const String >::type kernel_type(kernel_typeSEXP);
+    Rcpp::traits::input_parameter< const Eigen::VectorXd >::type alpha(alphaSEXP);
+    __result = Rcpp::wrap(generate_predictive_mean_cov(beta, nu, input, X, output, testing_input, X_testing, L, LX, theta_hat, sigma2_hat, rr0, r0, kernel_type, alpha));
+    return __result;
+END_RCPP
+}

@@ -4,6 +4,7 @@ exportPattern("^[[:alpha:]]+")
 importFrom(Rcpp, evalCpp)
 importFrom(stats,qt)
 importFrom(stats,optimize)
+importFrom("stats", "rchisq", "rnorm")
 
 ## S4
 exportClasses(rgasp) #,rgasp.RobustGaSP,summary.RobustGaSP,predict.RobustGaSP)

@@ -13,7 +13,7 @@ Setting up the robust GaSP model for estimating the parameters (if the parameter
 }
 \usage{
   rgasp(design, response, trend = matrix(1, length(response), 1), 
-      nugget = 0, nugget.est = F, range.par = NA, prior_choice, 
+      nugget = 0,nugget.est = F,range.par = NA,prior_choice="ref_approx",         
       a = 0.2, b = 1/(length(response))^{1/dim(as.matrix(design))[2]}*(a+
       dim(as.matrix(design))[2]), 
       kernel_type = "matern_5_2", 
@@ -148,7 +148,7 @@ library(RobustGaSP)
 
 show(m1)      ####show this rgasp object 
 
-m1@beta       ####estimated inverse range parameters
+m1@beta_hat       ####estimated inverse range parameters
 
   #-----------------------------------
   # a 2 dimensional example with trend
@@ -180,7 +180,7 @@ m1@beta       ####estimated inverse range parameters
 
 show(m1)      # show this rgasp object 
 
-m1@beta       # estimated inverse range parameters
+m1@beta_hat       # estimated inverse range parameters
 m1@theta_hat  
 
   #--------------------------------------------------------------------------------------
@@ -222,7 +222,7 @@ m1@theta_hat
   m3<- rgasp(design = input[,c(1,4,6,7,8)], response = output, 
             nugget.est=TRUE, lower_bound=FALSE,multiple_start=TRUE)
 
-m3@beta       # estimated inverse range parameters
+m3@beta_hat       # estimated inverse range parameters
 m3@nugget     
 
 

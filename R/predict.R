@@ -96,7 +96,7 @@ predict.rgasp <- function (object, testing_input, testing_trend= matrix(1,dim(te
     }
       
 
-    pred_list=pred_rgasp(object@beta,object@nugget,object@input,object@X,object@output,
+    pred_list=pred_rgasp(object@beta_hat,object@nugget,object@input,object@X,object@output,
                          testing_input,testing_trend,object@L,object@LX,object@theta_hat,
                          object@sigma2_hat,qt_025,qt_975,r0,object@kernel_type,object@alpha)
     
@@ -104,7 +104,7 @@ predict.rgasp <- function (object, testing_input, testing_trend= matrix(1,dim(te
     output.list$mean=pred_list[[1]]   #####can we all use @ or S? It will be more user friendly in that way 
     output.list$lower95=pred_list[[2]]
     output.list$upper95=pred_list[[3]]
-    output.list$sd=pred_list[[4]] 
+    output.list$sd=sqrt(pred_list[[4]]) 
 #  }
  
 #     

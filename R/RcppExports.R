@@ -57,3 +57,7 @@ pred_rgasp <- function(beta, nu, input, X, output, testing_input, X_testing, L, 
     .Call('RobustGaSP_pred_rgasp', PACKAGE = 'RobustGaSP', beta, nu, input, X, output, testing_input, X_testing, L, LX, theta_hat, sigma2_hat, qt_025, qt_975, r0, kernel_type, alpha)
 }
 
+generate_predictive_mean_cov <- function(beta, nu, input, X, output, testing_input, X_testing, L, LX, theta_hat, sigma2_hat, rr0, r0, kernel_type, alpha) {
+    .Call('RobustGaSP_generate_predictive_mean_cov', PACKAGE = 'RobustGaSP', beta, nu, input, X, output, testing_input, X_testing, L, LX, theta_hat, sigma2_hat, rr0, r0, kernel_type, alpha)
+}
+

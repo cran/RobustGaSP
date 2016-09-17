@@ -18,7 +18,7 @@ Objects of this class are created and initialized with the function \code{\link{
     \item{\code{q}:}{Object of class \code{integer}. The number of mean basis.}
     \item{\code{LB}:}{Object of class \code{vector} with dimension p x 1. The lower bound for inverse range parameters beta.}
     \item{\code{beta_initial}:}{Object of class \code{vector} with the initial values of inverse range parameters p x 1.}
-    \item{\code{beta}:}{Object of class \code{vector} with dimension p x 1. The inverse-range parameters.}
+    \item{\code{beta_hat}:}{Object of class \code{vector} with dimension p x 1. The inverse-range parameters.}
     \item{\code{log_post}:}{Object of class \code{numeric} with the logarithm of marginal posterior.}
     \item{\code{R0}:}{Object of class \code{list} of matrices where the j-th matrix is an absolute difference matrix of the j-th input vector.}
     \item{\code{theta_hat}:}{Object of class \code{vector} with dimension q x 1. The the mean (trend) parameter.}
