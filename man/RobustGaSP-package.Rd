@@ -22,7 +22,18 @@ Maintainer: \packageMaintainer{RobustGaSP}
 }
 
 \references{
-Mengyang Gu. (2016). Robust Uncertainty Quantification and Scalable Computation for Computer Models with Massive Output. Ph.D. thesis. Duke University.
+
+J.O. Berger, V. De Oliveira and B. Sanso (2001), \emph{Design and analysis of computer experiments}, \emph{Journal of the American Statistical Association}, \bold{96}, 1361-1374.
+
+
+M. Gu (2016), \emph{Robust Uncertainty Quantification and Scalable Computation for Computer Models with Massive Output}, Ph.D. thesis., Duke University.
+
+R. Paulo (2005), \emph{Default priors for Gaussian processes}, \emph{Annals of statistics}, \bold{33}, 556-582.
+
+J. Sacks, W.J. Welch, T.J. Mitchell, and H.P. Wynn (1989), \emph{Design and analysis of computer experiments}, \emph{Statistical Science}, \bold{4}, 409-435.
+
+
+
 }
 
 %%~~ Optionally other standard keywords, one per line, from file KEYWORDS in the R documentation directory ~~

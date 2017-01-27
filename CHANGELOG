@@ -1,4 +1,12 @@
-## RobustGaSP 0.5.2
+## RobustGaSP 0.5.3
+
+
+## change / RobustGaSP 0.5.2
+  * Bugs corrected in rgasp() about the sink() function when the optimization step fails
+  * Typo corrected in printing out the nugget value after the optimization is done
+  * Allow the argument design in rgasp() to be initialized as a sequence (previously it has to be the matrix type)
+  * Change of the maintainer’s Email address
+
 
 ## change / RobustGaSP 0.5
   * Implement a function ‘findInertInputs’ to identify inert inputs

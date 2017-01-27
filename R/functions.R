@@ -77,7 +77,9 @@ search_LB_prob<-function(param, R0,COND_NUM_UB,p,kernel_type,alpha,nugget){
   for( i_LB in 1:p){
     LB=c(LB, log(-log(propose_prob)/(max(R0[[i_LB]]))))    ###LB is log beta
   }
-  R=separable_kernel(R0,exp(LB),kernel_type,alpha)
+  
+  R=separable_kernel(R0,exp(LB),kernel_type,alpha)  
+  
   R=as.matrix(R)
   R=R+nugget*diag(num_obs)
   (kappa(R)-COND_NUM_UB)^2
