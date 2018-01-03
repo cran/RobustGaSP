@@ -10,7 +10,7 @@ Natural logarithm of marginal posterior density with the approximate reference p
 }
 \usage{
 neg_log_marginal_post_approx_ref(param, nugget, nugget.est, 
-                                  R0, X, output, CL, a, b, 
+                                  R0, X, zero_mean,output, CL, a, b, 
                                   kernel_type, alpha)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -35,6 +35,11 @@ A List of matrix where the j-th matrix is an absolute difference matrix of the j
 %%     ~~Describe \code{X} here~~
 The mean basis function i.e. the trend function.
 }
+  \item{zero_mean}{
+%%     ~~Describe \code{zero_mean} here~~
+The mean basis function is zero or not.
+}
+
   \item{output}{
 %%     ~~Describe \code{output} here~~
 The output vector.

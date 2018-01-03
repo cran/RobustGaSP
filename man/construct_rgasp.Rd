@@ -7,7 +7,7 @@
 This function constructs the Robust GaSP model if the range and noise-variance ratio parameters are given or have been estimated.
 }
 \usage{
-construct_rgasp(beta, nu, R0, X, output, kernel_type, alpha)
+construct_rgasp(beta, nu, R0, X, zero_mean, output, kernel_type, alpha)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -27,6 +27,11 @@ A List of matrix where the j-th matrix is an absolute difference matrix of the j
 %%     ~~Describe \code{X} here~~
 The mean basis function i.e. the trend function.
 }
+  \item{zero_mean}{
+%%     ~~Describe \code{zero_mean} here~~
+The mean basis function is zero or not.
+}
+
   \item{output}{
 %%     ~~Describe \code{output} here~~
 the output vector.

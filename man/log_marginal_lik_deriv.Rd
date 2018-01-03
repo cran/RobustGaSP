@@ -10,7 +10,8 @@ Derivative of natural logarithm of the marginal likelihood
 The derivative of natural logarithm of marginal likelihood with regard to inverse range parameters and nugget-variance ratio parameter after marginalizing out the mean (trend) and variance parameters the location-scale prior. When the nugget is fixed, it only compute the derivative with regard to the inverse range parameter; otherwise it produces derivative with regard to inverse range parameter and nugget-variance ratio parameter.
 }
 \usage{
-log_marginal_lik_deriv(param, nugget, nugget_est, R0, X, output, kernel_type, alpha)
+log_marginal_lik_deriv(param, nugget, nugget_est, R0, X, zero_mean, 
+output, kernel_type, alpha)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -34,6 +35,11 @@ A List of matrix where the j-th matrix is an absolute difference matrix of the j
 %%     ~~Describe \code{X} here~~
 The mean basis function i.e. the trend function.
 }
+  \item{zero_mean}{
+%%     ~~Describe \code{zero_mean} here~~
+The mean basis function is zero or not.
+}
+
   \item{output}{
 %%     ~~Describe \code{output} here~~
 The output vector.

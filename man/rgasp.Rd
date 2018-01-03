@@ -12,7 +12,7 @@ Setting up the robust GaSP model for estimating the parameters (if the parameter
 %The range and noise-variance ratio parameters are given and/or have been estimated.
 }
 \usage{
-  rgasp(design, response, trend = matrix(1, length(response), 1), 
+  rgasp(design, response, trend = matrix(1, length(response), 1),zero.mean="No", 
       nugget = 0,nugget.est = F,range.par = NA,prior_choice="ref_approx",         
       a = 0.2, b = 1/(length(response))^{1/dim(as.matrix(design))[2]}*(a+
       dim(as.matrix(design))[2]), 
@@ -32,6 +32,8 @@ Setting up the robust GaSP model for estimating the parameters (if the parameter
 }
   \item{trend}{ the mean/trend matrix of inputs. The default value is a  vector of ones. 
 %%     ~~Describe \code{trend} here~~
+}
+\item{zero.mean}{ it has zero mean or not. The default value is "No" meaning the mean is not zero. "Yes" means the mean is zero.
 }
   \item{nugget}{ numerical value of the nugget variance ratio. If nugget is equal to 0, it means there is either no nugget or the nugget is estimated. If the nugget is not equal to 0, it means a fixed nugget. The default value is 0. 
 %%     ~~Describe \code{nugget} here~~
@@ -149,6 +151,37 @@ library(RobustGaSP)
 show(m1)      ####show this rgasp object 
 
 m1@beta_hat       ####estimated inverse range parameters
+  
+ #
+   #--------------------------------------
+  # a 1 dimensional example with zero mean
+  #---------------------------------------
+
+
+  input=10*seq(0,1,1/14)
+  output<-hig02(input)
+  #the following code fit a GaSP with zero mean by setting zero.mean="Yes"
+  model<- rgasp(design = input, response = output, zero.mean="Yes")
+  model
+  
+  testing_input = as.matrix(seq(0,10,1/100))
+  model.predict<-predict(model,testing_input)
+  names(model.predict)
+  
+  #########plot predictive distribution
+  testing_output=hig02(testing_input)
+  plot(testing_input,model.predict$mean,type='l',col='blue',
+       xlab='input',ylab='output')
+  polygon( c(testing_input,rev(testing_input)),c(model.predict$lower95,
+        rev(model.predict$upper95)),col =  "grey80", border = FALSE)
+  lines(testing_input, testing_output)
+  lines(testing_input,model.predict$mean,type='l',col='blue')
+  lines(input, output,type='p')
+  
+  ## mean square erros
+  mean((model.predict$mean-testing_output)^2)
+
+ 
 
   #-----------------------------------
   # a 2 dimensional example with trend

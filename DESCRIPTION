@@ -1,8 +1,8 @@
 Package: RobustGaSP
 Type: Package
 Title: Robust Gaussian Stochastic Process Emulation
-Version: 0.5.3
-Date/Publication: 2017-01-27 18:52:56
+Version: 0.5.4
+Date/Publication: 2018-01-03 22:10:35 UTC
 Authors@R: c(person(given="Mengyang",family="Gu",role=c("aut","cre"),email="mgu6@jhu.edu"),
     person(given="Jesus",family="Palomo", role=c("aut")),
     person(given="James",family="Berger", role="aut"))
@@ -17,5 +17,5 @@ Suggests: nloptr (>= 1.0.4)
 LinkingTo: Rcpp, RcppEigen
 NeedsCompilation: yes
 Repository: CRAN
-Packaged: 2017-01-26 15:22:54 UTC; gumengyang
+Packaged: 2017-12-23 03:45:34 UTC; gumengyang
 RoxygenNote: 5.0.1

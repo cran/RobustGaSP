@@ -10,7 +10,7 @@ Prediction for robust GaSP model
 A function to make prediction on robust GaSP models after the robust GaSP model has been constructed.
 }
 \usage{
-pred_rgasp(beta, nu, input, X, output, testing_input,
+pred_rgasp(beta, nu, input, X, zero_mean,output, testing_input,
            X_testing, L, LX, theta_hat, sigma2_hat, 
            qt_025, qt_975, r0, kernel_type, alpha)
 }
@@ -32,6 +32,11 @@ input matrix.
 %%     ~~Describe \code{X} here~~
 the mean basis function i.e. the trend function.
 }
+  \item{zero_mean}{
+%%     ~~Describe \code{zero_mean} here~~
+The mean basis function is zero or not.
+}
+
   \item{output}{
 %%     ~~Describe \code{output} here~~
 output matrix.

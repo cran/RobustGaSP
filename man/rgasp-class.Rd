@@ -15,6 +15,7 @@ Objects of this class are created and initialized with the function \code{\link{
     \item{\code{input}:}{Object of class \code{matrix} with dimension n x p. The design of experiments.}
     \item{\code{output}:}{Object of class \code{matrix} with dimension n x 1. The Observations or output vector.}
     \item{\code{X}:}{Object of class \code{matrix} of with dimension n x q. The mean basis function, i.e. the trend function.}
+        \item{\code{zero_mean}:}{A \code{character} to specify whether the mean is zero or not. "Yes" means it has zero mean and "No"" means the mean is not zero. }
     \item{\code{q}:}{Object of class \code{integer}. The number of mean basis.}
     \item{\code{LB}:}{Object of class \code{vector} with dimension p x 1. The lower bound for inverse range parameters beta.}
     \item{\code{beta_initial}:}{Object of class \code{vector} with the initial values of inverse range parameters p x 1.}

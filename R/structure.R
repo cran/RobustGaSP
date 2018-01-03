@@ -21,6 +21,7 @@ setClass("rgasp",
            input = "matrix",           ## the design of experiments, size nxp
            output = "matrix",           ## the observations, size nx1
            X="matrix",                  ## mean basis, size nxq
+           zero_mean="character",      ## Yes or no
            q="integer",                 ## number of mean basis
            LB="vector",                  ## lower bound for inverse range parameters beta px1
            beta_initial="vector",       ###initial values of inverse range parameters px1

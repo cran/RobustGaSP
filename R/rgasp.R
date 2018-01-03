@@ -13,12 +13,15 @@
 #library(nloptr)    ####I need to have this nloptr, or I can use C++ nlopt, this one is faster than optim()
 #requireNamespace("nloptr")
                  
-rgasp <- function(design, response,trend=matrix(1,length(response),1),nugget=0,
+rgasp <- function(design, response,trend=matrix(1,length(response),1),zero.mean="No",nugget=0,
                   nugget.est=F,range.par=NA,prior_choice='ref_approx',a=0.2,
                   b=1/(length(response))^{1/dim(as.matrix(design))[2]}*(a+dim(as.matrix(design))[2]),
                   kernel_type='matern_5_2',
                   alpha=rep(1.9,dim(as.matrix(design))[2]),multiple_starts=T,lower_bound=T,max_eval=30,xtol_rel=1e-5){
   
+  if (zero.mean=="Yes"){
+    trend=matrix(0,length(response),1)
+  }
   
   if (!is.logical(nugget.est) && length(nugget.est) != 1){
     stop("nugget.est should be boolean (either T or F) \n")
@@ -54,7 +57,7 @@ rgasp <- function(design, response,trend=matrix(1,length(response),1),nugget=0,
   #####Only numeric inputs are allowed
   design=as.matrix(design)
   model@input <- matrix(as.numeric(design), dim(design)[1],dim(design)[2])
-    
+  
   # print(model@input)
   model@output <- as.matrix(response)
   # print(model@output)
@@ -71,8 +74,13 @@ rgasp <- function(design, response,trend=matrix(1,length(response),1),nugget=0,
   ##default setting constant mean basis. Of course We should let user to specify it
   #model@X = matrix(1,model@num_obs,1)   ####constant mean
   model@X=trend;               ###If the trend is specified, use it. If not, use a constant mean. 
-  #######number of regressor
-  model@q = dim(model@X)[2]; # NOTE THIS IS ALWAYS 1 SINCE YOU DEFINE IT THAT WAY ABOVE
+  model@zero_mean=zero.mean
+   #######number of regressor
+  if(model@zero_mean=="Yes"){
+    model@q=as.integer(0)
+  }else{
+    model@q = dim(model@X)[2]; # NOTE THIS IS ALWAYS 1 SINCE YOU DEFINE IT THAT WAY ABOVE
+  }
   ####################correlation matrix
   
   model@nugget.est <- nugget.est
@@ -86,7 +94,9 @@ rgasp <- function(design, response,trend=matrix(1,length(response),1),nugget=0,
   model@CL = rep(0,model@p)    ###CL is also used in the prior so I make it a model parameter
   
   for(i_cl in 1:model@p){
-    model@CL[i_cl] = mean(model@R0[[i_cl]][which(model@R0[[i_cl]]>0)])
+  #  model@CL[i_cl] = mean(model@R0[[i_cl]][which(model@R0[[i_cl]]>0)])
+    
+    model@CL[i_cl] = (max(model@input[,i_cl])-min(model@input[,i_cl]))/model@num_obs^{1/model@p}
   }
   
 
@@ -144,29 +154,29 @@ rgasp <- function(design, response,trend=matrix(1,length(response),1),nugget=0,
     
     
     ####not output the message from nlopt
-    sink(tempfile()) 
+    #sink(tempfile()) 
     
     if(prior_choice=='ref_approx'){####this one can be with nugget or without the nugget
     #  if (requireNamespace("lbfgs", quietly = TRUE)) {
       tt_all <- try(nloptr::lbfgs(ini_value, neg_log_marginal_post_approx_ref, 
                       neg_log_marginal_post_approx_ref_deriv,nugget=nugget, nugget.est=model@nugget.est, 
-                      R0=model@R0,X=model@X, output=model@output, CL=model@CL, a=a,b=b,
+                      R0=model@R0,X=model@X, zero_mean=model@zero_mean,output=model@output, CL=model@CL, a=a,b=b,
                       kernel_type=model@kernel_type,alpha=model@alpha,lower=model@LB,
-                      nl.info = TRUE, control = list(maxeval=max_eval, xtol_rel=xtol_rel)),TRUE)
+                      nl.info = FALSE, control = list(maxeval=max_eval, xtol_rel=xtol_rel)),TRUE)
    #   }
     }else if(prior_choice=='ref_xi'|prior_choice=='ref_gamma'){####this needs to be revised
     #  if (requireNamespace("lbfgs", quietly = TRUE)) {
         tt_all <- try(nloptr::lbfgs(ini_value, neg_log_marginal_post_ref, 
                       nugget=nugget, nugget.est=nugget.est, R0=model@R0,
-                      X=model@X, output=model@output, prior_choice=prior_choice, kernel_type=model@kernel_type,
-                      alpha=model@alpha,lower=model@LB,nl.info = TRUE, control = list(maxeval=max_eval, xtol_rel=xtol_rel)),TRUE)
+                      X=model@X, zero_mean=model@zero_mean,output=model@output, prior_choice=prior_choice, kernel_type=model@kernel_type,
+                      alpha=model@alpha,lower=model@LB,nl.info = FALSE, control = list(maxeval=max_eval, xtol_rel=xtol_rel)),TRUE)
      # }
     }
    if(class(tt_all)=="try-error"){
-     sink()
+     #sink()
      stop(tt_all)
    }
-   sink()#### close sink
+   #sink()#### close sink
    
    if(model@nugget.est==F){
       nugget_par=nugget
@@ -200,30 +210,30 @@ rgasp <- function(design, response,trend=matrix(1,length(response),1),nugget=0,
       }
       cat('The intial values of range parameters are', 1/exp(ini_value),'\n')
       
-      sink(tempfile()) 
+      #sink(tempfile()) 
       
       if(prior_choice=='ref_approx'){####this one can be with nugget or without the nugget
           tt_all2 <- try(nloptr::lbfgs(ini_value, neg_log_marginal_post_approx_ref, 
                                   neg_log_marginal_post_approx_ref_deriv,nugget=nugget, nugget.est=nugget.est, R0=model@R0,
-                                  X=model@X, output=model@output, CL=model@CL, a=a,b=b,  kernel_type=kernel_type,alpha=alpha,lower=model@LB,
-                                  nl.info = TRUE, control = list(maxeval=max_eval, xtol_rel=xtol_rel)),TRUE)
+                                  X=model@X, zero_mean=model@zero_mean, output=model@output, CL=model@CL, a=a,b=b,  kernel_type=kernel_type,alpha=alpha,lower=model@LB,
+                                  nl.info = FALSE, control = list(maxeval=max_eval, xtol_rel=xtol_rel)),TRUE)
           
       }else if(prior_choice=='ref_xi'|prior_choice=='ref_gamma'){####this needs to be revised
           tt_all2 <- try(nloptr::lbfgs(ini_value, neg_log_marginal_post_ref, 
                                   nugget=nugget, nugget.est=nugget.est, R0=model@R0,
-                                  X=model@X, output=model@output, prior_choice=prior_choice, kernel_type=kernel_type,alpha=alpha,lower=model@LB,
-                                  nl.info = TRUE, control = list(maxeval=max_eval, xtol_rel=xtol_rel)),TRUE)
+                                  X=model@X, zero_mean=model@zero_mean,output=model@output, prior_choice=prior_choice, kernel_type=kernel_type,alpha=alpha,lower=model@LB,
+                                  nl.info = FALSE, control = list(maxeval=max_eval, xtol_rel=xtol_rel)),TRUE)
       
       
       }
       
       
       if(class(tt_all2)=="try-error"){
-        sink()
+        #sink()
         stop(tt_all2)
       }
       
-      sink()#### close sink
+      #sink()#### close sink
       
       
       if(model@nugget.est==F){
@@ -269,7 +279,7 @@ rgasp <- function(design, response,trend=matrix(1,length(response),1),nugget=0,
     model@nugget=nugget
   }
   
-  list_return=construct_rgasp(model@beta_hat, model@nugget, model@R0, model@X, 
+  list_return=construct_rgasp(model@beta_hat, model@nugget, model@R0, model@X, zero_mean=model@zero_mean,
                               model@output,model@kernel_type,model@alpha); 
   model@L=list_return[[1]];
   model@LX=list_return[[2]];

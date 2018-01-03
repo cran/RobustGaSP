@@ -26,10 +26,10 @@ findInertInputs<-function(object,threshold=0.1){
 }
 
 ####################
-neg_log_marginal_post_approx_ref <- function(param,nugget, nugget.est,R0,X,output,CL,a,b,kernel_type,alpha) {
+neg_log_marginal_post_approx_ref <- function(param,nugget, nugget.est,R0,X,zero_mean,output,CL,a,b,kernel_type,alpha) {
    #####this has mean X, we should also include the case where X is not zero
    #####
-   lml=log_marginal_lik(param,nugget,nugget.est,R0,X,output,kernel_type,alpha);
+   lml=log_marginal_lik(param,nugget,nugget.est,R0,X,zero_mean,output,kernel_type,alpha);
    lp=log_approx_ref_prior(param,nugget,nugget.est,CL,a,b);
      
   -(lml+lp)
@@ -37,9 +37,9 @@ neg_log_marginal_post_approx_ref <- function(param,nugget, nugget.est,R0,X,outpu
 }
 
 ####################
-neg_log_marginal_post_ref<- function(param,nugget, nugget.est,R0,X,output,prior_choice,kernel_type,alpha) {
+neg_log_marginal_post_ref<- function(param,nugget, nugget.est,R0,X,zero_mean,output,prior_choice,kernel_type,alpha) {
   
-  lmp=log_ref_marginal_post(param,nugget,nugget.est,R0,X,output,kernel_type,alpha);
+  lmp=log_ref_marginal_post(param,nugget,nugget.est,R0,X,zero_mean,output,kernel_type,alpha);
   
   
   if(prior_choice=='ref_xi'){
@@ -61,8 +61,8 @@ neg_log_marginal_post_ref<- function(param,nugget, nugget.est,R0,X,output,prior_
 
 
 ########################
-neg_log_marginal_post_approx_ref_deriv<- function(param,nugget,nugget.est,R0,X,output,CL,a,b,kernel_type,alpha) {
-  lml_dev=log_marginal_lik_deriv(param,nugget,nugget.est,R0,X,output,kernel_type,alpha)
+neg_log_marginal_post_approx_ref_deriv<- function(param,nugget,nugget.est,R0,X,zero_mean,output,CL,a,b,kernel_type,alpha) {
+  lml_dev=log_marginal_lik_deriv(param,nugget,nugget.est,R0,X,zero_mean,output,kernel_type,alpha)
   lp_dev=log_approx_ref_prior_deriv(param,nugget,nugget.est,CL,a,b)
   
   -(lml_dev+lp_dev)*exp(param)
@@ -84,7 +84,7 @@ search_LB_prob<-function(param, R0,COND_NUM_UB,p,kernel_type,alpha,nugget){
   R=R+nugget*diag(num_obs)
   (kappa(R)-COND_NUM_UB)^2
 }
-###############a 2 dim hig02 function
+###############1 dim hig02 function
 hig02 <- function(s)
 {
   ##########################################################################

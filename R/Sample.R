@@ -14,10 +14,20 @@
   
 Sample.rgasp <- function (object, testing_input, num_sample=1,
                           testing_trend= matrix(1,dim(testing_input)[1],1),...){
-  if( dim(testing_trend)[2]!=dim(object@X)[2]){
-    stop("The dimensions of the design matrix and testing inputs matrix do not match. \n")
-    
+  
+  if(object@zero_mean=="Yes"){
+    testing_trend=rep(0,dim(testing_input)[1]);
+  }else{
+    if( dim(testing_trend)[2]!=dim(object@X)[2]){
+      stop("The dimensions of the design trend matrix and testing trend matrix do not match. \n")
+    }
   }
+  
+  if( dim(testing_input)[2]!=dim(object@input)[2]){
+    stop("The dimensions of the design matrix and testing inputs matrix do not match. \n")
+  }
+  
+  
   num_testing_input <- dim(testing_input)[1]
   #X_testing = matrix(1,num_testing_input,1) ###testing trend
   
@@ -35,7 +45,7 @@ Sample.rgasp <- function (object, testing_input, num_sample=1,
   }
   
   #####the following the posterior mean and cholesky decomposition of the sigma^2C_Star_star
-  mean_cov_list=generate_predictive_mean_cov(object@beta_hat,object@nugget,object@input,object@X,object@output,
+  mean_cov_list=generate_predictive_mean_cov(object@beta_hat,object@nugget,object@input,object@X,object@zero_mean,object@output,
                        testing_input,testing_trend,object@L,object@LX,object@theta_hat,
                        object@sigma2_hat,rr0,r0,object@kernel_type,object@alpha)
   

@@ -10,7 +10,7 @@ A C++ function to generate predictive mean and cholesky decomposition of the sca
 The function computes predictive mean and cholesky decomposition of the scaled covariance function.
 }
 \usage{
-generate_predictive_mean_cov(beta, nu, input, X,output, testing_input, 
+generate_predictive_mean_cov(beta, nu, input, X,zero_mean,output, testing_input, 
                              X_testing, L, LX, theta_hat, sigma2_hat,
                              rr0,r0,kernel_type,alpha)
 }
@@ -32,6 +32,11 @@ input matrix.
 %%     ~~Describe \code{X} here~~
 the mean basis function i.e. the trend function.
 }
+  \item{zero_mean}{
+%%     ~~Describe \code{zero_mean} here~~
+The mean basis function is zero or not.
+}
+
   \item{output}{
 %%     ~~Describe \code{output} here~~
 output matrix.

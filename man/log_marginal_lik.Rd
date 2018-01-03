@@ -10,7 +10,7 @@ Natural logarithm of marginal likelihood
 This function computes the natural logarithm of marginal likelihood after marginalizing out the mean (trend) and variance parameters by the location-scale prior.
 }
 \usage{
-log_marginal_lik(param, nugget, nugget_est, R0, X, output, kernel_type, alpha)
+log_marginal_lik(param, nugget, nugget_est, R0, X, zero_mean,output, kernel_type, alpha)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -34,6 +34,11 @@ A List of matrix where the j-th matrix is an absolute difference matrix of the j
 %%     ~~Describe \code{X} here~~
 The mean basis function i.e. the trend function.
 }
+  \item{zero_mean}{
+%%     ~~Describe \code{zero_mean} here~~
+The mean basis function is zero or not.
+}
+
   \item{output}{
 %%     ~~Describe \code{output} here~~
 The output vector.

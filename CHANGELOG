@@ -1,5 +1,7 @@
-## RobustGaSP 0.5.3
-
+## RobustGaSP 0.5.4
+  * Add the choice of the zero mean GaSP. 
+  * Change the setting of nloptr to be nl.info=F.  Delete sink().
+  * Correct printing of the noise
 
 ## change / RobustGaSP 0.5.2
   * Bugs corrected in rgasp() about the sink() function when the optimization step fails
