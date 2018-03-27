@@ -11,7 +11,14 @@
 ##    
 ##########################################################################
 
-predict.rgasp <- function (object, testing_input, testing_trend= matrix(1,dim(testing_input)[1],1),...){
+predict.rgasp <- function (object, testing_input, testing_trend= matrix(1,dim(testing_input)[1],1), 
+                           outasS3 = T, ...){
+
+  if (!outasS3) {
+    output.pred <- new("predrgasp")
+    output.pred@call <- match.call()
+  } else warning('In order to have a more informative predic.rgasp output, set the parameter outasS3 = F.\n')
+  
   if(object@zero_mean=="Yes"){
     testing_trend=rep(0,dim(testing_input)[1]);
   }else{
@@ -49,5 +56,22 @@ predict.rgasp <- function (object, testing_input, testing_trend= matrix(1,dim(te
     output.list$upper95=pred_list[[3]]
     output.list$sd=sqrt(pred_list[[4]]) 
 
+    if (!outasS3) {
+      auxcall <- output.pred@call
+      output.pred <- as.S4prediction.predict(output.list)
+      output.pred@call <-auxcall
+      output.list <- output.pred
+    }
+    
   return (output.list)
+}
+
+as.S4prediction.predict <- function(object){
+  auxres <- new("predrgasp")
+  auxres@call = match.call()
+  auxres@mean = object$mean
+  auxres@lower95 = object$lower95
+  auxres@upper95 = object$upper95
+  auxres@sd = object$sd
+  return(auxres)
 }

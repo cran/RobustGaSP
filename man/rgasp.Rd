@@ -18,7 +18,7 @@ Setting up the robust GaSP model for estimating the parameters (if the parameter
       dim(as.matrix(design))[2]), 
       kernel_type = "matern_5_2", 
       alpha = rep(1.9, dim(as.matrix(design))[2]),
-      multiple_starts=T,lower_bound=T,max_eval=30,xtol_rel=1e-5)
+      multiple_starts=T,lower_bound=T,max_eval=max(30,20+5*dim(design)[2]))
  % \S4method{show}{rgasp}(object)    
       
 }
@@ -33,7 +33,7 @@ Setting up the robust GaSP model for estimating the parameters (if the parameter
   \item{trend}{ the mean/trend matrix of inputs. The default value is a  vector of ones. 
 %%     ~~Describe \code{trend} here~~
 }
-\item{zero.mean}{ it has zero mean or not. The default value is "No" meaning the mean is not zero. "Yes" means the mean is zero.
+\item{zero.mean}{ it has zero mean or not. The default value is FALSE meaning the mean is not zero. TRUE means the mean is zero.
 }
   \item{nugget}{ numerical value of the nugget variance ratio. If nugget is equal to 0, it means there is either no nugget or the nugget is estimated. If the nugget is not equal to 0, it means a fixed nugget. The default value is 0. 
 %%     ~~Describe \code{nugget} here~~
@@ -72,10 +72,7 @@ roughness parameters in the \code{pow_exp} correlation functions. The default ch
   boolean value.  \code{T} means the default lower bounds of the inverse range parameters are used to constrained the optimization and \code{F} means the optimization is unconstrained. The default value is \code{T} and we also suggest to use \code{F} in various scenarios. 
   }
   \item{max_eval}{
-  the maximum number of steps to estimate the range and nugget parameters. The default choice is 30. 
-  }
-  \item{xtol_rel}{
-  the torerance bound to stop the searching algorithm in estimation of the range and nugget parameters. The default choice is \code{10^{-5}}.
+  the maximum number of steps to estimate the range and nugget parameters.  
   }
 }
 %\details{

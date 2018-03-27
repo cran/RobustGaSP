@@ -13,13 +13,15 @@ Prediction for Robust GaSP model
 Function to make prediction on Robust GaSP models after the Robust GaSP model has been constructed.
 }
 \usage{
-\S4method{predict}{rgasp}(object, testing_input, testing_trend= matrix(1,dim(testing_input)[1],1),...)
+\S4method{predict}{rgasp}(object, testing_input, testing_trend= matrix(1,dim(testing_input)[1],1),
+outasS3 = T,...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{object}{ an object of  class \code{rgasp}.}
   \item{testing_input}{a matrix containing the inputs where the \code{rgasp} is to perform prediction.}
   \item{testing_trend}{a matrix of mean/trend for prediction.}
+  \item{outasS3}{a boolean parameter indicating whether the output of the function should be as an \code{S3 object}.}
   \item{...}{Extra arguments to be passed to the function (not implemented yet).}
 }
 
@@ -35,7 +37,17 @@ Function to make prediction on Robust GaSP models after the Robust GaSP model ha
 %%  \item{comp1 }{Description of 'comp1'}
 %%  \item{comp2 }{Description of 'comp2'}
 %% ...
-The returned value is a \code{list} with 
+If the parameter \code{outasS3=F}, then the returned value is a \code{S4 object} of class \code{\link[=predrgasp-class]{predrgasp-class}} with 
+%\section{Slots}{
+	 \describe{
+	  \item{\code{call}:}{ \code{call} to \code{predict.rgasp} function where the returned object has been created.}
+    \item{\code{mean}:}{ predictive mean for the testing inputs.}
+    \item{\code{lower95}:}{lower bound of the 95\% posterior credible interval.}
+    \item{\code{upper95}:}{upper bound of the 95\% posterior credible interval.}
+    \item{\code{sd}:}{standard deviation of each \code{testing_input}.}
+  }
+%}
+If the parameter \code{outasS3=T}, then the returned value is a \code{list} with 
 \item{mean }{ predictive mean for the testing inputs.}
 \item{lower95 }{lower bound of the 95\% posterior credible interval.}
 \item{upper95 }{upper bound of the 95\% posterior credible interval.}

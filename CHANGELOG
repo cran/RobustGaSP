@@ -1,6 +1,12 @@
+## RobustGaSP 0.5.5
+ * Update the maximum num of evaluation in the optimizer by nloptr::lbfgs(). The maximum num of evaluation should increase with the increase of the dimension of the inputs
+ * Implement leave_one_out_rgasp() function for model checking
+ * Allow user to choose whether we use an S3 or S4 method for prediction
+
+
 ## RobustGaSP 0.5.4
-  * Add the choice of the zero mean GaSP. 
-  * Change the setting of nloptr to be nl.info=F.  Delete sink().
+  * Add the choice of the zero mean GaSP
+  * Change the setting of nloptr to be nl.info=F.  Delete sink()
   * Correct printing of the noise
 
 ## change / RobustGaSP 0.5.2

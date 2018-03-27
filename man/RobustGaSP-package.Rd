@@ -25,8 +25,9 @@ Maintainer: \packageMaintainer{RobustGaSP}
 
 J.O. Berger, V. De Oliveira and B. Sanso (2001), \emph{Design and analysis of computer experiments}, \emph{Journal of the American Statistical Association}, \bold{96}, 1361-1374.
 
-
 M. Gu (2016), \emph{Robust Uncertainty Quantification and Scalable Computation for Computer Models with Massive Output}, Ph.D. thesis., Duke University.
+
+M. Gu, X. Wang and J.O. Berger (2018), \emph{Robust Gaussian Stochastic Process Emulation}, \emph{Annals of Statistics, In Press}.
 
 R. Paulo (2005), \emph{Default priors for Gaussian processes}, \emph{Annals of statistics}, \bold{33}, 556-582.
 
@@ -84,9 +85,9 @@ J. Sacks, W.J. Welch, T.J. Mitchell, and H.P. Wynn (1989), \emph{Design and anal
   # generate points to be predicted
   testing_input <- matrix(runif(num_testing_input*dim_inputs),num_testing_input,dim_inputs)
   # Perform prediction
-  m1.predict<-predict(m1, testing_input)
+  m1.predict<-predict(m1, testing_input, outasS3 = FALSE)
   # Predictive mean
-  m1.predict$mean  
+  m1.predict@mean  
   
   # The following tests how good the prediction is 
   testing_output <- matrix(0,num_testing_input,1)
@@ -96,14 +97,14 @@ J. Sacks, W.J. Welch, T.J. Mitchell, and H.P. Wynn (1989), \emph{Design and anal
   
   # compute the MSE, average coverage and average length
   # out of sample MSE
-  MSE_emulator <- sum((m1.predict$mean-testing_output)^2)/(num_testing_input)  
+  MSE_emulator <- sum((m1.predict@mean-testing_output)^2)/(num_testing_input)  
   
   # proportion covered by 95\% posterior predictive credible interval
-  prop_emulator <- length(which((m1.predict$lower95<=testing_output)
-                   &(m1.predict$upper95>=testing_output)))/num_testing_input
+  prop_emulator <- length(which((m1.predict@lower95<=testing_output)
+                   &(m1.predict@upper95>=testing_output)))/num_testing_input
   
   # average length of  posterior predictive credible interval
-  length_emulator <- sum(m1.predict$upper95-m1.predict$lower95)/num_testing_input
+  length_emulator <- sum(m1.predict@upper95-m1.predict@lower95)/num_testing_input
   
   # output of prediction
   MSE_emulator

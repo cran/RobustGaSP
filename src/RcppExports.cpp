@@ -258,27 +258,3 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-
-static const R_CallMethodDef CallEntries[] = {
-    {"_RobustGaSP_matern_5_2_funct", (DL_FUNC) &_RobustGaSP_matern_5_2_funct, 2},
-    {"_RobustGaSP_matern_3_2_funct", (DL_FUNC) &_RobustGaSP_matern_3_2_funct, 2},
-    {"_RobustGaSP_pow_exp_funct", (DL_FUNC) &_RobustGaSP_pow_exp_funct, 3},
-    {"_RobustGaSP_matern_5_2_deriv", (DL_FUNC) &_RobustGaSP_matern_5_2_deriv, 3},
-    {"_RobustGaSP_matern_3_2_deriv", (DL_FUNC) &_RobustGaSP_matern_3_2_deriv, 3},
-    {"_RobustGaSP_pow_exp_deriv", (DL_FUNC) &_RobustGaSP_pow_exp_deriv, 4},
-    {"_RobustGaSP_separable_kernel", (DL_FUNC) &_RobustGaSP_separable_kernel, 4},
-    {"_RobustGaSP_log_marginal_lik", (DL_FUNC) &_RobustGaSP_log_marginal_lik, 9},
-    {"_RobustGaSP_log_approx_ref_prior", (DL_FUNC) &_RobustGaSP_log_approx_ref_prior, 6},
-    {"_RobustGaSP_log_marginal_lik_deriv", (DL_FUNC) &_RobustGaSP_log_marginal_lik_deriv, 9},
-    {"_RobustGaSP_log_approx_ref_prior_deriv", (DL_FUNC) &_RobustGaSP_log_approx_ref_prior_deriv, 6},
-    {"_RobustGaSP_log_ref_marginal_post", (DL_FUNC) &_RobustGaSP_log_ref_marginal_post, 9},
-    {"_RobustGaSP_construct_rgasp", (DL_FUNC) &_RobustGaSP_construct_rgasp, 8},
-    {"_RobustGaSP_pred_rgasp", (DL_FUNC) &_RobustGaSP_pred_rgasp, 17},
-    {"_RobustGaSP_generate_predictive_mean_cov", (DL_FUNC) &_RobustGaSP_generate_predictive_mean_cov, 16},
-    {NULL, NULL, 0}
-};
-
-RcppExport void R_init_RobustGaSP(DllInfo *dll) {
-    R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
-    R_useDynamicSymbols(dll, FALSE);
-}

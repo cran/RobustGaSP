@@ -17,8 +17,7 @@ rgasp <- function(design, response,trend=matrix(1,length(response),1),zero.mean=
                   nugget.est=F,range.par=NA,prior_choice='ref_approx',a=0.2,
                   b=1/(length(response))^{1/dim(as.matrix(design))[2]}*(a+dim(as.matrix(design))[2]),
                   kernel_type='matern_5_2',
-                  alpha=rep(1.9,dim(as.matrix(design))[2]),multiple_starts=T,lower_bound=T,max_eval=30,xtol_rel=1e-5){
-  
+                  alpha=rep(1.9,dim(as.matrix(design))[2]),multiple_starts=T,lower_bound=T,max_eval=max(30,20+5*dim(design)[2])){
   if (zero.mean=="Yes"){
     trend=matrix(0,length(response),1)
   }
@@ -75,7 +74,7 @@ rgasp <- function(design, response,trend=matrix(1,length(response),1),zero.mean=
   #model@X = matrix(1,model@num_obs,1)   ####constant mean
   model@X=trend;               ###If the trend is specified, use it. If not, use a constant mean. 
   model@zero_mean=zero.mean
-   #######number of regressor
+  #######number of regressor
   if(model@zero_mean=="Yes"){
     model@q=as.integer(0)
   }else{
@@ -94,12 +93,12 @@ rgasp <- function(design, response,trend=matrix(1,length(response),1),zero.mean=
   model@CL = rep(0,model@p)    ###CL is also used in the prior so I make it a model parameter
   
   for(i_cl in 1:model@p){
-  #  model@CL[i_cl] = mean(model@R0[[i_cl]][which(model@R0[[i_cl]]>0)])
+    #  model@CL[i_cl] = mean(model@R0[[i_cl]][which(model@R0[[i_cl]]>0)])
     
     model@CL[i_cl] = (max(model@input[,i_cl])-min(model@input[,i_cl]))/model@num_obs^{1/model@p}
   }
   
-
+  
   if(is.na(range.par)){
     ########this also depends on the kernel
     ##get some initial values of beta that we can start from a good set of range parameters to optimize
@@ -119,7 +118,7 @@ rgasp <- function(design, response,trend=matrix(1,length(response),1),zero.mean=
     
     
     ##LB=LB-log(model@p)   #####
-
+    
     if(lower_bound==T){
       if(model@nugget.est){
         model@LB=c(LB,-Inf)   
@@ -157,42 +156,42 @@ rgasp <- function(design, response,trend=matrix(1,length(response),1),zero.mean=
     #sink(tempfile()) 
     
     if(prior_choice=='ref_approx'){####this one can be with nugget or without the nugget
-    #  if (requireNamespace("lbfgs", quietly = TRUE)) {
+      #  if (requireNamespace("lbfgs", quietly = TRUE)) {
       tt_all <- try(nloptr::lbfgs(ini_value, neg_log_marginal_post_approx_ref, 
-                      neg_log_marginal_post_approx_ref_deriv,nugget=nugget, nugget.est=model@nugget.est, 
-                      R0=model@R0,X=model@X, zero_mean=model@zero_mean,output=model@output, CL=model@CL, a=a,b=b,
-                      kernel_type=model@kernel_type,alpha=model@alpha,lower=model@LB,
-                      nl.info = FALSE, control = list(maxeval=max_eval, xtol_rel=xtol_rel)),TRUE)
-   #   }
+                                  neg_log_marginal_post_approx_ref_deriv,nugget=nugget, nugget.est=model@nugget.est, 
+                                  R0=model@R0,X=model@X, zero_mean=model@zero_mean,output=model@output, CL=model@CL, a=a,b=b,
+                                  kernel_type=model@kernel_type,alpha=model@alpha,lower=model@LB,
+                                  nl.info = FALSE, control = list(maxeval=max_eval)),TRUE)
+      #   }
     }else if(prior_choice=='ref_xi'|prior_choice=='ref_gamma'){####this needs to be revised
-    #  if (requireNamespace("lbfgs", quietly = TRUE)) {
-        tt_all <- try(nloptr::lbfgs(ini_value, neg_log_marginal_post_ref, 
-                      nugget=nugget, nugget.est=nugget.est, R0=model@R0,
-                      X=model@X, zero_mean=model@zero_mean,output=model@output, prior_choice=prior_choice, kernel_type=model@kernel_type,
-                      alpha=model@alpha,lower=model@LB,nl.info = FALSE, control = list(maxeval=max_eval, xtol_rel=xtol_rel)),TRUE)
-     # }
+      #  if (requireNamespace("lbfgs", quietly = TRUE)) {
+      tt_all <- try(nloptr::lbfgs(ini_value, neg_log_marginal_post_ref, 
+                                  nugget=nugget, nugget.est=nugget.est, R0=model@R0,
+                                  X=model@X, zero_mean=model@zero_mean,output=model@output, prior_choice=prior_choice, kernel_type=model@kernel_type,
+                                  alpha=model@alpha,lower=model@LB,nl.info = FALSE, control = list(maxeval=max_eval)),TRUE)
+      # }
     }
-   if(class(tt_all)=="try-error"){
-     #sink()
-     stop(tt_all)
-   }
-   #sink()#### close sink
-   
-   if(model@nugget.est==F){
+    if(class(tt_all)=="try-error"){
+      #sink()
+      stop(tt_all)
+    }
+    #sink()#### close sink
+    
+    if(model@nugget.est==F){
       nugget_par=nugget
-   }else{
-     nugget_par=exp(tt_all$par)[model@p+1]
-   }
-   
+    }else{
+      nugget_par=exp(tt_all$par)[model@p+1]
+    }
+    
     if (tt_all$convergence>0){convergence=T}else{convergence=F}
-   cat('The number of interation is ', tt_all$iter,'\n',
-       'The value of the posterior is ', -tt_all$value,'\n',
-       'Optimized range parameters are', 1/exp(tt_all$par)[1:model@p],'\n',
-       'Optimized nugget parameter is', nugget_par,'\n',
-       'Convergence: ', convergence,'\n' )
-   
-   
-   
+    cat('The number of interation is ', tt_all$iter,'\n',
+        'The value of the posterior is ', -tt_all$value,'\n',
+        'Optimized range parameters are', 1/exp(tt_all$par)[1:model@p],'\n',
+        'Optimized nugget parameter is', nugget_par,'\n',
+        'Convergence: ', convergence,'\n' )
+    
+    
+    
     ###########here I do multiple starts 
     if(multiple_starts){
       cat('Start of the second optimization:','\n')
@@ -213,18 +212,18 @@ rgasp <- function(design, response,trend=matrix(1,length(response),1),zero.mean=
       #sink(tempfile()) 
       
       if(prior_choice=='ref_approx'){####this one can be with nugget or without the nugget
-          tt_all2 <- try(nloptr::lbfgs(ini_value, neg_log_marginal_post_approx_ref, 
-                                  neg_log_marginal_post_approx_ref_deriv,nugget=nugget, nugget.est=nugget.est, R0=model@R0,
-                                  X=model@X, zero_mean=model@zero_mean, output=model@output, CL=model@CL, a=a,b=b,  kernel_type=kernel_type,alpha=alpha,lower=model@LB,
-                                  nl.info = FALSE, control = list(maxeval=max_eval, xtol_rel=xtol_rel)),TRUE)
-          
+        tt_all2 <- try(nloptr::lbfgs(ini_value, neg_log_marginal_post_approx_ref, 
+                                     neg_log_marginal_post_approx_ref_deriv,nugget=nugget, nugget.est=nugget.est, R0=model@R0,
+                                     X=model@X, zero_mean=model@zero_mean, output=model@output, CL=model@CL, a=a,b=b,  kernel_type=kernel_type,alpha=alpha,lower=model@LB,
+                                     nl.info = FALSE, control = list(maxeval=max_eval)),TRUE)
+        
       }else if(prior_choice=='ref_xi'|prior_choice=='ref_gamma'){####this needs to be revised
-          tt_all2 <- try(nloptr::lbfgs(ini_value, neg_log_marginal_post_ref, 
-                                  nugget=nugget, nugget.est=nugget.est, R0=model@R0,
-                                  X=model@X, zero_mean=model@zero_mean,output=model@output, prior_choice=prior_choice, kernel_type=kernel_type,alpha=alpha,lower=model@LB,
-                                  nl.info = FALSE, control = list(maxeval=max_eval, xtol_rel=xtol_rel)),TRUE)
-      
-      
+        tt_all2 <- try(nloptr::lbfgs(ini_value, neg_log_marginal_post_ref, 
+                                     nugget=nugget, nugget.est=nugget.est, R0=model@R0,
+                                     X=model@X, zero_mean=model@zero_mean,output=model@output, prior_choice=prior_choice, kernel_type=kernel_type,alpha=alpha,lower=model@LB,
+                                     nl.info = FALSE, control = list(maxeval=max_eval)),TRUE)
+        
+        
       }
       
       
@@ -238,10 +237,10 @@ rgasp <- function(design, response,trend=matrix(1,length(response),1),zero.mean=
       
       if(model@nugget.est==F){
         nugget_par2=nugget
-        }else{
-          nugget_par2=exp(tt_all2$par)[model@p+1]
-        }
-        
+      }else{
+        nugget_par2=exp(tt_all2$par)[model@p+1]
+      }
+      
       if (tt_all2$convergence>0){convergence2=T}else{convergence2=F}
       cat('The number of interation is ', tt_all2$iter,'\n',
           'The value of the posterior is ', -tt_all2$value,'\n',
@@ -255,14 +254,14 @@ rgasp <- function(design, response,trend=matrix(1,length(response),1),zero.mean=
       }
     }
     
-   
-   
+    
+    
     ################################
     ##############estimated beta
     # print out to see whether or not it has converged
-   # cat('Convergence: ',tt_all,'\n')  ###cat doesn't work here
+    # cat('Convergence: ',tt_all,'\n')  ###cat doesn't work here
     
-   
+    
     model@log_post=-tt_all$value
     
     model@nugget=nugget;
@@ -305,6 +304,6 @@ show.rgasp <- function(object) {
   cat('Noise parameter: ', object@sigma2_hat*object@nugget,'\n')
   
   
- # cat('The slots of this object are: ',slotNames(object),'\n')
+  # cat('The slots of this object are: ',slotNames(object),'\n')
   
 }

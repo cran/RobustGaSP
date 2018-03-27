@@ -70,6 +70,44 @@ setMethod("show", "rgasp",
           }
 )
 
+setClass("predrgasp",
+         representation(
+           call = "language",         ## user call
+           mean = "numeric",          ## the mean value of the prediction
+           lower95 = "numeric",       ## the lower 95 bound of the prediction
+           upper95 = "numeric",       ## the upper 95 bound of the prediction
+           sd = "numeric"             ## the standard deviation of the prediction
+         )
+)
+
+if(!isGeneric("as.S3prediction")) {
+  setGeneric(name = "as.S3prediction",
+             def = function(object, ...) standardGeneric("as.S3prediction")
+  )
+}
+
+setMethod("as.S3prediction", "predrgasp",
+          definition = function(object)
+          {
+            structure(list(mean = object@mean, lower95 = object@lower95, 
+                           upper95 = object@upper95, sd = object@sd), class = "predrgasp")
+          }
+)
+
+if(!isGeneric("as.S4prediction")) {
+  setGeneric(name = "as.S4prediction",
+             def = function(object, ...) standardGeneric("as.S4prediction")
+  )
+}
+
+setMethod("as.S4prediction", "predrgasp",
+          definition = function(object)
+          {
+            as.S4prediction.predict(object=object)
+          }
+)
+
+
 if(!isGeneric("predict")) {
   setGeneric(name = "predict",
              def = function(object, ...) standardGeneric("predict")
@@ -77,9 +115,10 @@ if(!isGeneric("predict")) {
 }
 
 setMethod("predict", "rgasp",
-          definition=function(object, testing_input, testing_trend=matrix(1,dim(testing_input)[1],1), ...) {
+          definition=function(object, testing_input, testing_trend=matrix(1,dim(testing_input)[1],1),
+                              outasS3 = T, ...) {
             predict.rgasp(object = object, testing_input = testing_input, 
-                          testing_trend=testing_trend , ...)
+                          testing_trend=testing_trend , outasS3 = outasS3,...)
           }
 )
 
@@ -100,3 +139,17 @@ setMethod("Sample", "rgasp",
 )
 
 
+
+if(!isGeneric("Plot")) {
+  setGeneric(name = "Plot",
+             def = function(object,...) standardGeneric("Plot")
+  )
+}
+
+setMethod("Plot", 
+          signature(object = "rgasp"),
+          definition=function(object,...) {
+            Plot.rgasp(object)
+          
+          }
+)

@@ -53,7 +53,6 @@ Maintainer: \packageMaintainer{RobustGaSP}
 
 \note{
 %%  ~~further notes~~
-The number of experiments \code{p} must be larger or equal than the spatial dimension \code{num_obs}.
 The response \code{output} must have one dimension.
 The number of observations in \code{input} must be equal to the number of experiments \code{output}.
 }
