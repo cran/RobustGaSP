@@ -1,4 +1,6 @@
-\name{hig02}
+\name{higdon.1.data}
+\alias{higdon.1.data}
+\alias{higdon}
 \alias{hig02}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
@@ -12,17 +14,17 @@ Higdon (2002) 1-dimensional test function.
 %This function is a simple example used to test \code{s} method of space modeling. The values of the input variable \code{s} are spatial locations. A small error term \ifelse{html}{\out{epsilon ~ N(0, 0.12)}}{\eqn{\varepsilon \sim N(0, 0.12)}{epsilon ~ N(0, 0.12)}} is added to the response.
 }
 \usage{
-hig02(s)
+higdon.1.data(s)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{s}{ an 1-dimensional vector specifying the location where the function is to be evaluated.  
+  \item{s}{ a 1-dimensional vector specifying the location where the function is to be evaluated.  
 %%     ~~Describe \code{s} here~~
 }
 }
 \details{
 %%  ~~ If necessary, more details than the description above ~~
-See \url{http://www.sfu.ca/~ssurjano/hig02.html} for more details.
+For more details, see Higdon D. (2002) Space and Space-Time Modeling using Process Convolutions. In: Anderson C.W., Barnett V., Chatwin P.C., El-Shaarawi A.H. (eds) Quantitative Methods for Current Environmental Issues. Springer, London. DOI:\url{https://doi.org/10.1007/978-1-4471-0657-9_2}.
 }
 \value{
 %%  ~Describe the value returned
@@ -39,13 +41,16 @@ See \url{http://www.sfu.ca/~ssurjano/hig02.html} for more details.
 %% ~put references to the literature/web site here ~
 
 Higdon, D. (2002). Space and space-time modeling using process convolutions. In Quantitative methods for current environmental issues (pp. 37-56). Springer London.
+\url{https://doi.org/10.1007/978-1-4471-0657-9_2}
 
-\url{http://www.sfu.ca/~ssurjano/hig02.html}
+S. Surjanovic, D. Bingham, Virtual Library of Simulation Experiments:  Test Functions
+and Datasets, retrieved March 29, 2016, from \url{https://www.sfu.ca/~ssurjano/hig02.html}.
 
 }
 \author{
-%%  ~~who you are~~
-Copyright 2013. Derek Bingham, Simon Fraser University.
+\packageAuthor{RobustGaSP}
+
+Maintainer: \packageMaintainer{RobustGaSP}
 }
 %\note{
 %%  ~~further notes~~
@@ -58,8 +63,8 @@ Copyright 2013. Derek Bingham, Simon Fraser University.
 %}
 \examples{
 
-s=seq(0,10,0.01)
-y=hig02(s)
+s <- seq(0,10,0.01)
+y <- higdon.1.data(s)
 plot(s,y, xlab='s',ylab='y',type='l',main='Higdon (2002) function')
 
 }

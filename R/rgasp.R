@@ -4,9 +4,9 @@
 ## Robust GaSP Package
 ##
 ## This software is distributed under the terms of the GNU GENERAL
-## PUBLIC LICENSE Version 3, April 2013.
+## PUBLIC LICENSE Version 2, April 2013.
 ##
-## Copyright (C) 2015-present Mengyang Gu, James O. Berger, Jesus Palomo 
+## Copyright (C) 2015-present Mengyang Gu, Jesus Palomo, James O. Berger
 ##							  
 ##    
 ##########################################################################

@@ -1,7 +1,7 @@
-\name{Plot}
-\alias{Plot}
-\alias{Plot.rgasp}
-\alias{Plot,rgasp-method}
+\name{plot}
+\alias{plot}
+\alias{plot.rgasp}
+\alias{plot,rgasp-method}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 %%  ~~function to do ... ~~
@@ -12,12 +12,13 @@ Plot for Robust GaSP model
 Function to make plots on Robust GaSP models after the Robust GaSP model has been constructed.
 }
 \usage{
-\S4method{Plot}{rgasp}(object,...)
+\S4method{plot}{rgasp}(x,y, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{object}{ an object of  class \code{rgasp}.}
-    \item{...}{ additional arguments not implemented yet.}
+  \item{x}{ an object of  class \code{rgasp}.}
+  \item{y}{ not used.  }
+  \item{...}{ additional arguments not implemented yet.}
 
 }
 
@@ -70,18 +71,18 @@ Maintainer: \packageMaintainer{RobustGaSP}
   # library(lhs)
   # input <- maximinLHS(n=num_obs, k=dim_inputs)  ##maximin lhd sample
   
-  # outputs from the 3 dim detpep10curv function
+  # outputs from the 3 dim dettepepel.3.data function
   
   output = matrix(0,num_obs,1)
   for(i in 1:num_obs){
-    output[i]<-detpep10curv (input[i,])
+    output[i]<-dettepepel.3.data (input[i,])
   }
   
   # use constant mean basis, with no constraint on optimization
   m1<- rgasp(design = input, response = output, lower_bound=FALSE)
  
   # plot
-  Plot(m1)
+  plot(m1)
 }
 
 % Add one or more standard keywords, see file 'KEYWORDS' in the

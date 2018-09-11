@@ -4,7 +4,7 @@
 ## Robust GaSP Package
 ##
 ## This software is distributed under the terms of the GNU GENERAL
-## PUBLIC LICENSE Version 3, April 2013.
+## PUBLIC LICENSE Version 2, April 2013.
 ##
 ## Copyright (C) 2015-present Mengyang Gu, James O. Berger, Jesus Palomo 
 ##							  
@@ -32,11 +32,11 @@ input <- matrix(runif(num_obs*dim_inputs), num_obs,dim_inputs)
 # input <- maximinLHS(n=num_obs, k=dim_inputs)  ##maximin lhd sample
 
 ####
-# outputs from the 3 dim detpep10curv function
+# outputs from the 3 dim dettepepel.3.data function
 
 output = matrix(0,num_obs,1)
 for(i in 1:num_obs){
-  output[i]<-detpep10curv (input[i,])
+  output[i]<-dettepepel.3.data(input[i,])
 }
 
 # use constant mean basis, with no constraint on optimization
@@ -53,26 +53,26 @@ num_testing_input <- 5000
 # generate points to be predicted
 testing_input <- matrix(runif(num_testing_input*dim_inputs),num_testing_input,dim_inputs)
 # Perform prediction
-m1.predict<-predict(m1, testing_input)
+m1.predict<-predict(m1, testing_input,outasS3 = FALSE)
 # Predictive mean
-m1.predict$mean  
+m1.predict@mean
 
 # The following tests how good the prediction is 
 testing_output <- matrix(0,num_testing_input,1)
 for(i in 1:num_testing_input){
-  testing_output[i]<-detpep10curv(testing_input[i,])
+  testing_output[i]<-dettepepel.3.data(testing_input[i,])
 }
 
 # compute the MSE, average coverage and average length
 # out of sample MSE
-MSE_emulator <- sum((m1.predict$mean-testing_output)^2)/(num_testing_input)  
+MSE_emulator <- sum((m1.predict@mean-testing_output)^2)/(num_testing_input)  
 
 # proportion covered by 95\% posterior predictive credible interval
-prop_emulator <- length(which((m1.predict$lower95<=testing_output)
-                              &(m1.predict$upper95>=testing_output)))/num_testing_input
+prop_emulator <- length(which((m1.predict@lower95<=testing_output)
+                              &(m1.predict@upper95>=testing_output)))/num_testing_input
 
 # average length of  posterior predictive credible interval
-length_emulator <- sum(m1.predict$upper95-m1.predict$lower95)/num_testing_input
+length_emulator <- sum(m1.predict@upper95-m1.predict@lower95)/num_testing_input
 
 # output of prediction
 MSE_emulator

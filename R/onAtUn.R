@@ -2,9 +2,9 @@
 ## start-up and clean-up functions
 ##
 ## This software is distributed under the terms of the GNU GENERAL
-## PUBLIC LICENSE Version 3, June 2016.
+## PUBLIC LICENSE Version 2, June 2016.
 ##
-## Copyright (C) 2016-present Jesus Palomo, Mengyang Gu and James O. Berger
+## Copyright (C) 2016-present Mengyang Gu, Jesus Palomo, James O. Berger
 ##    
 ##########################################################################
 

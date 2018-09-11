@@ -1,8 +1,8 @@
-\name{Sample}
-\alias{Sample}
-\alias{Sample.rgasp}
-\alias{Sample.rgasp-class}
-\alias{Sample,rgasp-method}
+\name{simulate}
+\alias{simulate}
+\alias{simulate.rgasp}
+\alias{simulate.rgasp-class}
+\alias{simulate,rgasp-method}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 %%  ~~function to do ... ~~
@@ -13,7 +13,7 @@ Sample for Robust GaSP model
 Function to sample Robust GaSP after the Robust GaSP model has been constructed.
 }
 \usage{
-\S4method{Sample}{rgasp}(object, testing_input, num_sample=1,
+\S4method{simulate}{rgasp}(object, testing_input, num_sample=1,
 testing_trend= matrix(1,dim(testing_input)[1],1),...)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -82,14 +82,13 @@ for(i in 1:num_obs1){
 
 
 
-
 m1<- rgasp(design = input1, response = output1, lower_bound=FALSE)
 
 #####locations to samples
 testing_input1 = seq(0,10,1/50) 
 testing_input1=as.matrix(testing_input1)
 #####draw 10 samples
-m1_sample=Sample(m1,testing_input1,num_sample=10)
+m1_sample=simulate(m1,testing_input1,num_sample=10)
 
 #####plot these samples
 matplot(testing_input1,m1_sample, type='l',xlab='input',ylab='output')
@@ -102,4 +101,3 @@ lines(input1,output1,type='p')
 % R documentation directory.
 %\keyword{ ~kwd1 }% use one of  RShowDoc("KEYWORDS")
 %\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
-\keyword{internal}

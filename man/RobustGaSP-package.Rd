@@ -25,9 +25,11 @@ Maintainer: \packageMaintainer{RobustGaSP}
 
 J.O. Berger, V. De Oliveira and B. Sanso (2001), \emph{Design and analysis of computer experiments}, \emph{Journal of the American Statistical Association}, \bold{96}, 1361-1374.
 
-M. Gu (2016), \emph{Robust Uncertainty Quantification and Scalable Computation for Computer Models with Massive Output}, Ph.D. thesis., Duke University.
+M. Gu (2016), \emph{Robust Uncertainty Quantification and Scalable Computation for Computer Models with Massive Output}, Ph.D. thesis, Duke University.
 
-M. Gu, X. Wang and J.O. Berger (2018), \emph{Robust Gaussian Stochastic Process Emulation}, \emph{Annals of Statistics, In Press}.
+M. Gu, X. Wang and J.O. Berger (2018), \emph{Robust Gaussian Stochastic Process Emulation}, \emph{Annals of Statistics}, \bold{46}, 3038-3066.
+
+M. Gu (2018), \emph{Jointly Robust Prior for Gaussian Stochastic Process in Emulation, Calibration and Variable Selection}, arXiv:1804.09329.
 
 R. Paulo (2005), \emph{Default priors for Gaussian processes}, \emph{Annals of statistics}, \bold{33}, 556-582.
 
@@ -64,11 +66,11 @@ J. Sacks, W.J. Welch, T.J. Mitchell, and H.P. Wynn (1989), \emph{Design and anal
   # input <- maximinLHS(n=num_obs, k=dim_inputs)  ##maximin lhd sample
   
   ####
-  # outputs from the 3 dim detpep10curv function
+  # outputs from the 3 dim dettepepel.3.data function
   
   output = matrix(0,num_obs,1)
   for(i in 1:num_obs){
-    output[i]<-detpep10curv(input[i,])
+    output[i]<-dettepepel.3.data(input[i,])
   }
   
   # use constant mean basis, with no constraint on optimization
@@ -92,7 +94,7 @@ J. Sacks, W.J. Welch, T.J. Mitchell, and H.P. Wynn (1989), \emph{Design and anal
   # The following tests how good the prediction is 
   testing_output <- matrix(0,num_testing_input,1)
   for(i in 1:num_testing_input){
-    testing_output[i]<-detpep10curv(testing_input[i,])
+    testing_output[i]<-dettepepel.3.data(testing_input[i,])
   }
   
   # compute the MSE, average coverage and average length

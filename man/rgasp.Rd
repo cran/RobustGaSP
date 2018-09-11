@@ -91,6 +91,10 @@ roughness parameters in the \code{pow_exp} correlation functions. The default ch
 
 \references{
 %% ~put references to the literature/web site here ~
+M. Gu, X. Wang and J.O. Berger (2018), \emph{Robust Gaussian Stochastic Process Emulation}, \emph{Annals of Statistics}, \bold{46}, 3038-3066.
+
+M. Gu (2018), \emph{Jointly Robust Prior for Gaussian Stochastic Process in Emulation, Calibration and Variable Selection}, arXiv:1804.09329.
+
 Mengyang Gu. (2016). Robust Uncertainty Quantification and Scalable Computation for Computer Models with Massive Output. Ph.D. thesis. Duke University.
 
 }
@@ -113,8 +117,8 @@ Maintainer: \packageMaintainer{RobustGaSP}
 
 \examples{
 %\dontrun{
-library(RobustGaSP)
- #------------------------
+  library(RobustGaSP)
+  #------------------------
   # a 3 dimensional example
   #------------------------
   # dimensional of the inputs
@@ -129,11 +133,11 @@ library(RobustGaSP)
   # input <- maximinLHS(n=num_obs, k=dim_inputs)  ##maximin lhd sample
   
   ####
-  # outputs from the 3 dim detpep10curv function
+  # outputs from the 3 dim dettepepel.3.data function
   
   output = matrix(0,num_obs,1)
   for(i in 1:num_obs){
-    output[i]<-detpep10curv (input[i,])
+    output[i]<-dettepepel.3.data (input[i,])
   }
   
   # use constant mean basis, with no constraint on optimization
@@ -145,18 +149,18 @@ library(RobustGaSP)
   # the following use a single start on optimization
   # m1<- rgasp(design = input, response = output, lower_bound=FALSE, multiple_starts=FALSE)
 
-show(m1)      ####show this rgasp object 
+    show(m1)      ####show this rgasp object 
 
-m1@beta_hat       ####estimated inverse range parameters
+    m1@beta_hat       ####estimated inverse range parameters
   
- #
-   #--------------------------------------
+  #
+  #---------------------------------------
   # a 1 dimensional example with zero mean
   #---------------------------------------
 
 
   input=10*seq(0,1,1/14)
-  output<-hig02(input)
+  output<-higdon.1.data(input)
   #the following code fit a GaSP with zero mean by setting zero.mean="Yes"
   model<- rgasp(design = input, response = output, zero.mean="Yes")
   model
@@ -166,7 +170,7 @@ m1@beta_hat       ####estimated inverse range parameters
   names(model.predict)
   
   #########plot predictive distribution
-  testing_output=hig02(testing_input)
+  testing_output=higdon.1.data(testing_input)
   plot(testing_input,model.predict$mean,type='l',col='blue',
        xlab='input',ylab='output')
   polygon( c(testing_input,rev(testing_input)),c(model.predict$lower95,
@@ -194,11 +198,11 @@ m1@beta_hat       ####estimated inverse range parameters
   # library(lhs)
   # input <- maximinLHS(n=num_obs, k=dim_inputs)  # maximin lhd sample
   
-  # outputs from the 2 dim Brainin function
+  # outputs from a 2 dim function
   
   output <- matrix(0,num_obs,1)
   for(i in 1:num_obs){
-    output[i]<-limetal02non (input[i,])
+    output[i]<-limetal.2.data (input[i,])
   }
   
   ####trend or mean basis
@@ -208,10 +212,10 @@ m1@beta_hat       ####estimated inverse range parameters
   # use constant mean basis with trend, with no constraint on optimization
   m2<- rgasp(design = input, response = output,trend =X,  lower_bound=FALSE,multiple_start=TRUE)
 
-show(m1)      # show this rgasp object 
-
-m1@beta_hat       # estimated inverse range parameters
-m1@theta_hat  
+  show(m2)      # show this rgasp object 
+  
+  m2@beta_hat       # estimated inverse range parameters
+  m2@theta_hat  
 
   #--------------------------------------------------------------------------------------
   # an 8 dimensional example using only a subset inputs and a noise with unknown variance

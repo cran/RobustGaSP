@@ -1,14 +1,25 @@
+# Load the shared object
 useDynLib(RobustGaSP)
-exportPattern("^[[:alpha:]]+")
-import(Rcpp,methods)
-importFrom(Rcpp, evalCpp)
-importFrom(graphics, plot)
+
+# Exports
+export(rgasp, higdon.1.data, borehole, dettepepel.3.data, limetal.2.data, 
+friedman.5.data, as.S3prediction, as.S4prediction.predict, findInertInputs,
+leave_one_out_rgasp, matern_5_2_funct, matern_3_2_funct, pow_exp_funct,    matern_5_2_deriv, matern_3_2_deriv, pow_exp_deriv, separable_kernel,
+log_approx_ref_prior,log_approx_ref_prior_deriv,  log_marginal_lik, log_marginal_lik_deriv, log_ref_marginal_post,Sample,neg_log_marginal_post_ref)
+
+# Imports
+import("Rcpp","methods")
+importFrom("Rcpp", "evalCpp")
+importFrom("graphics", "plot")
 importFrom("stats", "optim","optimize","qt","rchisq", "rnorm","qqline", "qqnorm")
 importFrom("graphics", "lines", "par")
 
 ## S4
-exportClasses(rgasp) #,rgasp.RobustGaSP,summary.RobustGaSP,predict.RobustGaSP)
-exportMethods(show,predict,Sample,Plot)
-export(rgasp)
-## S3
-S3method(predict, rgasp)
+exportClasses(rgasp,predrgasp) #,rgasp.RobustGaSP,summary.RobustGaSP,predict.RobustGaSP)
+exportMethods(show,predict,simulate,plot)#,Sample)
+#export(rgasp)
+S3method(predict,rgasp)
+S3method(plot,rgasp)
+S3method(simulate,rgasp)
+#S3method(Sample,rgasp)
+

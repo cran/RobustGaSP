@@ -52,11 +52,11 @@ Maintainer: \packageMaintainer{RobustGaSP}
   # input <- maximinLHS(n=num_obs, k=dim_inputs)  ##maximin lhd sample
   
   ####
-  # outputs from the 3 dim detpep10curv function
+  # outputs from the 3 dim dettepepel.3.data function
   
   output = matrix(0,num_obs,1)
   for(i in 1:num_obs){
-    output[i]<-detpep10curv (input[i,])
+    output[i]<-dettepepel.3.data (input[i,])
   }
   
   # use constant mean basis, with no constraint on optimization

@@ -1,4 +1,5 @@
-\name{limetal02non}
+\name{limetal.2.data}
+\alias{limetal.2.data}
 \alias{limetal02non}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{ Lim et at. (2002) nonpolynomial function
@@ -11,16 +12,18 @@ This function is 2-dimensional test function.
 
 }
 \usage{
-limetal02non(xx)
+limetal.2.data(x)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{xx}{ a 2-dimensional vector specifying the location where the function is to be evaluated.}
+  \item{x}{ a 2-dimensional vector specifying the location where the function is to be evaluated.}
 %%     ~~Describe \code{x} here~~
 }
 
 \details{
-See \url{http://www.sfu.ca/~ssurjano/limetal02non.html} for more details.
+For more details, see Lim, Y. B., Sacks, J., Studden, W. J., & Welch, W. J. (2002). Design and analysis of computer experiments when the output is highly correlated over the input space. Canadian Journal of Statistics, 30(1), 109-126.
+
+Welch, W. J., Buck, R. J., Sacks, J., Wynn, H. P., Mitchell, T. J., & Morris, M. D. (1992). Screening, predicting, and computer experiments. Technometrics, 34(1), 15-25.
 }
 
 \value{
@@ -29,19 +32,25 @@ See \url{http://www.sfu.ca/~ssurjano/limetal02non.html} for more details.
 %%  \item{comp1 }{Description of 'comp1'}
 %%  \item{comp2 }{Description of 'comp2'}
 %% ...
-A real value of this function evaluated at \code{xx}.
+A real value of this function evaluated at \code{x}.
 
 }
 \references{
 %% ~put references to the literature/web site here ~
-\url{http://www.sfu.ca/~ssurjano/limetal02non.html}
 
 Lim, Y. B., Sacks, J., Studden, W. J., & Welch, W. J. (2002). Design and analysis of computer experiments when the output is highly correlated over the input space. , \emph{Canadian Journal of Statistics}, \bold{30}(1), 109-126.
 
+Welch, W. J., Buck, R. J., Sacks, J., Wynn, H. P., Mitchell, T. J., & Morris, M. D. (1992). Screening, predicting, and computer experiments. Technometrics, 34(1), 15-25.
+
+S. Surjanovic, D. Bingham, Virtual Library of Simulation Experiments:  Test Functions
+and Datasets, retrieved March 29, 2016, from \url{http://www.sfu.ca/~ssurjano/limetal02non.html}.
+
 }
+
 \author{
-%%  ~~who you are~~
-Copyright 2013. Derek Bingham, Simon Fraser University.
+\packageAuthor{RobustGaSP}
+
+Maintainer: \packageMaintainer{RobustGaSP}
 }
 
 %\note{

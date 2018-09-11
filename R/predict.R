@@ -4,9 +4,9 @@
 ## Robust GaSP Package
 ##
 ## This software is distributed under the terms of the GNU GENERAL
-## PUBLIC LICENSE Version 3, April 2013.
+## PUBLIC LICENSE Version 2, April 2013.
 ##
-## Copyright (C) 2015-present Mengyang Gu, James O. Berger, Jesus Palomo 
+## Copyright (C) 2015-present Mengyang Gu, Jesus Palomo , James O. Berger
 ##							  
 ##    
 ##########################################################################
@@ -17,7 +17,8 @@ predict.rgasp <- function (object, testing_input, testing_trend= matrix(1,dim(te
   if (!outasS3) {
     output.pred <- new("predrgasp")
     output.pred@call <- match.call()
-  } else warning('In order to have a more informative predic.rgasp output, set the parameter outasS3 = F.\n')
+  } 
+  #else warning('In order to have a more informative predic.rgasp output, set the parameter outasS3 = F.\n')
   
   if(object@zero_mean=="Yes"){
     testing_trend=rep(0,dim(testing_input)[1]);

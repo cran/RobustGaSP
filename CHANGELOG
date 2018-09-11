@@ -1,3 +1,10 @@
+## change / RobustGaSP 0.5.6
+ *Implement two functions called simulate() and plot() to replace Sample() and Plot() functions, respectively.
+ *Reimplemented the demo-functions, including higdon.1.data(), limetal.2.data(), dettepepel.3.data(), borehole() and friedman.5.data()
+ *The license is modified to GPL-2 | GPL-3. 
+ *change the slight typo of the reference prior when the emulator has zero mean 
+ *Add two references. The main paper is recently published in Annals of Statistics and another paper is on arXiv.
+
 ## RobustGaSP 0.5.5
  * Update the maximum num of evaluation in the optimizer by nloptr::lbfgs(). The maximum num of evaluation should increase with the increase of the dimension of the inputs
  * Implement leave_one_out_rgasp() function for model checking
@@ -22,4 +29,5 @@
   * Modify the printing information of the function ‘rgasp’ by removing the automatic printing message from the function of ‘nloptr::lbfgs’ and adding other printing information
   * Change the parameter ‘beta’ to ‘beta_hat’ in rgasp class
   * Fix the bug in the function ‘predict’ of the value ‘sd’
+
  

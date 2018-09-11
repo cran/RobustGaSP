@@ -4,9 +4,9 @@
 ## Robust GaSP Package
 ##
 ## This software is distributed under the terms of the GNU GENERAL
-## PUBLIC LICENSE Version 3, April 2013.
+## PUBLIC LICENSE Version 2, April 2013.
 ##
-## Copyright (C) 2015-present Mengyang Gu, James O. Berger, Jesus Palomo 
+## Copyright (C) 2015-present Mengyang Gu, Jesus Palomo , James O. Berger
 ##							  
 ##    
 ##########################################################################
@@ -125,6 +125,19 @@ setMethod("predict", "rgasp",
 
 
 
+if(!isGeneric("simulate")) {
+  setGeneric(name = "simulate",
+             def = function(object, ...) standardGeneric("simulate")
+  )
+}
+
+setMethod("simulate", "rgasp",
+          definition=function(object, testing_input, num_sample=1,testing_trend=matrix(1,dim(testing_input)[1],1), ...) {
+            simulate.rgasp(object = object, testing_input = testing_input, num_sample=num_sample,
+                          testing_trend=testing_trend , ...)
+          }
+)
+
 if(!isGeneric("Sample")) {
   setGeneric(name = "Sample",
              def = function(object, ...) standardGeneric("Sample")
@@ -133,23 +146,37 @@ if(!isGeneric("Sample")) {
 
 setMethod("Sample", "rgasp",
           definition=function(object, testing_input, num_sample=1,testing_trend=matrix(1,dim(testing_input)[1],1), ...) {
-            Sample.rgasp(object = object, testing_input = testing_input, num_sample=num_sample,
-                          testing_trend=testing_trend , ...)
+            simulate.rgasp(object = object, testing_input = testing_input, num_sample=num_sample,
+                         testing_trend=testing_trend , ...)
           }
 )
 
+# if(!isGeneric("Sample.rgasp")) {
+#   setGeneric(name = "Sample.rgasp",
+#              def = function(object, ...) standardGeneric("Sample.rgasp")
+#   )
+# }
+# 
+# setMethod("Sample.rgasp", "rgasp",
+#           definition=function(object, testing_input, num_sample=1,testing_trend=matrix(1,dim(testing_input)[1],1), ...) {
+#             simulate.rgasp(object = object, testing_input = testing_input, num_sample=num_sample,
+#                            testing_trend=testing_trend , ...)
+#           }
+# )
 
 
-if(!isGeneric("Plot")) {
-  setGeneric(name = "Plot",
-             def = function(object,...) standardGeneric("Plot")
+
+if(!isGeneric("plot")) {
+  setGeneric(name = "plot",
+             def = function(x, y, ...) standardGeneric("plot")
   )
 }
 
-setMethod("Plot", 
-          signature(object = "rgasp"),
-          definition=function(object,...) {
-            Plot.rgasp(object)
+setMethod("plot", 
+          signature(x = "rgasp"),
+          definition=function(x, y, ...) {
+            if (!missing(y)) warning("Argument y is ignored (not used in this plot method)")
+            plot.rgasp(x=x, ...)
           
           }
 )

@@ -1,4 +1,6 @@
-\name{fried}
+\name{friedman.5.data}
+\alias{friedman.5.data}
+\alias{friedman}
 \alias{fried}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Friedman Function
@@ -10,18 +12,18 @@ A 5-dimensional test function.
 %This function is used for the comparison of computer experiment designs. It is highly curved.
 }
 \usage{
-fried(xx)
+friedman.5.data(x)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{xx}{ a 5-dimensional vector specifying the location where the function is to be evaluated.  
+  \item{x}{ a 5-dimensional vector specifying the location where the function is to be evaluated.  
 
 %%     ~~Describe \code{xx} here~~
 }
 }
 \details{
 %%  ~~ If necessary, more details than the description above ~~
-See \url{http://www.sfu.ca/~ssurjano/fried.html} for more details.
+ For more details see Friedman, J. H. (1991). Multivariate adaptive regression splines. The annals of statistics, 19(1), 1-67.
 }
 \value{
 %%  ~Describe the value returned
@@ -29,19 +31,21 @@ See \url{http://www.sfu.ca/~ssurjano/fried.html} for more details.
 %%  \item{comp1 }{Description of 'comp1'}
 %%  \item{comp2 }{Description of 'comp2'}
 %% ...
-A real value equal to the function value evaluated at xx.
+A real value equal to the function value evaluated at x.
 }
 \references{
 %% ~put references to the literature/web site here ~
 Friedman, J. H. (1991). Multivariate adaptive regression splines. The annals of statistics, 19(1), 1-67.
 
-
-\url{http://www.sfu.ca/~ssurjano/fried.html}
+S. Surjanovic, D. Bingham, Virtual Library of Simulation Experiments:  Test Functions
+and Datasets, retrieved March 29, 2016, from \url{http://www.sfu.ca/~ssurjano/fried.html}.
 
 }
+
 \author{
-%%  ~~who you are~~
-Copyright 2013. Derek Bingham, Simon Fraser University.
+\packageAuthor{RobustGaSP}
+
+Maintainer: \packageMaintainer{RobustGaSP}
 }
 %\note{
 %%  ~~further notes~~

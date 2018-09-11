@@ -1,18 +1,18 @@
 ##########################################################################
-## prediction function
+## simulate function
 ## 
 ## Robust GaSP Package
 ##
 ## This software is distributed under the terms of the GNU GENERAL
-## PUBLIC LICENSE Version 3, April 2013.
+## PUBLIC LICENSE Version 2, April 2013.
 ##
-## Copyright (C) 2015-present Mengyang Gu, James O. Berger, Jesus Palomo 
+## Copyright (C) 2015-present Mengyang Gu, Jesus Palomo , James O. Berger
 ##  						  
 ##    
 ##########################################################################
   
   
-Sample.rgasp <- function (object, testing_input, num_sample=1,
+simulate.rgasp <- function (object, testing_input, num_sample=1,
                           testing_trend= matrix(1,dim(testing_input)[1],1),...){
   
   if(object@zero_mean=="Yes"){
@@ -59,4 +59,4 @@ Sample.rgasp <- function (object, testing_input, num_sample=1,
   }
   return(predictive_sample)
 }
-  
+

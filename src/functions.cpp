@@ -383,9 +383,10 @@ double log_ref_marginal_post(const Eigen::VectorXd param,double nugget, bool nug
       Vb[param_size-1]=L.transpose().triangularView<Upper>().solve(L.triangularView<Lower>().solve(dev_R_i));
 
     }
-   int q=X.cols();
+  // int q=X.cols();
   MatrixXd IR(param_size+1,param_size+1);
-  IR(0,0)=num_obs-q;
+  IR(0,0)=num_obs;
+  
   for(int i=0;i<param_size;i++){
     MatrixXd Vb_i=Vb[i];
     IR(0,i+1)=IR(i+1,0)= Vb_i.trace();
