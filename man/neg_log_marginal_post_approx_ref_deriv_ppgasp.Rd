@@ -1,16 +1,16 @@
-\name{neg_log_marginal_post_approx_ref_deriv}
-\alias{neg_log_marginal_post_approx_ref_deriv}
+\name{neg_log_marginal_post_approx_ref_deriv_ppgasp}
+\alias{neg_log_marginal_post_approx_ref_deriv_ppgasp}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 %%  ~~function to do ... ~~
-Derivative of negative natural logarithm of approximate reference marginal posterior density
+Derivative of negative natural logarithm of approximate reference marginal posterior density of the PP GaSP model
 }
 \description{
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
-The function computes the derivative (with regard to log of inverse range parameter) of natural logarithm of marginal posterior density with the jointly robust prior prior after marginalizing out the mean (trend) and variance parameters  by the location-scale prior.
+The function computes the derivative (with regard to log of inverse range parameter) of natural logarithm of marginal posterior density of the PP GaSP model with the jointly robust  prior after marginalizing out the mean (trend) and variance parameters  by the location-scale prior.
 }
 \usage{
-neg_log_marginal_post_approx_ref_deriv(param, nugget, nugget.est, 
+neg_log_marginal_post_approx_ref_deriv_ppgasp(param, nugget, nugget.est, 
                                        R0, X, zero_mean,output, CL, a, b, 
                                       kernel_type, alpha)
 }
@@ -43,7 +43,7 @@ The mean basis function is zero or not.
 
   \item{output}{
 %%     ~~Describe \code{output} here~~
-The output vector.
+The output matrix.
 }
   \item{CL}{
 %%     ~~Describe \code{CL} here~~
@@ -75,12 +75,14 @@ Roughness parameters in the kernel functions.
 %%  \item{comp1 }{Description of 'comp1'}
 %%  \item{comp2 }{Description of 'comp2'}
 %% ...
-The derivative of natural logarithm of marginal posterior density with jointly robust prior prior.
+The derivative of natural logarithm of marginal posterior density with the jointly robust prior.
 }
 \references{
-Mengyang Gu. (2016). Robust Uncertainty Quantification and Scalable Computation for Computer Models with Massive Output. Ph.D. thesis. Duke University.
+M. Gu. and J.O. Berger (2016). Parallel partial Gaussian process emulation for computer models with massive output. \emph{Annals of Applied Statistics}, 10(3), 1317-1347.
 
-M. Gu (2018), \emph{Jointly Robust Prior for Gaussian Stochastic Process in Emulation, Calibration and Variable Selection}, arXiv:1804.09329.
+M. Gu. (2016). Robust uncertainty quantification and scalable computation for computer models with massive output. Ph.D. thesis. Duke University.
+
+M. Gu (2018), \emph{Jointly robust prior for Gaussian stochastic process in emulation, calibration and variable selection}, arXiv:1804.09329.
 
 }
 \author{
@@ -96,7 +98,7 @@ Maintainer: \packageMaintainer{RobustGaSP}
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{neg_log_marginal_post_approx_ref}}.
+\code{\link{neg_log_marginal_post_approx_ref_ppgasp}}.
 }
 
 % Add one or more standard keywords, see file 'KEYWORDS' in the

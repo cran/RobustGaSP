@@ -1,4 +1,4 @@
-\name{predict}
+\name{predict.rgasp}
 \alias{predict}
 \alias{predict.rgasp}
 \alias{predict.rgasp-class}
@@ -10,7 +10,7 @@ Prediction for Robust GaSP model
 }
 \description{
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
-Function to make prediction on Robust GaSP models after the Robust GaSP model has been constructed.
+Function to make prediction on the robust GaSP model after the robust GaSP model has been constructed.
 }
 \usage{
 \S4method{predict}{rgasp}(object, testing_input, testing_trend= matrix(1,dim(testing_input)[1],1),
@@ -54,7 +54,14 @@ If the parameter \code{outasS3=T}, then the returned value is a \code{list} with
 \item{sd }{standard deviation of each \code{testing_input}.}
 }
 \references{
-Mengyang Gu. (2016). Robust Uncertainty Quantification and Scalable Computation for Computer Models with Massive Output. Ph.D. thesis. Duke University.
+M. Gu. (2016). Robust Uncertainty Quantification and Scalable Computation for Computer Models with Massive Output. Ph.D. thesis. Duke University.
+
+M. Gu. and J.O. Berger (2016). Parallel partial Gaussian process emulation for computer models with massive output. \emph{Annals of Applied Statistics}, 10(3), 1317-1347.
+
+M. Gu, X. Wang and J.O. Berger (2018), \emph{Robust Gaussian Stochastic Process Emulation}, \emph{Annals of Statistics}, 46(6A), 3038-3066.
+
+M. Gu (2018), \emph{Jointly Robust Prior for Gaussian Stochastic Process in Emulation, Calibration and Variable Selection}, arXiv:1804.09329.
+
 }
 
 \author{
@@ -103,7 +110,7 @@ Maintainer: \packageMaintainer{RobustGaSP}
   # m1<- rgasp(design = input, response = output, lower_bound=TRUE)
   
   # the following use a single start on optimization
-  # m1<- rgasp(design = input, response = output, lower_bound=FALSE, multiple_starts=FALSE)
+  # m1<- rgasp(design = input, response = output, lower_bound=FALS)
   
   # number of points to be predicted 
   num_testing_input <- 5000    
@@ -165,7 +172,7 @@ Maintainer: \packageMaintainer{RobustGaSP}
   
   
   # use constant mean basis with trend, with no constraint on optimization
-  m2<- rgasp(design = input, response = output,trend =X,  lower_bound=FALSE,multiple_start=TRUE)
+  m2<- rgasp(design = input, response = output,trend =X,  lower_bound=FALSE)
   
   
   # number of points to be predicted 
@@ -244,7 +251,7 @@ Maintainer: \packageMaintainer{RobustGaSP}
   
   # use constant mean basis with trend, with no constraint on optimization
   m3<- rgasp(design = input[,c(1,4,6,7,8)], response = output,
-             nugget.est=TRUE, lower_bound=FALSE,multiple_start=TRUE)
+             nugget.est=TRUE, lower_bound=FALSE)
   
   
   # number of points to be predicted 

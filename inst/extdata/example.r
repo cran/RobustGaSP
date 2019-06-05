@@ -45,8 +45,6 @@ m1<- rgasp(design = input, response = output, lower_bound=FALSE)
 # the following use constraints on optimization
 # m1<- rgasp(design = input, response = output, lower_bound=T)
 
-# the following use a single start on optimization
-# m1<- rgasp(design = input, response = output, lower_bound=F, multiple_starts=F)
 
 # number of points to be predicted 
 num_testing_input <- 5000    

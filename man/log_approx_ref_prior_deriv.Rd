@@ -51,7 +51,7 @@ Prior parameter in the jointly robust prior.
 The numerical value of the derivative of the jointly robust prior with regard to \code{beta} (the inverse-range parameters) and \code{nugget} (the nugget-variance ratio parameter). When the nugget is fixed, the derivative is on inverse-range parameters.
 }
 \references{
-Mengyang Gu. (2016). Robust Uncertainty Quantification and Scalable Computation for Computer Models with Massive Output. Ph.D. thesis. Duke University.
+M. Gu. (2016). Robust uncertainty quantification and scalable computation for computer models with massive output. Ph.D. thesis. Duke University.
 }
 \author{
 %%  ~~who you are~~

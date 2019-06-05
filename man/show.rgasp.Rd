@@ -66,7 +66,7 @@ Maintainer: \packageMaintainer{RobustGaSP}
   # m1<- rgasp(design = input, response = output, lower_bound=TRUE)
   
   # the following use a single start on optimization
-  # m1<- rgasp(design = input, response = output, lower_bound=FALSE, multiple_starts=FALSE)
+  # m1<- rgasp(design = input, response = output, lower_bound=FALSE)
   
   
   show(m1)

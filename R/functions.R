@@ -64,11 +64,55 @@ borehole <- function(x)
   return(res1/res2/res3)
 }
 
+#############the environmental model with 4 dimensional input from Bliznyuk et al. (2008)
+environ.4.data <- function(x, s=c(0.5, 1, 1.5, 2, 2.5), t=seq(from=0.3, to=60, by=0.3)){
+
+  M   <- x[1]
+  D   <- x[2]
+  L   <- x[3]
+  tau <- x[4]
+  
+  ds <- length(s)
+  dt <- length(t)
+  dY <- ds * dt
+  Y <- matrix(0, ds, dt)
+  
+  # Create matrix Y, where each row corresponds to si and each column
+  # corresponds to tj.
+  for (ii in 1:ds) {
+    si <- s[ii]
+    for (jj in 1:dt) {
+      tj <- t[jj]
+      
+      term1a <- M / sqrt(4*pi*D*tj)
+      term1b <- exp(-si^2 / (4*D*tj))
+      term1 <- term1a * term1b
+      
+      term2 <- 0
+      if (tau < tj) {
+        term2a <- M / sqrt(4*pi*D*(tj-tau))
+        term2b <- exp(-(si-L)^2 / (4*D*(tj-tau)))
+        term2 <- term2a * term2b
+      }
+      
+      C <- term1 + term2
+      Y[ii, jj] <- sqrt(4*pi) * C
+    }
+  }
+  
+  # Convert the matrix into a vector (by rows).
+  Yrow <- t(Y)
+  y <- t(as.vector(Yrow))
+  return(y)
+}
+
+
 #############5 dimension example function from Friedman 1991
 friedman.5.data <- function(x)
 {
   return(10 * sin(pi*x[1]*x[2]) + 20 * (x[3]-0.5)^2 + 10*x[4] + 5*x[5])
 }
+
 
 ####################
 findInertInputs<-function(object,threshold=0.1){
@@ -95,6 +139,20 @@ neg_log_marginal_post_approx_ref <- function(param,nugget, nugget.est,R0,X,zero_
 
 }
 
+
+####################
+neg_log_marginal_post_approx_ref_ppgasp <- function(param,nugget, nugget.est,R0,X,zero_mean,output,CL,a,b,kernel_type,alpha) {
+  #####this has mean X, we should also include the case where X is not zero
+  #####
+  lml=log_marginal_lik_ppgasp(param,nugget,nugget.est,R0,X,zero_mean,output,kernel_type,alpha);
+  lp=log_approx_ref_prior(param,nugget,nugget.est,CL,a,b);
+  #print(param)
+  #print(-(lml+lp))
+  
+  -(lml+lp)
+  
+}
+
 ####################
 neg_log_marginal_post_ref<- function(param,nugget, nugget.est,R0,X,zero_mean,output,prior_choice,kernel_type,alpha) {
   
@@ -117,6 +175,27 @@ neg_log_marginal_post_ref<- function(param,nugget, nugget.est,R0,X,zero_mean,out
   }
 }
 
+###ppgasp
+neg_log_marginal_post_ref_ppgasp<- function(param,nugget, nugget.est,R0,X,zero_mean,output,prior_choice,kernel_type,alpha) {
+  
+  lmp=log_ref_marginal_post_ppgasp(param,nugget,nugget.est,R0,X,zero_mean,output,kernel_type,alpha);
+  
+  
+  if(prior_choice=='ref_xi'){
+    if(nugget.est==T){###note that in this case nu is also needed to be transformed have tail properties
+      #-sum(param)-lmp  ###this will let nu be non zero so we need to be careful
+      -sum(param[1:(length(param))])-lmp ###this might be fine when intercept is in the trend
+    }else{ ###no nugget
+      -sum(param)-lmp
+    }
+  }else if(prior_choice=='ref_gamma'){
+    if(nugget.est==T){###note that in this case nu is also needed to be transformed have tail properties
+      -2*sum(param[1:(length(param)-1)])-lmp 
+    }else{ ###no nugget
+      -2*sum(param)-lmp
+    }
+  }
+}
 
 
 ########################
@@ -127,6 +206,16 @@ neg_log_marginal_post_approx_ref_deriv<- function(param,nugget,nugget.est,R0,X,z
   -(lml_dev+lp_dev)*exp(param)
     
 }
+
+#######################ppgasp
+neg_log_marginal_post_approx_ref_deriv_ppgasp<- function(param,nugget,nugget.est,R0,X,zero_mean,output,CL,a,b,kernel_type,alpha) {
+  lml_dev=log_marginal_lik_deriv_ppgasp(param,nugget,nugget.est,R0,X,zero_mean,output,kernel_type,alpha)
+  lp_dev=log_approx_ref_prior_deriv(param,nugget,nugget.est,CL,a,b)
+  
+  -(lml_dev+lp_dev)*exp(param)
+  
+}
+
 #############this is a function to search the lower bounds for range parameters beta
 #####need R0 in the function
 search_LB_prob<-function(param, R0,COND_NUM_UB,p,kernel_type,alpha,nugget){
@@ -137,7 +226,7 @@ search_LB_prob<-function(param, R0,COND_NUM_UB,p,kernel_type,alpha,nugget){
     LB=c(LB, log(-log(propose_prob)/(max(R0[[i_LB]]))))    ###LB is log beta
   }
   
-  R=separable_kernel(R0,exp(LB),kernel_type,alpha)  
+  R=separable_multi_kernel(R0,exp(LB),kernel_type,alpha)  
   
   R=as.matrix(R)
   R=R+nugget*diag(num_obs)

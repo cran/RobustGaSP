@@ -35,7 +35,7 @@ Function to make plots on Robust GaSP models after the Robust GaSP model has bee
 Three plots: the leave-one-out fitted values versus exact values, standardized residuals and QQ plot.
 }
 \references{
-Mengyang Gu. (2016). Robust Uncertainty Quantification and Scalable Computation for Computer Models with Massive Output. Ph.D. thesis. Duke University.
+M. Gu. (2016). Robust uncertainty quantification and scalable computation for computer models with massive output. Ph.D. thesis. Duke University.
 }
 
 \author{

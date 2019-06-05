@@ -16,7 +16,7 @@ findInertInputs(object,threshold=0.1)
 \arguments{
   \item{object }{
 %%     ~~Describe \code{param} here~~
-an object of  class \code{rgasp}.
+an object of  class \code{rgasp} or the \code{ppgasp}.
 }
    \item{threshold}{
    a threshold between 0 to 1. If the normalized inverse parameter of an input is smaller this value, it is classified as inert inputs. 

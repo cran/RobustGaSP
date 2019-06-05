@@ -2,9 +2,11 @@
 \alias{as.S3prediction}
 \alias{as.S3prediction.predrgasp-class}
 \alias{as.S3prediction,predrgasp-method}
+\alias{as.S3prediction.predppgasp-class}
+\alias{as.S3prediction,predppgasp-method}
 
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{ Convert a \code{RobustGaSP} \code{S4 object} prediction into a \code{S3 object}
+\title{ Convert a \code{rgasp} or \code{ppgasp} \code{S4 object} prediction into a \code{S3 object}
 %%  ~~function to do ... ~~
 }
 \description{
@@ -16,7 +18,7 @@ as.S3prediction(object, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{object}{ an object of class \code{\link{predrgasp-class}} is converted into a \code{S3 object}
+  \item{object}{ an object of class \code{\link{predrgasp-class}} or \code{\link{ppgasp-class}}  is converted into a \code{S3 object}
 %%     ~~Describe \code{object} here~~
 }
   \item{\dots}{ Extra arguments to be passed to the function (not implemented yet).

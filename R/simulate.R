@@ -44,10 +44,22 @@ simulate.rgasp <- function (object, testing_input, num_sample=1,
     rr0[[i]] = as.matrix(abs(outer(testing_input[,i], testing_input[,i], "-")))
   }
   
+  ##change kernel type to integer to pass to C++ code
+  kernel_type_num=rep(0,  object@p)
+  for(i_p in 1:  object@p){
+    if(object@kernel_type[i_p]=="matern_5_2"){
+      kernel_type_num[i_p]=as.integer(3)
+    }else if (object@kernel_type[i_p]=="matern_3_2"){
+      kernel_type_num[i_p]=as.integer(2)
+    }else if (object@kernel_type[i_p]=="pow_exp"){
+      kernel_type_num[i_p]=as.integer(1)
+    }
+  }
+  
   #####the following the posterior mean and cholesky decomposition of the sigma^2C_Star_star
   mean_cov_list=generate_predictive_mean_cov(object@beta_hat,object@nugget,object@input,object@X,object@zero_mean,object@output,
                        testing_input,testing_trend,object@L,object@LX,object@theta_hat,
-                       object@sigma2_hat,rr0,r0,object@kernel_type,object@alpha)
+                       object@sigma2_hat,rr0,r0,kernel_type_num,object@alpha)
   
   predictive_sample=matrix(0,num_testing_input,num_sample)
   rnorm_sample=matrix(rnorm(num_testing_input*num_sample,0,1),num_testing_input,num_sample)

@@ -1,14 +1,14 @@
-\name{predrgasp-class}
-\alias{predrgasp-class}
+\name{predppgasp-class}
+\alias{predppgasp-class}
 \docType{class}
-\title{ Predictive robust GaSP class }
-\description{ S4 class for the prediction of a Robust GaSP}
+\title{ Predicted PP GaSP class }
+\description{ S4 class for the prediction of a PP GaSP model}
 \section{Objects from the Class}{
-Objects of this class are created and initialized with the function \code{\link{predict.rgasp}} that computes the prediction on Robust GaSP models after the Robust GaSP model has been constructed.}
+Objects of this class are created and initialized with the function \code{\link{predict.ppgasp}} that computes the prediction on the PP GaSP model after the PP GaSP model has been constructed.}
 
 \section{Slots}{
 	 \describe{
-	  \item{\code{call}:}{ \code{call} to \code{predict.rgasp} function where the returned object has been created.}
+	  \item{\code{call}:}{ \code{call} to \code{predict.ppgasp} function where the returned object has been created.}
     \item{\code{mean}:}{ predictive mean for the testing inputs.}
     \item{\code{lower95}:}{lower bound of the 95\% posterior credible interval.}
     \item{\code{upper95}:}{upper bound of the 95\% posterior credible interval.}
@@ -35,7 +35,7 @@ Maintainer: \packageMaintainer{RobustGaSP}
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
-\seealso{ \code{\link{predict.rgasp}} for more details about how to make predictions based on a \code{rgasp} object.
+\seealso{ \code{\link{predict.ppgasp}} for more details about how to make predictions based on a \code{ppgasp} object.
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 

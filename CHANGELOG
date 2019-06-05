@@ -1,3 +1,11 @@
+##change / RobustGaSP 0.5.7
+ *Implement the Parallel partial Gaussian stochastic process through the ppgasp() function. Implements the ppgasp-class, predppgasp-class ppgasp.predict(), show.ppgasp().
+ *Include the data set humanity_model.rda. The document of the ppgasp()  function uses it as an example. 
+ *Implement the separable_multi_kernel() function to allow users to specify a different kernel function for each dimension of the input
+ *For the rgasp() and ppgasp() functions, now users can specify the number of initial values of the kernel parameters to be optimized and specify the initial values to be optimizers through the arguments “num_initial_values” and “initial_values”, respectively. 
+ * Imports the R package nloptr as the main optimizer in rgasp() and ppgasp() depend on the lbfgs() function in nloptr. 
+
+
 ## change / RobustGaSP 0.5.6
  *Implement two functions called simulate() and plot() to replace Sample() and Plot() functions, respectively.
  *Reimplemented the demo-functions, including higdon.1.data(), limetal.2.data(), dettepepel.3.data(), borehole() and friedman.5.data()

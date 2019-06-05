@@ -40,7 +40,7 @@ testing_trend= matrix(1,dim(testing_input)[1],1),...)
 The returned value is a \code{matrix} where each column is a sample on the prespecified inputs. 
 }
 \references{
-Mengyang Gu. (2016). Robust Uncertainty Quantification and Scalable Computation for Computer Models with Massive Output. Ph.D. thesis. Duke University.
+M. Gu. (2016). Robust uncertainty quantification and scalable computation for computer models with massive output. Ph.D. thesis. Duke University.
 }
 
 \author{

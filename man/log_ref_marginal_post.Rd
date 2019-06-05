@@ -3,7 +3,7 @@
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 %%  ~~function to do ... ~~
-Natural logarithm of reference marginal posterior density
+Natural logarithm of reference marginal posterior density of the robust GaSP model
 }
 \description{
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
@@ -17,11 +17,11 @@ output, kernel_type, alpha)
 \arguments{
   \item{param}{
 %%     ~~Describe \code{param} here~~
-A vector of natural logarithm of inverse-range parameters and natural logarithm of the nugget-variance ratio parameter.
+a vector of natural logarithm of inverse-range parameters and natural logarithm of the nugget-variance ratio parameter.
 }
   \item{nugget}{
 %%     ~~Describe \code{nugget} here~~
-The nugget-variance ratio parameter if this parameter is fixed.
+the nugget-variance ratio parameter if this parameter is fixed.
 }
   \item{nugget_est}{
 %%     ~~Describe \code{nugget.est} here~~
@@ -29,28 +29,28 @@ Boolean value of whether the nugget is estimated or fixed.
 }
   \item{R0}{
 %%     ~~Describe \code{R0} here~~
-A List of matrix where the j-th matrix is an absolute difference matrix of the j-th input vector.
+a list of matrix where the j-th matrix is an absolute difference matrix of the j-th input vector.
 }
   \item{X}{
 %%     ~~Describe \code{X} here~~
-The mean basis function i.e. the trend function.
+the mean basis function i.e. the trend function.
 }
   \item{zero_mean}{
 %%     ~~Describe \code{zero_mean} here~~
-The mean basis function is zero or not.
+the mean basis function is zero or not.
 }
 
   \item{output}{
 %%     ~~Describe \code{output} here~~
-The output vector.
+the output vector.
 }
   \item{kernel_type}{
 %%     ~~Describe \code{kernel_type} here~~
-Type of kernel. \code{matern_3_2} and \code{matern_5_2} are \code{Matern kernel} with roughness parameter 3/2 and 5/2 respectively. \code{pow_exp} is power exponential kernel with roughness parameter alpha. If \code{pow_exp} is to be used, one needs to specify its roughness parameter alpha.
+type of kernel. \code{matern_3_2} and \code{matern_5_2} are \code{Matern kernel} with roughness parameter 3/2 and 5/2 respectively. \code{pow_exp} is power exponential kernel with roughness parameter alpha. If \code{pow_exp} is to be used, one needs to specify its roughness parameter alpha.
 }
   \item{alpha}{
 %%     ~~Describe \code{alpha} here~~
-Roughness parameters in the kernel functions.
+roughness parameters in the kernel functions.
 }
 }
 %\details{

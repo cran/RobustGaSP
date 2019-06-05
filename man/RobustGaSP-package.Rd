@@ -23,15 +23,17 @@ Maintainer: \packageMaintainer{RobustGaSP}
 
 \references{
 
-J.O. Berger, V. De Oliveira and B. Sanso (2001), \emph{Design and analysis of computer experiments}, \emph{Journal of the American Statistical Association}, \bold{96}, 1361-1374.
+J.O. Berger, V. De Oliveira and B. Sanso (2001), \emph{Objective Bayesian analysis of spatially correlated data}, \emph{Journal of the American Statistical Association}, {96}, 1361-1374.
 
-M. Gu (2016), \emph{Robust Uncertainty Quantification and Scalable Computation for Computer Models with Massive Output}, Ph.D. thesis, Duke University.
+M. Gu. and J.O. Berger (2016). Parallel partial Gaussian process emulation for computer models with massive output. \emph{Annals of Applied Statistics}, 10(3), 1317-1347.
 
-M. Gu, X. Wang and J.O. Berger (2018), \emph{Robust Gaussian Stochastic Process Emulation}, \emph{Annals of Statistics}, \bold{46}, 3038-3066.
+M. Gu. (2016). Robust uncertainty quantification and scalable computation for computer models with massive output. Ph.D. thesis. Duke University.
 
-M. Gu (2018), \emph{Jointly Robust Prior for Gaussian Stochastic Process in Emulation, Calibration and Variable Selection}, arXiv:1804.09329.
+M. Gu, X. Wang and J.O. Berger (2018), \emph{Robust Gaussian stochastic process emulation}, \emph{Annals of Statistics}, 46(6A), 3038-3066.
 
-R. Paulo (2005), \emph{Default priors for Gaussian processes}, \emph{Annals of statistics}, \bold{33}, 556-582.
+M. Gu (2018), \emph{Jointly robust prior for Gaussian stochastic process in emulation, calibration and variable selection}, arXiv:1804.09329.
+
+R. Paulo (2005), \emph{Default priors for Gaussian processes}, \emph{Annals of statistics}, 33(2), 556-582.
 
 J. Sacks, W.J. Welch, T.J. Mitchell, and H.P. Wynn (1989), \emph{Design and analysis of computer experiments}, \emph{Statistical Science}, \bold{4}, 409-435.
 
@@ -80,7 +82,7 @@ J. Sacks, W.J. Welch, T.J. Mitchell, and H.P. Wynn (1989), \emph{Design and anal
   # m1<- rgasp(design = input, response = output, lower_bound=TRUE)
   
   # the following use a single start on optimization
-  # m1<- rgasp(design = input, response = output, lower_bound=FALSE, multiple_starts=FALSE)
+  # m1<- rgasp(design = input, response = output, lower_bound=FALSE)
   
   # number of points to be predicted 
   num_testing_input <- 5000    

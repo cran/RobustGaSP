@@ -1,12 +1,12 @@
-\name{separable_kernel}
-\alias{separable_kernel}
+\name{separable_multi_kernel}
+\alias{separable_multi_kernel}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Product correlation matrix with the product form
 %%  ~~function to do ... ~~
 }
 \description{
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
-Function to construct the product correlation matrix with the product form.
+Function to construct the product correlation matrix with the product form. The kernel can be different for each coordinate of the input. 
 }
 \usage{
 separable_kernel(R0, beta, kernel_type, alpha)
@@ -23,7 +23,8 @@ The range parameters.
 }
   \item{kernel_type}{
 %%     ~~Describe \code{kernel_type} here~~
-A vector specifying the type of kernels of each coordinate of the input. \code{matern_3_2} and \code{matern_5_2} are \code{Matern kernel} with roughness parameter 3/2 and 5/2 respectively. \code{pow_exp} is power exponential kernel with roughness parameter alpha. If \code{pow_exp} is to be used, one needs to specify its roughness parameter alpha.
+A vector of \code{integer} specifying the type of kernels of each coordinate of the input. 
+In each coordinate of the vector, 1 means the \code{pow_exp} kernel with roughness parameter specified in alpha. 2 means  \code{matern_3_2}  kernel and 3 means \code{matern_5_2}  kernel.
 }
   \item{alpha}{
 %%     ~~Describe \code{alpha} here~~

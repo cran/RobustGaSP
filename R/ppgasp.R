@@ -10,18 +10,18 @@
 ##							  
 ##    
 ##########################################################################
-#library(nloptr)    ####I need to have this nloptr, or I can use C++ nlopt, this one is faster than optim()
-#requireNamespace("nloptr")
-                 
-rgasp <- function(design, response,trend=matrix(1,length(response),1),zero.mean="No",nugget=0,
+
+##function for parallel partial Gaussian stochastic process
+ppgasp <- function(design, response,trend=matrix(1,dim(response)[1],1),zero.mean="No",nugget=0,
                   nugget.est=F,range.par=NA,prior_choice='ref_approx',a=0.2,
                   b=1/(length(response))^{1/dim(as.matrix(design))[2]}*(a+dim(as.matrix(design))[2]),
                   kernel_type='matern_5_2',
-                  alpha=rep(1.9,dim(as.matrix(design))[2]),
-                  lower_bound=T,max_eval=max(30,20+5*dim(design)[2]),
+                  alpha=rep(1.9,dim(as.matrix(design))[2]),lower_bound=T,max_eval=max(30,20+5*dim(design)[2]),
                   initial_values=NA,num_initial_values=2){
+  
+  ##response is n x k matrix, where n is the number of obs and k is the number of loc
   if (zero.mean=="Yes"){
-    trend=matrix(0,length(response),1)
+    trend=matrix(0,dim(response)[1],1)
   }
   
   if (!is.logical(nugget.est) && length(nugget.est) != 1){
@@ -45,13 +45,16 @@ rgasp <- function(design, response,trend=matrix(1,length(response),1),zero.mean=
     stop("nugget should be a numerical value \n")  
   }
   
-  model <- new("rgasp")
+  #model <- new("rgasp")
+  model <- new("ppgasp")
+  
   model@call <- match.call()
   
   
   #cat('Kernel type is ',model@kernel_type,'\n')
   
-
+  #cat('Multiple starting points: ',multiple_starts, '\n')
+  
   model@alpha <-alpha
   
   #####Only numeric inputs are allowed
@@ -60,9 +63,16 @@ rgasp <- function(design, response,trend=matrix(1,length(response),1),zero.mean=
   
   # print(model@input)
   model@output <- as.matrix(response)
+  
+  if(dim(model@output)[1]!=dim(model@input)[1]){
+    stop("the number of rows in the input should be the same as the number of rows 
+         in the output \n")  
+    
+  }
   # print(model@output)
   model@p <- dim(model@input)[2]
-  model@num_obs <- dim(model@input)[1]
+  model@num_obs <- dim(model@output)[1]
+  model@k <- dim(model@output)[2]
   
   ## Checking the dimensions between the different inputs
   if (model@num_obs != dim(model@output)[1]){
@@ -128,20 +138,20 @@ rgasp <- function(design, response,trend=matrix(1,length(response),1),zero.mean=
     ########this also depends on the kernel
     ##get some initial values of beta that we can start from a good set of range parameters to optimize
     
-    
-    COND_NUM_UB = 10^{16}  ###maximum condition number, this might be a little too large
-    
-    LB_all = optimize(search_LB_prob, interval=c(-5,12), maximum = FALSE, R0=model@R0,COND_NUM_UB= COND_NUM_UB,
-                      p=model@p,kernel_type=kernel_type_num,alpha=model@alpha,nugget=nugget) ###find a lower bound for parameter beta
-    
-    LB_prob = exp(LB_all$minimum)/(exp(LB_all$minimum)+1)
-    
-    LB = NULL
-    
-    for( i_LB in 1:model@p){
-      LB = c(LB, log(-log(LB_prob)/(max(model@R0[[i_LB]]))))    ###LB is lower bound for log beta, may consider to have it related to p
-    }
-    
+   
+      COND_NUM_UB = 10^{16}  ###maximum condition number, this might be a little too large
+      
+      LB_all = optimize(search_LB_prob, interval=c(-5,12), maximum = FALSE, R0=model@R0,COND_NUM_UB= COND_NUM_UB,
+                        p=model@p,kernel_type=kernel_type_num,alpha=model@alpha,nugget=nugget) ###find a lower bound for parameter beta
+      
+      LB_prob = exp(LB_all$minimum)/(exp(LB_all$minimum)+1)
+      
+      LB = NULL
+      
+      for( i_LB in 1:model@p){
+        LB = c(LB, log(-log(LB_prob)/(max(model@R0[[i_LB]]))))    ###LB is lower bound for log beta, may consider to have it related to p
+      }
+   
     if(lower_bound==T){
       if(model@nugget.est){
         model@LB=c(LB,-Inf)   
@@ -170,72 +180,79 @@ rgasp <- function(design, response,trend=matrix(1,length(response),1),zero.mean=
       if(num_initial_values>1){
         beta_initial[2,]=(a+model@p)/(model@p*model@CL*b)/2  ###half the prior value
         eta_initial[2]=0.0002
+
       }
       if(num_initial_values>2){
         for(i_ini in 3:num_initial_values){
           set.seed(i_ini)
+          
           beta_initial[i_ini,]=10^3*runif(model@p)/model@CL
           eta_initial[i_ini]=10^(-3)*runif(1)
         }
       }
       initial_values=cbind(log(beta_initial),log(eta_initial))
     }
-    
+      
     model@log_post=-Inf;
     for(i_ini in 1:num_initial_values){
-      if(model@nugget.est){
-        ini_value=initial_values[i_ini,]
-      }else{
-        ini_value=initial_values[i_ini,1:model@p]
-        ###without the nugget
-      }
-      cat('The initial values of range parameters are', 1/exp(ini_value[1:model@p]),'\n')
-      cat('Start of the optimization ', i_ini,' : \n')
-      
-      if(prior_choice=='ref_approx'){####this one can be with nugget or without the nugget
-        #  if (requireNamespace("lbfgs", quietly = TRUE)) {
-        tt_all <- try(nloptr::lbfgs(ini_value, neg_log_marginal_post_approx_ref, 
-                                    neg_log_marginal_post_approx_ref_deriv,nugget=nugget, nugget.est=model@nugget.est, 
-                                    R0=model@R0,X=model@X, zero_mean=model@zero_mean,output=model@output, CL=model@CL, a=a,b=b,
-                                    kernel_type=kernel_type_num,alpha=model@alpha,lower=model@LB,
-                                    nl.info = FALSE, control = list(maxeval=max_eval)),TRUE)
-        #   }
-      }else if(prior_choice=='ref_xi'|prior_choice=='ref_gamma'){####this needs to be revised
-        #  if (requireNamespace("lbfgs", quietly = TRUE)) {
-        tt_all <- try(nloptr::lbfgs(ini_value, neg_log_marginal_post_ref, 
-                                    nugget=nugget, nugget.est=nugget.est, R0=model@R0,
-                                    X=model@X, zero_mean=model@zero_mean,output=model@output, prior_choice=prior_choice, kernel_type=kernel_type_num,
-                                    alpha=model@alpha,lower=model@LB,nl.info = FALSE, control = list(maxeval=max_eval)),TRUE)
-        # }
-      }
-      if(class(tt_all)!="try-error"){
-        if(model@nugget.est==F){
-          nugget_par=nugget
+        if(model@nugget.est){
+          ini_value=initial_values[i_ini,]
         }else{
-          nugget_par=exp(tt_all$par)[model@p+1]
+          ini_value=initial_values[i_ini,1:model@p]
+          ###without the nugget
         }
+        cat('The initial values of range parameters are', 1/exp(ini_value[1:model@p]),'\n')
+        cat('Start of the optimization ', i_ini,' : \n')
         
-        if (tt_all$convergence>0){convergence=T}else{convergence=F}
-        cat('The number of interation is ', tt_all$iter,'\n',
-            'The value of the posterior is ', -tt_all$value,'\n',
-            'Optimized range parameters are', 1/exp(tt_all$par)[1:model@p],'\n',
-            'Optimized nugget parameter is', nugget_par,'\n',
-            'Convergence: ', convergence,'\n' )
-        
-        
-        if( (-tt_all$value)>model@log_post){
-          log_lik=-tt_all$value
-          model@log_post=-tt_all$value
-          model@nugget=nugget;
-          if(nugget.est){
-            model@beta_hat = exp(tt_all$par)[1:model@p];
-            model@nugget=exp(tt_all$par)[model@p+1];
+        if(prior_choice=='ref_approx'){####this one can be with nugget or without the nugget
+          #  if (requireNamespace("lbfgs", quietly = TRUE)) {
+          tt_all <- try(nloptr::lbfgs(ini_value, neg_log_marginal_post_approx_ref_ppgasp, 
+                                      neg_log_marginal_post_approx_ref_deriv_ppgasp,nugget=nugget, nugget.est=model@nugget.est, 
+                                      R0=model@R0,X=model@X, zero_mean=model@zero_mean,output=model@output, CL=model@CL, a=a,b=b,
+                                      kernel_type=kernel_type_num,alpha=model@alpha,lower=model@LB,
+                                      nl.info = FALSE, control = list(maxeval=max_eval)),TRUE)
+          #   }
+        }else if(prior_choice=='ref_xi'|prior_choice=='ref_gamma'){####this needs to be revised
+          #  if (requireNamespace("lbfgs", quietly = TRUE)) {
+          tt_all <- try(nloptr::lbfgs(ini_value, neg_log_marginal_post_ref_ppgasp, 
+                                      nugget=nugget, nugget.est=nugget.est, R0=model@R0,
+                                      X=model@X, zero_mean=model@zero_mean,output=model@output, prior_choice=prior_choice, kernel_type=kernel_type_num,
+                                      alpha=model@alpha,lower=model@LB,nl.info = FALSE, control = list(maxeval=max_eval)),TRUE)
+          # }
+        }
+        #if(class(tt_all)=="try-error"){
+          #sink()
+        #  stop(tt_all)
+        #}
+
+        if(class(tt_all)!="try-error"){
+          if(model@nugget.est==F){
+            nugget_par=nugget
           }else{
-            model@beta_hat = exp(tt_all$par);
-            #  model@nugget=0;
+            nugget_par=exp(tt_all$par)[model@p+1]
+          }
+          
+          if (tt_all$convergence>0){convergence=T}else{convergence=F}
+          cat('The number of interation is ', tt_all$iter,'\n',
+              'The value of the posterior is ', -tt_all$value,'\n',
+              'Optimized range parameters are', 1/exp(tt_all$par)[1:model@p],'\n',
+              'Optimized nugget parameter is', nugget_par,'\n',
+              'Convergence: ', convergence,'\n' )
+        
+
+          if( (-tt_all$value)>model@log_post){
+            log_lik=-tt_all$value
+            model@log_post=-tt_all$value
+            model@nugget=nugget;
+            if(nugget.est){
+              model@beta_hat = exp(tt_all$par)[1:model@p];
+              model@nugget=exp(tt_all$par)[model@p+1];
+            }else{
+              model@beta_hat = exp(tt_all$par);
+              #  model@nugget=0;
+            }
           }
         }
-      }
     }
   }else{###this is the case where the range parameters and the nugget are all fixed
     model@LB=rep(-Inf,model@p)
@@ -243,7 +260,7 @@ rgasp <- function(design, response,trend=matrix(1,length(response),1),zero.mean=
     model@nugget=nugget
   }
   
-  list_return=construct_rgasp(model@beta_hat, model@nugget, model@R0, model@X, zero_mean=model@zero_mean,
+  list_return=construct_ppgasp(model@beta_hat, model@nugget, model@R0, model@X, zero_mean=model@zero_mean,
                               model@output,kernel_type_num,model@alpha); 
   model@L=list_return[[1]];
   model@LX=list_return[[2]];
@@ -253,16 +270,20 @@ rgasp <- function(design, response,trend=matrix(1,length(response),1),zero.mean=
   return(model)
 }
 
-show.rgasp <- function(object) {	
+show.ppgasp <- function(object) {	
   cat("\n")
   cat("Call:\n")
   print(object@call)
   
-  cat('Mean parameters: ',object@theta_hat,'\n')
-  cat('Variance parameter: ', object@sigma2_hat,'\n')
-  cat('Range parameters: ', 1/object@beta_hat,'\n')
-  cat('Noise parameter: ', object@sigma2_hat*object@nugget,'\n')
-  
-  
 
+  cat('The dimension  of the design is: ',dim(object@input),'\n')
+  cat('The dimension  of the output is: ',dim(object@output),'\n')
+
+
+  cat('Range parameters: ', 1/object@beta_hat,'\n')
+  cat('Nugget parameter: ', object@nugget,'\n')
+  
+  
+  # cat('The slots of this object are: ',slotNames(object),'\n')
+  
 }

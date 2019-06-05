@@ -12,15 +12,14 @@ Setting up the robust GaSP model for estimating the parameters (if the parameter
 %The range and noise-variance ratio parameters are given and/or have been estimated.
 }
 \usage{
-  rgasp(design, response, trend = matrix(1, length(response), 1),zero.mean="No", 
-      nugget = 0,nugget.est = F,range.par = NA,prior_choice="ref_approx",         
-      a = 0.2, b = 1/(length(response))^{1/dim(as.matrix(design))[2]}*(a+
-      dim(as.matrix(design))[2]), 
-      kernel_type = "matern_5_2", 
-      alpha = rep(1.9, dim(as.matrix(design))[2]),
-      multiple_starts=T,lower_bound=T,max_eval=max(30,20+5*dim(design)[2]))
+  rgasp(design, response,trend=matrix(1,length(response),1),zero.mean="No",nugget=0,
+    nugget.est=F,range.par=NA,prior_choice='ref_approx',a=0.2,
+    b=1/(length(response))^{1/dim(as.matrix(design))[2]}*(a+dim(as.matrix(design))[2]),
+    kernel_type='matern_5_2',
+    alpha=rep(1.9,dim(as.matrix(design))[2]),
+    lower_bound=T,max_eval=max(30,20+5*dim(design)[2]),
+    initial_values=NA,num_initial_values=2)
  % \S4method{show}{rgasp}(object)    
-      
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -58,21 +57,25 @@ prior parameters in the jointly robust prior. The default value is \code{n^{-1/p
 }
   \item{kernel_type}{
 %%     ~~Describe \code{kernel_type} here~~
-type of kernel. \code{matern_3_2} and \code{matern_5_2} are \code{Matern correlation} with roughness parameter 3/2 and 5/2 respectively. \code{pow_exp} is power exponential correlation with roughness parameter alpha. If \code{pow_exp} is to be used, one needs to specify its roughness parameter alpha. The default choice is \code{matern_5_2}.
+
+A vector specifying the type of kernels of each coordinate of the input. \code{matern_3_2} and \code{matern_5_2} are \code{Matern correlation} with roughness parameter 3/2 and 5/2 respectively. \code{pow_exp} is power exponential correlation with roughness parameter alpha. If \code{pow_exp} is to be used, one needs to specify its roughness parameter alpha. The default choice is \code{matern_5_2}.
 }
   \item{alpha}{
 %%     ~~Describe \code{alpha} here~~
 roughness parameters in the \code{pow_exp} correlation functions. The default choice is a vector with each entry being 1.9. 
 }
  % \item{object}{An object of the corresponding signature.}  %%??
-  \item{multiple_starts}{
-  boolean value. \code{T} means it uses multiple default initial points to search the optimal range and nugget parameters  and \code{F} means it use one default points to search the optimal parameters. The default value is \code{T}. 
-  }
   \item{lower_bound}{
   boolean value.  \code{T} means the default lower bounds of the inverse range parameters are used to constrained the optimization and \code{F} means the optimization is unconstrained. The default value is \code{T} and we also suggest to use \code{F} in various scenarios. 
   }
   \item{max_eval}{
   the maximum number of steps to estimate the range and nugget parameters.  
+  }
+  \item{initial_values}{
+a matrix of initial values of the kernel parameters to be optimized numerically, where each row of the matrix contains a set of the log inverse range parameters and the log nugget parameter. 
+  }
+  \item{num_initial_values}{
+the number of initial values of the kernel parameters in optimization.
   }
 }
 %\details{
@@ -91,12 +94,15 @@ roughness parameters in the \code{pow_exp} correlation functions. The default ch
 
 \references{
 %% ~put references to the literature/web site here ~
-M. Gu, X. Wang and J.O. Berger (2018), \emph{Robust Gaussian Stochastic Process Emulation}, \emph{Annals of Statistics}, \bold{46}, 3038-3066.
+M. Gu, X. Wang and J.O. Berger (2018), \emph{Robust Gaussian stochastic process emulation}, \emph{Annals of Statistics}, 46(6A), 3038-3066.
 
-M. Gu (2018), \emph{Jointly Robust Prior for Gaussian Stochastic Process in Emulation, Calibration and Variable Selection}, arXiv:1804.09329.
+M. Gu (2018), \emph{Jointly robust prior for Gaussian stochastic process in emulation, calibration and variable selection}, arXiv:1804.09329.
 
-Mengyang Gu. (2016). Robust Uncertainty Quantification and Scalable Computation for Computer Models with Massive Output. Ph.D. thesis. Duke University.
+M. Gu. (2016). Robust uncertainty quantification and scalable computation for computer models with massive output. Ph.D. thesis. Duke University.
 
+M. Gu. and J.O. Berger (2016). Parallel partial Gaussian process emulation for computer models with massive output. \emph{Annals of Applied Statistics}, 10(3), 1317-1347.
+
+E.T. Spiller, M.J. Bayarri, J.O. Berger and E.S. Calder and A.K. Patra and E.B. Pitman, and R.L. Wolpert (2014), Automating emulator construction for geophysical hazard maps. SIAM/ASA Journal on Uncertainty Quantification, 2(1), 126-152.
 }
 
 \author{
@@ -142,16 +148,6 @@ Maintainer: \packageMaintainer{RobustGaSP}
   
   # use constant mean basis, with no constraint on optimization
   m1<- rgasp(design = input, response = output, lower_bound=FALSE)
-  
-  # the following use constraints on optimization
-  # m1<- rgasp(design = input, response = output, lower_bound=TRUE)
-  
-  # the following use a single start on optimization
-  # m1<- rgasp(design = input, response = output, lower_bound=FALSE, multiple_starts=FALSE)
-
-    show(m1)      ####show this rgasp object 
-
-    m1@beta_hat       ####estimated inverse range parameters
   
   #
   #---------------------------------------
@@ -210,7 +206,7 @@ Maintainer: \packageMaintainer{RobustGaSP}
   
   
   # use constant mean basis with trend, with no constraint on optimization
-  m2<- rgasp(design = input, response = output,trend =X,  lower_bound=FALSE,multiple_start=TRUE)
+  m2<- rgasp(design = input, response = output,trend =X,  lower_bound=FALSE)
 
   show(m2)      # show this rgasp object 
   
@@ -254,7 +250,7 @@ Maintainer: \packageMaintainer{RobustGaSP}
   
   # use constant mean basis with trend, with no constraint on optimization
   m3<- rgasp(design = input[,c(1,4,6,7,8)], response = output, 
-            nugget.est=TRUE, lower_bound=FALSE,multiple_start=TRUE)
+            nugget.est=TRUE, lower_bound=FALSE)
 
 m3@beta_hat       # estimated inverse range parameters
 m3@nugget     

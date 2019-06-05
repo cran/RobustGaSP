@@ -1,16 +1,17 @@
-\name{log_marginal_lik}
-\alias{log_marginal_lik}
+\name{log_marginal_lik_deriv_ppgasp}
+\alias{log_marginal_lik_deriv_ppgasp}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 %%  ~~function to do ... ~~
-Natural logarithm of marginal likelihood of the robust GaSP model
+Derivative of natural logarithm of the marginal likelihood
 }
 \description{
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
-This function computes the natural logarithm of marginal likelihood after marginalizing out the mean (trend) and variance parameters by the location-scale prior.
+The derivative of natural logarithm of marginal likelihood of the PP GaSP model with regard to inverse range parameters and nugget-variance ratio parameter after marginalizing out the mean (trend) and variance parameters the location-scale prior. When the nugget is fixed, it only compute the derivative with regard to the inverse range parameter; otherwise it produces derivative with regard to inverse range parameter and nugget-variance ratio parameter.
 }
 \usage{
-log_marginal_lik(param, nugget, nugget_est, R0, X, zero_mean,output, kernel_type, alpha)
+log_marginal_lik_deriv_ppgasp(param, nugget, nugget_est, R0, X, zero_mean, 
+output, kernel_type, alpha)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -41,7 +42,7 @@ the mean basis function is zero or not.
 
   \item{output}{
 %%     ~~Describe \code{output} here~~
-the output vector.
+a matrix where each row is one runs of the computer model output.
 }
   \item{kernel_type}{
 %%     ~~Describe \code{kernel_type} here~~
@@ -49,7 +50,7 @@ type of kernel. \code{matern_3_2} and \code{matern_5_2} are \code{Matern kernel}
 }
   \item{alpha}{
 %%     ~~Describe \code{alpha} here~~
-Roughness parameters in the kernel functions.
+roughness parameters in the kernel functions.
 }
 }
 %\details{
@@ -61,9 +62,11 @@ Roughness parameters in the kernel functions.
 %%  \item{comp1 }{Description of 'comp1'}
 %%  \item{comp2 }{Description of 'comp2'}
 %% ...
-The numerical value of natural logarithm of the marginal likelihood.
+The numerical value of the derivative of natural logarithm of marginal likelihood with regard to range and nugget-variance ratio parameter (if not fixed). When the nugget is fixed, the derivative is on inverse-range parameters.
 }
 \references{
+M. Gu. and J.O. Berger (2016). Parallel partial Gaussian process emulation for computer models with massive output. \emph{Annals of Applied Statistics}, 10(3), 1317-1347.
+
 M. Gu. (2016). Robust uncertainty quantification and scalable computation for computer models with massive output. Ph.D. thesis. Duke University.
 }
 \author{
@@ -78,10 +81,9 @@ Maintainer: \packageMaintainer{RobustGaSP}
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
-%\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-%}
-
+\seealso{
+ \code{\link{log_marginal_lik_ppgasp}}.
+}
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
 %\keyword{ ~kwd1 }% use one of  RShowDoc("KEYWORDS")

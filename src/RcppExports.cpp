@@ -98,8 +98,22 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// separable_multi_kernel
+Eigen::MatrixXd separable_multi_kernel(List R0, Eigen::VectorXd beta, Eigen::VectorXi kernel_type, Eigen::VectorXd alpha);
+RcppExport SEXP _RobustGaSP_separable_multi_kernel(SEXP R0SEXP, SEXP betaSEXP, SEXP kernel_typeSEXP, SEXP alphaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type R0(R0SEXP);
+    Rcpp::traits::input_parameter< Eigen::VectorXd >::type beta(betaSEXP);
+    Rcpp::traits::input_parameter< Eigen::VectorXi >::type kernel_type(kernel_typeSEXP);
+    Rcpp::traits::input_parameter< Eigen::VectorXd >::type alpha(alphaSEXP);
+    rcpp_result_gen = Rcpp::wrap(separable_multi_kernel(R0, beta, kernel_type, alpha));
+    return rcpp_result_gen;
+END_RCPP
+}
 // log_marginal_lik
-double log_marginal_lik(const Vec param, double nugget, const bool nugget_est, const List R0, const Eigen::Map<Eigen::MatrixXd>& X, const String zero_mean, const Eigen::Map<Eigen::MatrixXd>& output, const String kernel_type, const Eigen::VectorXd alpha);
+double log_marginal_lik(const Vec param, double nugget, const bool nugget_est, const List R0, const Eigen::Map<Eigen::MatrixXd>& X, const String zero_mean, const Eigen::Map<Eigen::MatrixXd>& output, Eigen::VectorXi kernel_type, const Eigen::VectorXd alpha);
 RcppExport SEXP _RobustGaSP_log_marginal_lik(SEXP paramSEXP, SEXP nuggetSEXP, SEXP nugget_estSEXP, SEXP R0SEXP, SEXP XSEXP, SEXP zero_meanSEXP, SEXP outputSEXP, SEXP kernel_typeSEXP, SEXP alphaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -111,7 +125,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd>& >::type X(XSEXP);
     Rcpp::traits::input_parameter< const String >::type zero_mean(zero_meanSEXP);
     Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd>& >::type output(outputSEXP);
-    Rcpp::traits::input_parameter< const String >::type kernel_type(kernel_typeSEXP);
+    Rcpp::traits::input_parameter< Eigen::VectorXi >::type kernel_type(kernel_typeSEXP);
     Rcpp::traits::input_parameter< const Eigen::VectorXd >::type alpha(alphaSEXP);
     rcpp_result_gen = Rcpp::wrap(log_marginal_lik(param, nugget, nugget_est, R0, X, zero_mean, output, kernel_type, alpha));
     return rcpp_result_gen;
@@ -134,7 +148,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // log_marginal_lik_deriv
-Eigen::VectorXd log_marginal_lik_deriv(const Eigen::VectorXd param, double nugget, bool nugget_est, const List R0, const Eigen::Map<Eigen::MatrixXd>& X, const String zero_mean, const Eigen::Map<Eigen::MatrixXd>& output, const String kernel_type, const Eigen::VectorXd alpha);
+Eigen::VectorXd log_marginal_lik_deriv(const Eigen::VectorXd param, double nugget, bool nugget_est, const List R0, const Eigen::Map<Eigen::MatrixXd>& X, const String zero_mean, const Eigen::Map<Eigen::MatrixXd>& output, Eigen::VectorXi kernel_type, const Eigen::VectorXd alpha);
 RcppExport SEXP _RobustGaSP_log_marginal_lik_deriv(SEXP paramSEXP, SEXP nuggetSEXP, SEXP nugget_estSEXP, SEXP R0SEXP, SEXP XSEXP, SEXP zero_meanSEXP, SEXP outputSEXP, SEXP kernel_typeSEXP, SEXP alphaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -146,7 +160,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd>& >::type X(XSEXP);
     Rcpp::traits::input_parameter< const String >::type zero_mean(zero_meanSEXP);
     Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd>& >::type output(outputSEXP);
-    Rcpp::traits::input_parameter< const String >::type kernel_type(kernel_typeSEXP);
+    Rcpp::traits::input_parameter< Eigen::VectorXi >::type kernel_type(kernel_typeSEXP);
     Rcpp::traits::input_parameter< const Eigen::VectorXd >::type alpha(alphaSEXP);
     rcpp_result_gen = Rcpp::wrap(log_marginal_lik_deriv(param, nugget, nugget_est, R0, X, zero_mean, output, kernel_type, alpha));
     return rcpp_result_gen;
@@ -169,7 +183,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // log_ref_marginal_post
-double log_ref_marginal_post(const Eigen::VectorXd param, double nugget, bool nugget_est, const List R0, const Eigen::Map<Eigen::MatrixXd>& X, const String zero_mean, const Eigen::Map<Eigen::MatrixXd>& output, const String kernel_type, const Eigen::VectorXd alpha);
+double log_ref_marginal_post(const Eigen::VectorXd param, double nugget, bool nugget_est, const List R0, const Eigen::Map<Eigen::MatrixXd>& X, const String zero_mean, const Eigen::Map<Eigen::MatrixXd>& output, Eigen::VectorXi kernel_type, const Eigen::VectorXd alpha);
 RcppExport SEXP _RobustGaSP_log_ref_marginal_post(SEXP paramSEXP, SEXP nuggetSEXP, SEXP nugget_estSEXP, SEXP R0SEXP, SEXP XSEXP, SEXP zero_meanSEXP, SEXP outputSEXP, SEXP kernel_typeSEXP, SEXP alphaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -181,14 +195,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd>& >::type X(XSEXP);
     Rcpp::traits::input_parameter< const String >::type zero_mean(zero_meanSEXP);
     Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd>& >::type output(outputSEXP);
-    Rcpp::traits::input_parameter< const String >::type kernel_type(kernel_typeSEXP);
+    Rcpp::traits::input_parameter< Eigen::VectorXi >::type kernel_type(kernel_typeSEXP);
     Rcpp::traits::input_parameter< const Eigen::VectorXd >::type alpha(alphaSEXP);
     rcpp_result_gen = Rcpp::wrap(log_ref_marginal_post(param, nugget, nugget_est, R0, X, zero_mean, output, kernel_type, alpha));
     return rcpp_result_gen;
 END_RCPP
 }
 // construct_rgasp
-List construct_rgasp(const Eigen::VectorXd beta, const double nu, const List R0, const Eigen::Map<Eigen::MatrixXd>& X, const String zero_mean, const Eigen::Map<Eigen::MatrixXd>& output, const String kernel_type, const Eigen::VectorXd alpha);
+List construct_rgasp(const Eigen::VectorXd beta, const double nu, const List R0, const Eigen::Map<Eigen::MatrixXd>& X, const String zero_mean, const Eigen::Map<Eigen::MatrixXd>& output, Eigen::VectorXi kernel_type, const Eigen::VectorXd alpha);
 RcppExport SEXP _RobustGaSP_construct_rgasp(SEXP betaSEXP, SEXP nuSEXP, SEXP R0SEXP, SEXP XSEXP, SEXP zero_meanSEXP, SEXP outputSEXP, SEXP kernel_typeSEXP, SEXP alphaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -199,14 +213,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd>& >::type X(XSEXP);
     Rcpp::traits::input_parameter< const String >::type zero_mean(zero_meanSEXP);
     Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd>& >::type output(outputSEXP);
-    Rcpp::traits::input_parameter< const String >::type kernel_type(kernel_typeSEXP);
+    Rcpp::traits::input_parameter< Eigen::VectorXi >::type kernel_type(kernel_typeSEXP);
     Rcpp::traits::input_parameter< const Eigen::VectorXd >::type alpha(alphaSEXP);
     rcpp_result_gen = Rcpp::wrap(construct_rgasp(beta, nu, R0, X, zero_mean, output, kernel_type, alpha));
     return rcpp_result_gen;
 END_RCPP
 }
 // pred_rgasp
-List pred_rgasp(const Eigen::VectorXd beta, const double nu, const Eigen::Map<Eigen::MatrixXd>& input, const Eigen::Map<Eigen::MatrixXd>& X, const String zero_mean, const Eigen::Map<Eigen::MatrixXd>& output, const Eigen::Map<Eigen::MatrixXd>& testing_input, const Eigen::Map<Eigen::MatrixXd>& X_testing, const Eigen::Map<Eigen::MatrixXd>& L, Eigen::Map<Eigen::MatrixXd>& LX, Eigen::Map<Eigen::VectorXd>& theta_hat, double sigma2_hat, double qt_025, double qt_975, List r0, const String kernel_type, const Eigen::VectorXd alpha);
+List pred_rgasp(const Eigen::VectorXd beta, const double nu, const Eigen::Map<Eigen::MatrixXd>& input, const Eigen::Map<Eigen::MatrixXd>& X, const String zero_mean, const Eigen::Map<Eigen::MatrixXd>& output, const Eigen::Map<Eigen::MatrixXd>& testing_input, const Eigen::Map<Eigen::MatrixXd>& X_testing, const Eigen::Map<Eigen::MatrixXd>& L, Eigen::Map<Eigen::MatrixXd>& LX, Eigen::Map<Eigen::VectorXd>& theta_hat, double sigma2_hat, double qt_025, double qt_975, List r0, Eigen::VectorXi kernel_type, const Eigen::VectorXd alpha);
 RcppExport SEXP _RobustGaSP_pred_rgasp(SEXP betaSEXP, SEXP nuSEXP, SEXP inputSEXP, SEXP XSEXP, SEXP zero_meanSEXP, SEXP outputSEXP, SEXP testing_inputSEXP, SEXP X_testingSEXP, SEXP LSEXP, SEXP LXSEXP, SEXP theta_hatSEXP, SEXP sigma2_hatSEXP, SEXP qt_025SEXP, SEXP qt_975SEXP, SEXP r0SEXP, SEXP kernel_typeSEXP, SEXP alphaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -226,14 +240,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type qt_025(qt_025SEXP);
     Rcpp::traits::input_parameter< double >::type qt_975(qt_975SEXP);
     Rcpp::traits::input_parameter< List >::type r0(r0SEXP);
-    Rcpp::traits::input_parameter< const String >::type kernel_type(kernel_typeSEXP);
+    Rcpp::traits::input_parameter< Eigen::VectorXi >::type kernel_type(kernel_typeSEXP);
     Rcpp::traits::input_parameter< const Eigen::VectorXd >::type alpha(alphaSEXP);
     rcpp_result_gen = Rcpp::wrap(pred_rgasp(beta, nu, input, X, zero_mean, output, testing_input, X_testing, L, LX, theta_hat, sigma2_hat, qt_025, qt_975, r0, kernel_type, alpha));
     return rcpp_result_gen;
 END_RCPP
 }
 // generate_predictive_mean_cov
-List generate_predictive_mean_cov(const Eigen::VectorXd beta, const double nu, const Eigen::Map<Eigen::MatrixXd>& input, const Eigen::Map<Eigen::MatrixXd>& X, const String zero_mean, const Eigen::Map<Eigen::MatrixXd>& output, const Eigen::Map<Eigen::MatrixXd>& testing_input, const Eigen::Map<Eigen::MatrixXd>& X_testing, const Eigen::Map<Eigen::MatrixXd>& L, Eigen::Map<Eigen::MatrixXd>& LX, Eigen::Map<Eigen::VectorXd>& theta_hat, double sigma2_hat, List rr0, List r0, const String kernel_type, const Eigen::VectorXd alpha);
+List generate_predictive_mean_cov(const Eigen::VectorXd beta, const double nu, const Eigen::Map<Eigen::MatrixXd>& input, const Eigen::Map<Eigen::MatrixXd>& X, const String zero_mean, const Eigen::Map<Eigen::MatrixXd>& output, const Eigen::Map<Eigen::MatrixXd>& testing_input, const Eigen::Map<Eigen::MatrixXd>& X_testing, const Eigen::Map<Eigen::MatrixXd>& L, Eigen::Map<Eigen::MatrixXd>& LX, Eigen::Map<Eigen::VectorXd>& theta_hat, double sigma2_hat, List rr0, List r0, Eigen::VectorXi kernel_type, const Eigen::VectorXd alpha);
 RcppExport SEXP _RobustGaSP_generate_predictive_mean_cov(SEXP betaSEXP, SEXP nuSEXP, SEXP inputSEXP, SEXP XSEXP, SEXP zero_meanSEXP, SEXP outputSEXP, SEXP testing_inputSEXP, SEXP X_testingSEXP, SEXP LSEXP, SEXP LXSEXP, SEXP theta_hatSEXP, SEXP sigma2_hatSEXP, SEXP rr0SEXP, SEXP r0SEXP, SEXP kernel_typeSEXP, SEXP alphaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -252,9 +266,111 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type sigma2_hat(sigma2_hatSEXP);
     Rcpp::traits::input_parameter< List >::type rr0(rr0SEXP);
     Rcpp::traits::input_parameter< List >::type r0(r0SEXP);
-    Rcpp::traits::input_parameter< const String >::type kernel_type(kernel_typeSEXP);
+    Rcpp::traits::input_parameter< Eigen::VectorXi >::type kernel_type(kernel_typeSEXP);
     Rcpp::traits::input_parameter< const Eigen::VectorXd >::type alpha(alphaSEXP);
     rcpp_result_gen = Rcpp::wrap(generate_predictive_mean_cov(beta, nu, input, X, zero_mean, output, testing_input, X_testing, L, LX, theta_hat, sigma2_hat, rr0, r0, kernel_type, alpha));
+    return rcpp_result_gen;
+END_RCPP
+}
+// log_marginal_lik_ppgasp
+double log_marginal_lik_ppgasp(const Vec param, double nugget, const bool nugget_est, const List R0, const Eigen::Map<Eigen::MatrixXd>& X, const String zero_mean, const Eigen::Map<Eigen::MatrixXd>& output, Eigen::VectorXi kernel_type, const Eigen::VectorXd alpha);
+RcppExport SEXP _RobustGaSP_log_marginal_lik_ppgasp(SEXP paramSEXP, SEXP nuggetSEXP, SEXP nugget_estSEXP, SEXP R0SEXP, SEXP XSEXP, SEXP zero_meanSEXP, SEXP outputSEXP, SEXP kernel_typeSEXP, SEXP alphaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Vec >::type param(paramSEXP);
+    Rcpp::traits::input_parameter< double >::type nugget(nuggetSEXP);
+    Rcpp::traits::input_parameter< const bool >::type nugget_est(nugget_estSEXP);
+    Rcpp::traits::input_parameter< const List >::type R0(R0SEXP);
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd>& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const String >::type zero_mean(zero_meanSEXP);
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd>& >::type output(outputSEXP);
+    Rcpp::traits::input_parameter< Eigen::VectorXi >::type kernel_type(kernel_typeSEXP);
+    Rcpp::traits::input_parameter< const Eigen::VectorXd >::type alpha(alphaSEXP);
+    rcpp_result_gen = Rcpp::wrap(log_marginal_lik_ppgasp(param, nugget, nugget_est, R0, X, zero_mean, output, kernel_type, alpha));
+    return rcpp_result_gen;
+END_RCPP
+}
+// log_ref_marginal_post_ppgasp
+double log_ref_marginal_post_ppgasp(const Eigen::VectorXd param, double nugget, bool nugget_est, const List R0, const Eigen::Map<Eigen::MatrixXd>& X, const String zero_mean, const Eigen::Map<Eigen::MatrixXd>& output, Eigen::VectorXi kernel_type, const Eigen::VectorXd alpha);
+RcppExport SEXP _RobustGaSP_log_ref_marginal_post_ppgasp(SEXP paramSEXP, SEXP nuggetSEXP, SEXP nugget_estSEXP, SEXP R0SEXP, SEXP XSEXP, SEXP zero_meanSEXP, SEXP outputSEXP, SEXP kernel_typeSEXP, SEXP alphaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Eigen::VectorXd >::type param(paramSEXP);
+    Rcpp::traits::input_parameter< double >::type nugget(nuggetSEXP);
+    Rcpp::traits::input_parameter< bool >::type nugget_est(nugget_estSEXP);
+    Rcpp::traits::input_parameter< const List >::type R0(R0SEXP);
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd>& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const String >::type zero_mean(zero_meanSEXP);
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd>& >::type output(outputSEXP);
+    Rcpp::traits::input_parameter< Eigen::VectorXi >::type kernel_type(kernel_typeSEXP);
+    Rcpp::traits::input_parameter< const Eigen::VectorXd >::type alpha(alphaSEXP);
+    rcpp_result_gen = Rcpp::wrap(log_ref_marginal_post_ppgasp(param, nugget, nugget_est, R0, X, zero_mean, output, kernel_type, alpha));
+    return rcpp_result_gen;
+END_RCPP
+}
+// log_marginal_lik_deriv_ppgasp
+Eigen::VectorXd log_marginal_lik_deriv_ppgasp(const Eigen::VectorXd param, double nugget, bool nugget_est, const List R0, const Eigen::Map<Eigen::MatrixXd>& X, const String zero_mean, const Eigen::Map<Eigen::MatrixXd>& output, Eigen::VectorXi kernel_type, const Eigen::VectorXd alpha);
+RcppExport SEXP _RobustGaSP_log_marginal_lik_deriv_ppgasp(SEXP paramSEXP, SEXP nuggetSEXP, SEXP nugget_estSEXP, SEXP R0SEXP, SEXP XSEXP, SEXP zero_meanSEXP, SEXP outputSEXP, SEXP kernel_typeSEXP, SEXP alphaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Eigen::VectorXd >::type param(paramSEXP);
+    Rcpp::traits::input_parameter< double >::type nugget(nuggetSEXP);
+    Rcpp::traits::input_parameter< bool >::type nugget_est(nugget_estSEXP);
+    Rcpp::traits::input_parameter< const List >::type R0(R0SEXP);
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd>& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const String >::type zero_mean(zero_meanSEXP);
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd>& >::type output(outputSEXP);
+    Rcpp::traits::input_parameter< Eigen::VectorXi >::type kernel_type(kernel_typeSEXP);
+    Rcpp::traits::input_parameter< const Eigen::VectorXd >::type alpha(alphaSEXP);
+    rcpp_result_gen = Rcpp::wrap(log_marginal_lik_deriv_ppgasp(param, nugget, nugget_est, R0, X, zero_mean, output, kernel_type, alpha));
+    return rcpp_result_gen;
+END_RCPP
+}
+// construct_ppgasp
+List construct_ppgasp(const Eigen::VectorXd beta, const double nu, const List R0, const Eigen::Map<Eigen::MatrixXd>& X, const String zero_mean, const Eigen::Map<Eigen::MatrixXd>& output, Eigen::VectorXi kernel_type, const Eigen::VectorXd alpha);
+RcppExport SEXP _RobustGaSP_construct_ppgasp(SEXP betaSEXP, SEXP nuSEXP, SEXP R0SEXP, SEXP XSEXP, SEXP zero_meanSEXP, SEXP outputSEXP, SEXP kernel_typeSEXP, SEXP alphaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Eigen::VectorXd >::type beta(betaSEXP);
+    Rcpp::traits::input_parameter< const double >::type nu(nuSEXP);
+    Rcpp::traits::input_parameter< const List >::type R0(R0SEXP);
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd>& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const String >::type zero_mean(zero_meanSEXP);
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd>& >::type output(outputSEXP);
+    Rcpp::traits::input_parameter< Eigen::VectorXi >::type kernel_type(kernel_typeSEXP);
+    Rcpp::traits::input_parameter< const Eigen::VectorXd >::type alpha(alphaSEXP);
+    rcpp_result_gen = Rcpp::wrap(construct_ppgasp(beta, nu, R0, X, zero_mean, output, kernel_type, alpha));
+    return rcpp_result_gen;
+END_RCPP
+}
+// pred_ppgasp
+List pred_ppgasp(const Eigen::VectorXd beta, const double nu, const Eigen::Map<Eigen::MatrixXd>& input, const Eigen::Map<Eigen::MatrixXd>& X, const String zero_mean, const Eigen::Map<Eigen::MatrixXd>& output, const Eigen::Map<Eigen::MatrixXd>& testing_input, const Eigen::Map<Eigen::MatrixXd>& X_testing, const Eigen::Map<Eigen::MatrixXd>& L, Eigen::Map<Eigen::MatrixXd>& LX, Eigen::Map<Eigen::MatrixXd>& theta_hat, const Eigen::Map<Eigen::VectorXd>& sigma2_hat, double qt_025, double qt_975, List r0, Eigen::VectorXi kernel_type, const Eigen::VectorXd alpha);
+RcppExport SEXP _RobustGaSP_pred_ppgasp(SEXP betaSEXP, SEXP nuSEXP, SEXP inputSEXP, SEXP XSEXP, SEXP zero_meanSEXP, SEXP outputSEXP, SEXP testing_inputSEXP, SEXP X_testingSEXP, SEXP LSEXP, SEXP LXSEXP, SEXP theta_hatSEXP, SEXP sigma2_hatSEXP, SEXP qt_025SEXP, SEXP qt_975SEXP, SEXP r0SEXP, SEXP kernel_typeSEXP, SEXP alphaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Eigen::VectorXd >::type beta(betaSEXP);
+    Rcpp::traits::input_parameter< const double >::type nu(nuSEXP);
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd>& >::type input(inputSEXP);
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd>& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const String >::type zero_mean(zero_meanSEXP);
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd>& >::type output(outputSEXP);
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd>& >::type testing_input(testing_inputSEXP);
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd>& >::type X_testing(X_testingSEXP);
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::MatrixXd>& >::type L(LSEXP);
+    Rcpp::traits::input_parameter< Eigen::Map<Eigen::MatrixXd>& >::type LX(LXSEXP);
+    Rcpp::traits::input_parameter< Eigen::Map<Eigen::MatrixXd>& >::type theta_hat(theta_hatSEXP);
+    Rcpp::traits::input_parameter< const Eigen::Map<Eigen::VectorXd>& >::type sigma2_hat(sigma2_hatSEXP);
+    Rcpp::traits::input_parameter< double >::type qt_025(qt_025SEXP);
+    Rcpp::traits::input_parameter< double >::type qt_975(qt_975SEXP);
+    Rcpp::traits::input_parameter< List >::type r0(r0SEXP);
+    Rcpp::traits::input_parameter< Eigen::VectorXi >::type kernel_type(kernel_typeSEXP);
+    Rcpp::traits::input_parameter< const Eigen::VectorXd >::type alpha(alphaSEXP);
+    rcpp_result_gen = Rcpp::wrap(pred_ppgasp(beta, nu, input, X, zero_mean, output, testing_input, X_testing, L, LX, theta_hat, sigma2_hat, qt_025, qt_975, r0, kernel_type, alpha));
     return rcpp_result_gen;
 END_RCPP
 }

@@ -29,6 +29,10 @@ separable_kernel <- function(R0, beta, kernel_type, alpha) {
     .Call('_RobustGaSP_separable_kernel', PACKAGE = 'RobustGaSP', R0, beta, kernel_type, alpha)
 }
 
+separable_multi_kernel <- function(R0, beta, kernel_type, alpha) {
+    .Call('_RobustGaSP_separable_multi_kernel', PACKAGE = 'RobustGaSP', R0, beta, kernel_type, alpha)
+}
+
 log_marginal_lik <- function(param, nugget, nugget_est, R0, X, zero_mean, output, kernel_type, alpha) {
     .Call('_RobustGaSP_log_marginal_lik', PACKAGE = 'RobustGaSP', param, nugget, nugget_est, R0, X, zero_mean, output, kernel_type, alpha)
 }
@@ -59,5 +63,25 @@ pred_rgasp <- function(beta, nu, input, X, zero_mean, output, testing_input, X_t
 
 generate_predictive_mean_cov <- function(beta, nu, input, X, zero_mean, output, testing_input, X_testing, L, LX, theta_hat, sigma2_hat, rr0, r0, kernel_type, alpha) {
     .Call('_RobustGaSP_generate_predictive_mean_cov', PACKAGE = 'RobustGaSP', beta, nu, input, X, zero_mean, output, testing_input, X_testing, L, LX, theta_hat, sigma2_hat, rr0, r0, kernel_type, alpha)
+}
+
+log_marginal_lik_ppgasp <- function(param, nugget, nugget_est, R0, X, zero_mean, output, kernel_type, alpha) {
+    .Call('_RobustGaSP_log_marginal_lik_ppgasp', PACKAGE = 'RobustGaSP', param, nugget, nugget_est, R0, X, zero_mean, output, kernel_type, alpha)
+}
+
+log_ref_marginal_post_ppgasp <- function(param, nugget, nugget_est, R0, X, zero_mean, output, kernel_type, alpha) {
+    .Call('_RobustGaSP_log_ref_marginal_post_ppgasp', PACKAGE = 'RobustGaSP', param, nugget, nugget_est, R0, X, zero_mean, output, kernel_type, alpha)
+}
+
+log_marginal_lik_deriv_ppgasp <- function(param, nugget, nugget_est, R0, X, zero_mean, output, kernel_type, alpha) {
+    .Call('_RobustGaSP_log_marginal_lik_deriv_ppgasp', PACKAGE = 'RobustGaSP', param, nugget, nugget_est, R0, X, zero_mean, output, kernel_type, alpha)
+}
+
+construct_ppgasp <- function(beta, nu, R0, X, zero_mean, output, kernel_type, alpha) {
+    .Call('_RobustGaSP_construct_ppgasp', PACKAGE = 'RobustGaSP', beta, nu, R0, X, zero_mean, output, kernel_type, alpha)
+}
+
+pred_ppgasp <- function(beta, nu, input, X, zero_mean, output, testing_input, X_testing, L, LX, theta_hat, sigma2_hat, qt_025, qt_975, r0, kernel_type, alpha) {
+    .Call('_RobustGaSP_pred_ppgasp', PACKAGE = 'RobustGaSP', beta, nu, input, X, zero_mean, output, testing_input, X_testing, L, LX, theta_hat, sigma2_hat, qt_025, qt_975, r0, kernel_type, alpha)
 }
 

@@ -50,7 +50,10 @@ Prior parameter in the jointly robust prior.
 The numerical value of the derivative of the approximate reference prior with regard to inverse-range parameters and the nugget-variance ratio parameter. When the nugget is fixed, the derivative is on inverse-range parameters.
 }
 \references{
-Mengyang Gu. (2016). Robust Uncertainty Quantification and Scalable Computation for Computer Models with Massive Output. Ph.D. thesis. Duke University.
+M. Gu. (2016). Robust uncertainty quantification and scalable computation for computer models with massive output. Ph.D. thesis. Duke University.
+
+M. Gu (2018), \emph{Jointly robust prior for Gaussian stochastic process in emulation, calibration and variable selection}, arXiv:1804.09329.
+
 }
 \author{
 %%  ~~who you are~~

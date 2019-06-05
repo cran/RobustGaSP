@@ -7,7 +7,7 @@ Derivative of natural logarithm of the marginal likelihood
 }
 \description{
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
-The derivative of natural logarithm of marginal likelihood with regard to inverse range parameters and nugget-variance ratio parameter after marginalizing out the mean (trend) and variance parameters the location-scale prior. When the nugget is fixed, it only compute the derivative with regard to the inverse range parameter; otherwise it produces derivative with regard to inverse range parameter and nugget-variance ratio parameter.
+The derivative of natural logarithm of marginal likelihood of the Robust GaSP model with regard to inverse range parameters and nugget-variance ratio parameter after marginalizing out the mean (trend) and variance parameters the location-scale prior. When the nugget is fixed, it only compute the derivative with regard to the inverse range parameter; otherwise it produces derivative with regard to inverse range parameter and nugget-variance ratio parameter.
 }
 \usage{
 log_marginal_lik_deriv(param, nugget, nugget_est, R0, X, zero_mean, 
@@ -29,7 +29,7 @@ Boolean value of whether the nugget is estimated or fixed.
 }
   \item{R0}{
 %%     ~~Describe \code{R0} here~~
-A List of matrix where the j-th matrix is an absolute difference matrix of the j-th input vector.
+A list of matrix where the j-th matrix is an absolute difference matrix of the j-th input vector.
 }
   \item{X}{
 %%     ~~Describe \code{X} here~~
@@ -65,7 +65,7 @@ Roughness parameters in the kernel functions.
 The numerical value of the derivative of natural logarithm of marginal likelihood with regard to range and nugget-variance ratio parameter (if not fixed). When the nugget is fixed, the derivative is on inverse-range parameters.
 }
 \references{
-Mengyang Gu. (2016). Robust Uncertainty Quantification and Scalable Computation for Computer Models with Massive Output. Ph.D. thesis. Duke University.
+M. Gu. (2016). Robust uncertainty quantification and scalable computation for computer models with massive output. Ph.D. thesis. Duke University.
 }
 \author{
 %%  ~~who you are~~

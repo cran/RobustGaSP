@@ -1,19 +1,20 @@
-\name{rgasp-class}
+\name{ppgasp-class}
 \docType{class}
-\alias{rgasp-class}
+\alias{ppgasp-class}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{ Robust GaSP class }
-\description{ S4 class for Robust GaSP if the range and noise-variance ratio parameters are given and/or have been estimated.}
+\title{PP GaSP class }
+\description{ S4 class for PP GaSP model if the range and noise-variance ratio parameters are given and/or have been estimated.}
 
 \section{Objects from the Class}{
-Objects of this class are created and initialized with the function \code{\link{rgasp}} that computes the calculations needed for setting up the analysis.}
+Objects of this class are created and initialized with the function \code{\link{ppgasp}} that computes the calculations needed for setting up the analysis.}
 
 \section{Slots}{
 	 \describe{
     \item{\code{p}:}{Object of class \code{integer}. The dimensions of the inputs.}
     \item{\code{num_obs}:}{Object of class \code{integer}. The number of observations.}
+        \item{\code{k}:}{Object of class \code{integer}. The number of outputs in each computer model run.}
     \item{\code{input}:}{Object of class \code{matrix} with dimension n x p. The design of experiments.}
-    \item{\code{output}:}{Object of class \code{matrix} with dimension n x 1. The Observations or output vector.}
+    \item{\code{output}:}{Object of class \code{matrix} with dimension n x k. Each row denotes a output vector in each run of the computer model.}
     \item{\code{X}:}{Object of class \code{matrix} of with dimension n x q. The mean basis function, i.e. the trend function.}
         \item{\code{zero_mean}:}{A \code{character} to specify whether the mean is zero or not. "Yes" means it has zero mean and "No"" means the mean is not zero. }
     \item{\code{q}:}{Object of class \code{integer}. The number of mean basis.}
@@ -24,14 +25,14 @@ Objects of this class are created and initialized with the function \code{\link{
     \item{\code{R0}:}{Object of class \code{list} of matrices where the j-th matrix is an absolute difference matrix of the j-th input vector.}
     \item{\code{theta_hat}:}{Object of class \code{vector} with dimension q x 1. The the mean (trend) parameter.}
     \item{\code{L}:}{Object of class \code{matrix} with dimension n x n. The Cholesky decomposition of the correlation matrix \code{R}, i.e. \deqn{L\%*\%t(L)=R}{L\%*\%t(L)=R}}
-    \item{\code{sigma2_hat}:}{Object of the class \code{numeric}. The estimated variance parameter.}
+    \item{\code{sigma2_hat}:}{Object of the class \code{matrix}. The estimated variance parameter of each output.}
     \item{\code{LX}:}{Object of the class \code{matrix} with dimension q x q. The Cholesky decomposition of the correlation matrix \deqn{t(X)\%*\%R^{-1}\%*\%X}{t(X)\%*\%R^{-1}\%*\%X}}
     \item{\code{CL}:}{Object of the class \code{vector} used for the lower bound and the prior.}
     \item{\code{nugget}:}{A \code{numeric} object used for the noise-variance ratio parameter.}
     \item{\code{nugget.est}:}{A \code{logical} object of whether the nugget is estimated (T) or fixed (F).}
     \item{\code{kernel_type}:}{A \code{vector} of \code{character} to specify the type of kernel to use.}
     \item{\code{alpha}:}{Object of class \code{vector} with dimension p x 1 for the roughness parameters in the kernel.}
-    \item{\code{call}:}{The \code{call} to \code{rgasp} function to create the object.}
+    \item{\code{call}:}{The \code{call} to \code{ppgasp} function to create the object.}
     }
   }
 
@@ -41,7 +42,7 @@ Objects of this class are created and initialized with the function \code{\link{
 %    \item{summary}{A summary of the object created. }
     \item{show}{Prints the main slots of the object. }
 %    \item{plot}{See \code{\link[=plot,SAVE-method]{plot}}. }
-    \item{predict}{See \code{\link[=predict.rgasp]{predict}}.}
+    \item{predict}{See \code{\link[=predict.ppgasp]{predict}}.}
 	 }
 }
 
@@ -51,11 +52,11 @@ Objects of this class are created and initialized with the function \code{\link{
 Maintainer: \packageMaintainer{RobustGaSP}
 }
 
-\note{
+%\note{
 %%  ~~further notes~~
-The response \code{output} must have one dimension.
-The number of observations in \code{input} must be equal to the number of experiments \code{output}.
-}
+%The response \code{output} must have one dimension.
+%The number of observations in \code{input} must be equal to the number of experiments \code{output}.
+%}
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
