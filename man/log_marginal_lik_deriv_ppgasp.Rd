@@ -7,7 +7,7 @@ Derivative of natural logarithm of the marginal likelihood
 }
 \description{
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
-The derivative of natural logarithm of marginal likelihood of the PP GaSP model with regard to inverse range parameters and nugget-variance ratio parameter after marginalizing out the mean (trend) and variance parameters the location-scale prior. When the nugget is fixed, it only compute the derivative with regard to the inverse range parameter; otherwise it produces derivative with regard to inverse range parameter and nugget-variance ratio parameter.
+The derivative of natural logarithm of marginal likelihood of the PP GaSP model with regard to inverse range parameters and nugget-variance ratio parameter after marginalizing out the mean (trend) and variance parameters by the location-scale prior. When the nugget is fixed, it only compute the derivative with regard to the inverse range parameter; otherwise it produces derivative with regard to inverse range parameter and nugget-variance ratio parameter.
 }
 \usage{
 log_marginal_lik_deriv_ppgasp(param, nugget, nugget_est, R0, X, zero_mean, 
@@ -46,7 +46,7 @@ a matrix where each row is one runs of the computer model output.
 }
   \item{kernel_type}{
 %%     ~~Describe \code{kernel_type} here~~
-type of kernel. \code{matern_3_2} and \code{matern_5_2} are \code{Matern kernel} with roughness parameter 3/2 and 5/2 respectively. \code{pow_exp} is power exponential kernel with roughness parameter alpha. If \code{pow_exp} is to be used, one needs to specify its roughness parameter alpha.
+A vector specifying the type of kernels of each coordinate of the input. \code{matern_3_2} and \code{matern_5_2} are \code{Matern correlation} with roughness parameter 3/2 and 5/2 respectively. \code{pow_exp} is power exponential correlation with roughness parameter alpha. If \code{pow_exp} is to be used, one needs to specify its roughness parameter alpha. The default choice is \code{matern_5_2}. The \code{periodic_gauss} means the Gaussian kernel with periodic folding method with be used. The \code{periodic_exp} means the exponential kernel with periodic folding method will be used.
 }
   \item{alpha}{
 %%     ~~Describe \code{alpha} here~~

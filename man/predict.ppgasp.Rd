@@ -13,14 +13,27 @@ Prediction for PP GaSP model
 Function to make prediction on the PP GaSP model after the PP GaSP model has been constructed.
 }
 \usage{
-\S4method{predict}{ppgasp}(object, testing_input,  
-                   testing_trend= matrix(1,dim(testing_input)[1],1),outasS3 = T, ...)
+\S4method{predict}{ppgasp}(object, testing_input, 
+testing_trend= matrix(1,dim(testing_input)[1],1),r0=NA, 
+interval_data=T,
+outasS3 = T, ...)
 %- maybe also 'usage' for other objects documented here.
 }
 \arguments{
   \item{object}{ an object of  class \code{ppgasp}.}
   \item{testing_input}{a matrix containing the inputs where the \code{rgasp} is to perform prediction.}
   \item{testing_trend}{a matrix of mean/trend for prediction.}
+  \item{r0}{
+      the distance between input and testing input. If the value 
+      is \code{NA}, it will be calculated later. It can also be 
+      specified by the user. If specified by user, it is either a 
+      \code{matrix} or \code{list}. The default value is \code{NA}.
+    }
+\item{interval_data}{
+   a boolean value. If \code{T}, the interval of the data will be   
+   calculated. Otherwise, the interval of the mean of the data will 
+   be calculted.
+}
   \item{outasS3}{a boolean parameter indicating whether the output of the function should be as an \code{S3 object}.}
   \item{...}{Extra arguments to be passed to the function (not implemented yet).}
 }
@@ -85,6 +98,7 @@ Maintainer: \packageMaintainer{RobustGaSP}
   #----------------------------------
   
   set.seed(1)
+  #Here the sample size is very small. Consider to use more observations 
   n=100
   p=4
   ##using the latin hypercube will be better
@@ -126,13 +140,14 @@ Maintainer: \packageMaintainer{RobustGaSP}
   ##we do a transformation of the output 
   ##one can change the number of initial values to test
   log_output_1=log(output+1)
+  #since we have lots of output, we use 'nelder-mead' for optimization
   m.ppgasp=ppgasp(design=input,response=log_output_1,kernel_type
-                  ='pow_exp',num_initial_values=2)
+                  ='pow_exp',num_initial_values=2,optimization='nelder-mead')
   m_pred.ppgasp=predict(m.ppgasp,testing_input)
   ##we transform back for the prediction
-  m_pred_ppgasp_mean=exp(m_pred.ppgasp$mean)-1
+  m_pred_ppgasp_median=exp(m_pred.ppgasp$mean)-1
   ##mean squared error
-  mean( (m_pred_ppgasp_mean-testing_output)^2)
+  mean( (m_pred_ppgasp_median-testing_output)^2)
   ##variance of the testing outputs
   var(as.numeric(testing_output))
   
@@ -150,7 +165,7 @@ Maintainer: \packageMaintainer{RobustGaSP}
                                                by = (max_testing_plot_1-min_testing_plot_1)/5),
           add = TRUE, col = "brown")
   
-  ppgasp_plot_1=matrix(m_pred_ppgasp_mean[1,],  length(t), length(s) )
+  ppgasp_plot_1=matrix(m_pred_ppgasp_median[1,],  length(t), length(s) )
   max_ppgasp_plot_1=max(ppgasp_plot_1)
   min_ppgasp_plot_1=min(ppgasp_plot_1)
   

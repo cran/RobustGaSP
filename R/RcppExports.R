@@ -13,6 +13,14 @@ pow_exp_funct <- function(d, beta_i, alpha_i) {
     .Call('_RobustGaSP_pow_exp_funct', PACKAGE = 'RobustGaSP', d, beta_i, alpha_i)
 }
 
+periodic_gauss_funct <- function(d, beta_i) {
+    .Call('_RobustGaSP_periodic_gauss_funct', PACKAGE = 'RobustGaSP', d, beta_i)
+}
+
+periodic_exp_funct <- function(d, beta_i) {
+    .Call('_RobustGaSP_periodic_exp_funct', PACKAGE = 'RobustGaSP', d, beta_i)
+}
+
 matern_5_2_deriv <- function(R0_i, R, beta_i) {
     .Call('_RobustGaSP_matern_5_2_deriv', PACKAGE = 'RobustGaSP', R0_i, R, beta_i)
 }
@@ -25,6 +33,14 @@ pow_exp_deriv <- function(R0_i, R, beta_i, alpha_i) {
     .Call('_RobustGaSP_pow_exp_deriv', PACKAGE = 'RobustGaSP', R0_i, R, beta_i, alpha_i)
 }
 
+periodic_gauss_deriv <- function(R0_i, R, beta_i) {
+    .Call('_RobustGaSP_periodic_gauss_deriv', PACKAGE = 'RobustGaSP', R0_i, R, beta_i)
+}
+
+periodic_exp_deriv <- function(R0_i, R, beta_i) {
+    .Call('_RobustGaSP_periodic_exp_deriv', PACKAGE = 'RobustGaSP', R0_i, R, beta_i)
+}
+
 separable_kernel <- function(R0, beta, kernel_type, alpha) {
     .Call('_RobustGaSP_separable_kernel', PACKAGE = 'RobustGaSP', R0, beta, kernel_type, alpha)
 }
@@ -33,8 +49,20 @@ separable_multi_kernel <- function(R0, beta, kernel_type, alpha) {
     .Call('_RobustGaSP_separable_multi_kernel', PACKAGE = 'RobustGaSP', R0, beta, kernel_type, alpha)
 }
 
+separable_multi_kernel_pred_periodic <- function(R0, beta, kernel_type, alpha, perid_const) {
+    .Call('_RobustGaSP_separable_multi_kernel_pred_periodic', PACKAGE = 'RobustGaSP', R0, beta, kernel_type, alpha, perid_const)
+}
+
+euclidean_distance <- function(input1, input2) {
+    .Call('_RobustGaSP_euclidean_distance', PACKAGE = 'RobustGaSP', input1, input2)
+}
+
 log_marginal_lik <- function(param, nugget, nugget_est, R0, X, zero_mean, output, kernel_type, alpha) {
     .Call('_RobustGaSP_log_marginal_lik', PACKAGE = 'RobustGaSP', param, nugget, nugget_est, R0, X, zero_mean, output, kernel_type, alpha)
+}
+
+log_profile_lik <- function(param, nugget, nugget_est, R0, X, zero_mean, output, kernel_type, alpha) {
+    .Call('_RobustGaSP_log_profile_lik', PACKAGE = 'RobustGaSP', param, nugget, nugget_est, R0, X, zero_mean, output, kernel_type, alpha)
 }
 
 log_approx_ref_prior <- function(param, nugget, nugget_est, CL, a, b) {
@@ -43,6 +71,10 @@ log_approx_ref_prior <- function(param, nugget, nugget_est, CL, a, b) {
 
 log_marginal_lik_deriv <- function(param, nugget, nugget_est, R0, X, zero_mean, output, kernel_type, alpha) {
     .Call('_RobustGaSP_log_marginal_lik_deriv', PACKAGE = 'RobustGaSP', param, nugget, nugget_est, R0, X, zero_mean, output, kernel_type, alpha)
+}
+
+log_profile_lik_deriv <- function(param, nugget, nugget_est, R0, X, zero_mean, output, kernel_type, alpha) {
+    .Call('_RobustGaSP_log_profile_lik_deriv', PACKAGE = 'RobustGaSP', param, nugget, nugget_est, R0, X, zero_mean, output, kernel_type, alpha)
 }
 
 log_approx_ref_prior_deriv <- function(param, nugget, nugget_est, CL, a, b) {
@@ -57,16 +89,20 @@ construct_rgasp <- function(beta, nu, R0, X, zero_mean, output, kernel_type, alp
     .Call('_RobustGaSP_construct_rgasp', PACKAGE = 'RobustGaSP', beta, nu, R0, X, zero_mean, output, kernel_type, alpha)
 }
 
-pred_rgasp <- function(beta, nu, input, X, zero_mean, output, testing_input, X_testing, L, LX, theta_hat, sigma2_hat, qt_025, qt_975, r0, kernel_type, alpha) {
-    .Call('_RobustGaSP_pred_rgasp', PACKAGE = 'RobustGaSP', beta, nu, input, X, zero_mean, output, testing_input, X_testing, L, LX, theta_hat, sigma2_hat, qt_025, qt_975, r0, kernel_type, alpha)
+pred_rgasp <- function(beta, nu, input, X, zero_mean, output, testing_input, X_testing, L, LX, theta_hat, sigma2_hat, q_025, q_975, r0, kernel_type, alpha, method, interval_data) {
+    .Call('_RobustGaSP_pred_rgasp', PACKAGE = 'RobustGaSP', beta, nu, input, X, zero_mean, output, testing_input, X_testing, L, LX, theta_hat, sigma2_hat, q_025, q_975, r0, kernel_type, alpha, method, interval_data)
 }
 
-generate_predictive_mean_cov <- function(beta, nu, input, X, zero_mean, output, testing_input, X_testing, L, LX, theta_hat, sigma2_hat, rr0, r0, kernel_type, alpha) {
-    .Call('_RobustGaSP_generate_predictive_mean_cov', PACKAGE = 'RobustGaSP', beta, nu, input, X, zero_mean, output, testing_input, X_testing, L, LX, theta_hat, sigma2_hat, rr0, r0, kernel_type, alpha)
+generate_predictive_mean_cov <- function(beta, nu, input, X, zero_mean, output, testing_input, X_testing, L, LX, theta_hat, sigma2_hat, rr0, r0, kernel_type, alpha, method, sample_data) {
+    .Call('_RobustGaSP_generate_predictive_mean_cov', PACKAGE = 'RobustGaSP', beta, nu, input, X, zero_mean, output, testing_input, X_testing, L, LX, theta_hat, sigma2_hat, rr0, r0, kernel_type, alpha, method, sample_data)
 }
 
 log_marginal_lik_ppgasp <- function(param, nugget, nugget_est, R0, X, zero_mean, output, kernel_type, alpha) {
     .Call('_RobustGaSP_log_marginal_lik_ppgasp', PACKAGE = 'RobustGaSP', param, nugget, nugget_est, R0, X, zero_mean, output, kernel_type, alpha)
+}
+
+log_profile_lik_ppgasp <- function(param, nugget, nugget_est, R0, X, zero_mean, output, kernel_type, alpha) {
+    .Call('_RobustGaSP_log_profile_lik_ppgasp', PACKAGE = 'RobustGaSP', param, nugget, nugget_est, R0, X, zero_mean, output, kernel_type, alpha)
 }
 
 log_ref_marginal_post_ppgasp <- function(param, nugget, nugget_est, R0, X, zero_mean, output, kernel_type, alpha) {
@@ -77,11 +113,19 @@ log_marginal_lik_deriv_ppgasp <- function(param, nugget, nugget_est, R0, X, zero
     .Call('_RobustGaSP_log_marginal_lik_deriv_ppgasp', PACKAGE = 'RobustGaSP', param, nugget, nugget_est, R0, X, zero_mean, output, kernel_type, alpha)
 }
 
+log_profile_lik_deriv_ppgasp <- function(param, nugget, nugget_est, R0, X, zero_mean, output, kernel_type, alpha) {
+    .Call('_RobustGaSP_log_profile_lik_deriv_ppgasp', PACKAGE = 'RobustGaSP', param, nugget, nugget_est, R0, X, zero_mean, output, kernel_type, alpha)
+}
+
 construct_ppgasp <- function(beta, nu, R0, X, zero_mean, output, kernel_type, alpha) {
     .Call('_RobustGaSP_construct_ppgasp', PACKAGE = 'RobustGaSP', beta, nu, R0, X, zero_mean, output, kernel_type, alpha)
 }
 
-pred_ppgasp <- function(beta, nu, input, X, zero_mean, output, testing_input, X_testing, L, LX, theta_hat, sigma2_hat, qt_025, qt_975, r0, kernel_type, alpha) {
-    .Call('_RobustGaSP_pred_ppgasp', PACKAGE = 'RobustGaSP', beta, nu, input, X, zero_mean, output, testing_input, X_testing, L, LX, theta_hat, sigma2_hat, qt_025, qt_975, r0, kernel_type, alpha)
+pred_ppgasp <- function(beta, nu, input, X, zero_mean, output, testing_input, X_testing, L, LX, theta_hat, sigma2_hat, q_025, q_975, r0, kernel_type, alpha, method, interval_data) {
+    .Call('_RobustGaSP_pred_ppgasp', PACKAGE = 'RobustGaSP', beta, nu, input, X, zero_mean, output, testing_input, X_testing, L, LX, theta_hat, sigma2_hat, q_025, q_975, r0, kernel_type, alpha, method, interval_data)
+}
+
+test_const_column <- function(d) {
+    .Call('_RobustGaSP_test_const_column', PACKAGE = 'RobustGaSP', d)
 }
 

@@ -12,6 +12,8 @@ using namespace std;
 using namespace Eigen;
 
 
+//#define PI 3.14159265359
+
 // via the depends attribute we tell Rcpp to create hooks for
 // RcppEigen so that the build process will know what to do
 //
@@ -50,6 +52,82 @@ Eigen::MatrixXd matern_5_2_funct (const MapMat &d, double beta_i){
 
 }
 
+// [[Rcpp::export]]
+Eigen::MatrixXd periodic_gauss_funct(const MapMat &d, double beta_i){
+  
+  int Rnrow = d.rows();
+  int Rncol = d.cols();
+  
+  Eigen::MatrixXd R=1.0/(2.0*sqrt(PI*beta_i))*Eigen::MatrixXd::Ones(Rnrow,Rncol);
+    double two_beta_i=2*beta_i;
+    int n_ti=std::min(std::max(11.0, two_beta_i),101.0);
+    for(int ti=1; ti <n_ti; ti++){
+      R=R+1.0/sqrt(PI*beta_i)*exp(-pow(ti,2.0)/(4.0*beta_i))* (ti*d).array().cos().matrix();
+  }
+  R=R/R(0,0);
+  return R;
+  
+  
+
+
+}
+
+
+Eigen::MatrixXd periodic_gauss_funct_fixed_normalized_const(const MapMat &d, double beta_i,double perid_const_i){
+  int Rnrow = d.rows();
+  int Rncol = d.cols();
+  
+  Eigen::MatrixXd R=1.0/(2.0*sqrt(PI*beta_i))*Eigen::MatrixXd::Ones(Rnrow,Rncol);
+  double two_beta_i=2*beta_i;
+  int n_ti=std::min(std::max(11.0, two_beta_i),101.0);
+  for(int ti=1; ti <n_ti; ti++){
+    R=R+1.0/sqrt(PI*beta_i)*exp(-pow(ti,2.0)/(4.0*beta_i))* (ti*d).array().cos().matrix();
+  }
+  R=R/perid_const_i;
+  return R;
+  
+}
+
+// [[Rcpp::export]]
+Eigen::MatrixXd periodic_exp_funct(const MapMat &d, double beta_i){
+  
+  int Rnrow = d.rows();
+  int Rncol = d.cols();
+  
+  Eigen::MatrixXd R=1.0/(PI*beta_i)*Eigen::MatrixXd::Ones(Rnrow,Rncol);
+
+  double five_beta_i=5*beta_i;
+  int n_ti=std::min(std::max(21.0, five_beta_i),201.0);
+  for(int ti=1; ti <n_ti; ti++){
+    R=R+2.0*beta_i/((pow(beta_i,2.0)+pow(ti,2.0))*PI)*(ti*d).array().cos().matrix();
+  }
+  R=R/R(0,0);
+  return R;
+  
+
+}
+
+
+
+
+Eigen::MatrixXd periodic_exp_funct_fixed_normalized_const(const MapMat &d, double beta_i,double perid_const_i){
+  int Rnrow = d.rows();
+  int Rncol = d.cols();
+  
+  Eigen::MatrixXd R=1.0/(PI*beta_i)*Eigen::MatrixXd::Ones(Rnrow,Rncol);
+  
+  double five_beta_i=5*beta_i;
+  int n_ti=std::min(std::max(21.0, five_beta_i),201.0);
+  for(int ti=1; ti <n_ti; ti++){
+    R=R+2.0*beta_i/((pow(beta_i,2.0)+pow(ti,2.0))*PI)*(ti*d).array().cos().matrix();
+  }
+  R=R/perid_const_i;
+  return R;
+  
+}
+       
+
+
 
 //////derivative of kernel functions with regard to inverse range parameter
 // [[Rcpp::export]]
@@ -82,6 +160,54 @@ Eigen::MatrixXd pow_exp_deriv(const MapMat & R0_i,  const Eigen::MatrixXd R, con
  return  -(R.array()*(R0_i.array().pow(alpha_i))).matrix()*alpha_i*pow(beta_i,alpha_i-1);
 }
 
+// [[Rcpp::export]]
+Eigen::MatrixXd periodic_gauss_deriv(const MapMat &R0_i, const Eigen::MatrixXd & R, double beta_i){
+  
+  int Rnrow = R0_i.rows();
+  int Rncol = R0_i.cols();
+  
+  Eigen::MatrixXd R_here=1.0/(2.0*sqrt(PI*beta_i))*Eigen::MatrixXd::Ones(Rnrow,Rncol);
+  
+  Eigen::MatrixXd R_partial=-pow(beta_i,-1.5)/(4*sqrt(PI))*R.Ones(Rnrow,Rncol);
+  double two_beta_i=2*beta_i;
+  int n_ti=std::min(std::max(11.0, two_beta_i),101.0);
+  for(int ti=1; ti <n_ti; ti++){
+    R_here=R_here+1.0/sqrt(PI*beta_i)*exp(-pow(ti,2.0)/(4.0*beta_i))* (ti*R0_i).array().cos().matrix();
+    R_partial=R_partial+ exp(-pow(ti,2.0)/(4.0*beta_i) )*pow(beta_i,-1.5)/(2*sqrt(PI))*(pow(ti,2.0)/(beta_i*2.0)-1 )*(ti*R0_i).array().cos().matrix();
+  }
+  
+  double c_norm=R_here(0,0);
+  double c_norm_partial=R_partial(0,0);
+  
+  return (R.array()*( R_partial.array()*c_norm/R_here.array()- (c_norm_partial*R.Ones(Rnrow,Rncol)).array() )/c_norm).matrix();
+  
+  
+}
+
+// [[Rcpp::export]]
+Eigen::MatrixXd periodic_exp_deriv(const MapMat &R0_i, const Eigen::MatrixXd & R, double beta_i){
+  
+  int Rnrow = R0_i.rows();
+  int Rncol = R0_i.cols();
+  
+  Eigen::MatrixXd R_here=1.0/(PI*beta_i)*Eigen::MatrixXd::Ones(Rnrow,Rncol);
+  
+  Eigen::MatrixXd R_partial=-1.0/(PI*pow(beta_i,2.0) )*R.Ones(Rnrow,Rncol);
+  double five_beta_i=5*beta_i;
+  int n_ti=std::min(std::max(21.0, five_beta_i),201.0);
+  for(int ti=1; ti <n_ti; ti++){
+    R_here=R_here+2.0*beta_i/((pow(beta_i,2.0)+pow(ti,2.0))*PI)*(ti*R0_i).array().cos().matrix();
+    R_partial=R_partial+ 2.0*(pow(ti,2.0)-pow(beta_i,2.0) )/(PI*(pow(beta_i,2.0)+pow(ti,2.0) ))*(ti*R0_i).array().cos().matrix();
+  }
+  
+  double c_norm=R_here(0,0);
+  double c_norm_partial=R_partial(0,0);
+  
+  return (R.array()*( R_partial.array()*c_norm/R_here.array()- (c_norm_partial*R.Ones(Rnrow,Rncol)).array() )/c_norm).matrix();
+  
+}
+
+
 
 //this one is used in the old version and I still keep it here if other packages depends on it
 // [[Rcpp::export]]
@@ -105,6 +231,18 @@ Eigen::MatrixXd separable_kernel (List R0, Eigen::VectorXd beta,String kernel_ty
       R = (pow_exp_funct(R0[i_ker],beta[i_ker],alpha[i_ker])).cwiseProduct(R);
     }
   }
+  else if(kernel_type=="periodic_gauss"){
+    for (int i_ker = 0; i_ker < beta.size(); i_ker++){
+      R = (periodic_gauss_funct(R0[i_ker],beta[i_ker])).cwiseProduct(R);
+    }
+  }
+  else if(kernel_type=="periodic_exp"){
+    for (int i_ker = 0; i_ker < beta.size(); i_ker++){
+      R = (periodic_exp_funct(R0[i_ker],beta[i_ker])).cwiseProduct(R);
+    }
+  }
+  
+  
   return R;
 }
 
@@ -124,9 +262,60 @@ Eigen::MatrixXd separable_multi_kernel (List R0, Eigen::VectorXd beta,Eigen::Vec
       R = (matern_3_2_funct(R0[i_ker],beta[i_ker])).cwiseProduct(R);
     }else if(kernel_type[i_ker]==1){
       R = (pow_exp_funct(R0[i_ker],beta[i_ker],alpha[i_ker])).cwiseProduct(R);
+    }else if(kernel_type[i_ker]==4){
+      R = (periodic_gauss_funct(R0[i_ker],beta[i_ker])).cwiseProduct(R);
+    }else if(kernel_type[i_ker]==5){
+      R = (periodic_exp_funct(R0[i_ker],beta[i_ker])).cwiseProduct(R);
+    }
+      
+  }
+  return R;
+}
+
+////this is the for the normalizing constant in prediction
+// [[Rcpp::export]]
+Eigen::MatrixXd separable_multi_kernel_pred_periodic (const List R0, const Eigen::VectorXd beta,const Eigen::VectorXi kernel_type, const Eigen::VectorXd alpha, const Eigen::VectorXd perid_const){
+  Eigen::MatrixXd R0element = R0[0];
+  int Rnrow = R0element.rows();
+  int Rncol = R0element.cols();
+  
+  Eigen::MatrixXd R = R.Ones(Rnrow,Rncol);
+  //String kernel_type_i_ker;
+  for (int i_ker = 0; i_ker < beta.size(); i_ker++){
+    // kernel_type_i_ker=kernel_type[i_ker];
+    if(kernel_type[i_ker]==3){
+      R = (matern_5_2_funct(R0[i_ker],beta[i_ker])).cwiseProduct(R);
+    }else if(kernel_type[i_ker]==2){
+      R = (matern_3_2_funct(R0[i_ker],beta[i_ker])).cwiseProduct(R);
+    }else if(kernel_type[i_ker]==1){
+      R = (pow_exp_funct(R0[i_ker],beta[i_ker],alpha[i_ker])).cwiseProduct(R);
+    }else if(kernel_type[i_ker]==4){
+      R = (periodic_gauss_funct_fixed_normalized_const(R0[i_ker],beta[i_ker],perid_const[i_ker])).cwiseProduct(R);
+    }else if(kernel_type[i_ker]==5){
+      R = (periodic_exp_funct_fixed_normalized_const(R0[i_ker],beta[i_ker],perid_const[i_ker])).cwiseProduct(R);
     }
   }
   return R;
+}
+
+
+
+// [[Rcpp::export]]
+Eigen::MatrixXd euclidean_distance(const MapMat & input1,const MapMat & input2){
+  //input are n by p, where p is larger than n
+  
+  int num_obs1 = input1.rows();
+  int num_obs2 = input2.rows();
+  
+  Eigen::MatrixXd R0=R0.Ones(num_obs1,num_obs2);
+  
+  for (int i = 0; i < num_obs1; i++){
+    
+    for (int j = 0; j < num_obs2; j++){
+      R0(i,j)=sqrt((input1.row(i)-input2.row(j)).array().pow(2.0).sum());
+    }
+  }
+  return R0;
 }
 
 
@@ -174,6 +363,58 @@ double log_marginal_lik(const Vec param,double nugget, const bool nugget_est, co
   return (-(L.diagonal().array().log().matrix().sum())-(LX.diagonal().array().log().matrix().sum())-(num_obs-q)/2.0*log_S_2);
   }
 }
+
+
+// [[Rcpp::export]]
+double log_profile_lik(const Vec param,double nugget, const bool nugget_est, const List R0, const Eigen::Map<Eigen::MatrixXd> & X,const String zero_mean,const Eigen::Map<Eigen::MatrixXd> & output, Eigen::VectorXi kernel_type,const Eigen::VectorXd alpha ){
+  Eigen::VectorXd beta;
+  double nu=nugget;
+  int param_size=param.size();
+  if(!nugget_est){
+    beta= param.array().exp().matrix();
+    // nu=0;
+  }else{
+    beta=param.head(param_size-1).array().exp().matrix(); 
+    nu=exp(param[param_size-1]); //nugget
+  }
+  
+  int num_obs=output.rows();
+  MatrixXd R= separable_multi_kernel(R0,beta, kernel_type,alpha);
+  R=R+nu*MatrixXd::Identity(num_obs,num_obs);  //not sure 
+  
+  LLT<MatrixXd> lltOfR(R);             // compute the cholesky decomposition of R called lltofR
+  MatrixXd L = lltOfR.matrixL();   //retrieve factor L  in the decomposition
+  
+  if(zero_mean=="Yes"){
+    
+    MatrixXd yt_R_inv= (L.transpose().triangularView<Upper>().solve(L.triangularView<Lower>().solve(output))).transpose(); 
+    MatrixXd S_2= (yt_R_inv*output);
+    double log_S_2=log(S_2(0,0));
+    
+    return (-(L.diagonal().array().log().matrix().sum())-(num_obs)/2.0*log_S_2);
+    
+  }else{
+    
+    //int q=X.cols();
+    
+    MatrixXd R_inv_X=L.transpose().triangularView<Upper>().solve(L.triangularView<Lower>().solve(X)); //one forward and one backward to compute R.inv%*%X
+    MatrixXd Xt_R_inv_X=X.transpose()*R_inv_X; //Xt%*%R.inv%*%X
+    
+    LLT<MatrixXd> lltOfXRinvX(Xt_R_inv_X); // cholesky decomposition of Xt_R_inv_X called lltOfXRinvX
+    MatrixXd LX = lltOfXRinvX.matrixL();  //  retrieve factor LX  in the decomposition 
+    MatrixXd R_inv_X_Xt_R_inv_X_inv_Xt_R_inv= R_inv_X*(LX.transpose().triangularView<Upper>().solve(LX.triangularView<Lower>().solve(R_inv_X.transpose())));          //compute  R_inv_X_Xt_R_inv_X_inv_Xt_R_inv through one forward and one backward solve
+    MatrixXd yt_R_inv= (L.transpose().triangularView<Upper>().solve(L.triangularView<Lower>().solve(output))).transpose(); 
+    MatrixXd S_2= (yt_R_inv*output-output.transpose()*R_inv_X_Xt_R_inv_X_inv_Xt_R_inv*output);
+    double log_S_2=log(S_2(0,0));
+    
+    //change to profile likelihood seems only needs one step
+    //return (-(L.diagonal().array().log().matrix().sum())-(LX.diagonal().array().log().matrix().sum())-(num_obs-q)/2.0*log_S_2);
+    return (-(L.diagonal().array().log().matrix().sum())-(num_obs)/2.0*log_S_2);
+    
+  }
+}
+
+
 // [[Rcpp::export]]
 double log_approx_ref_prior(const Vec param,double nugget, bool nugget_est, const Eigen::VectorXd CL,const double a,const double b ){
 
@@ -234,6 +475,10 @@ Eigen::VectorXd log_marginal_lik_deriv(const Eigen::VectorXd param,double nugget
         dev_R_i=matern_3_2_deriv( R0[ti],R_ori,beta[ti]);  //now here I have R_ori instead of R
       }else if(kernel_type[ti]==1){
         dev_R_i=pow_exp_deriv( R0[ti],R_ori,beta[ti],alpha[ti]);   //now here I have R_ori instead of R
+      }else if(kernel_type[ti]==4){
+        dev_R_i = (periodic_gauss_deriv(R0[ti],R_ori,beta[ti])).cwiseProduct(R);
+      }else if(kernel_type[ti]==5){
+        dev_R_i = (periodic_exp_deriv(R0[ti],R_ori,beta[ti])).cwiseProduct(R);
       }
       Vb_ti=L.transpose().triangularView<Upper>().solve(L.triangularView<Lower>().solve(dev_R_i));
       ans[ti]=-0.5*Vb_ti.diagonal().sum()+(num_obs/2.0*output.transpose()*Vb_ti*yt_R_inv.transpose()/ S_2(0,0))(0,0) ;  
@@ -269,6 +514,10 @@ Eigen::VectorXd log_marginal_lik_deriv(const Eigen::VectorXd param,double nugget
         dev_R_i=matern_3_2_deriv( R0[ti],R_ori,beta[ti]);  //now here I have R_ori instead of R
       }else if(kernel_type[ti]==1){
         dev_R_i=pow_exp_deriv( R0[ti],R_ori,beta[ti],alpha[ti]);   //now here I have R_ori instead of R
+      }else if(kernel_type[ti]==4){
+        dev_R_i = (periodic_gauss_deriv(R0[ti],R_ori,beta[ti])).cwiseProduct(R);
+      }else if(kernel_type[ti]==5){
+        dev_R_i = (periodic_exp_deriv(R0[ti],R_ori,beta[ti])).cwiseProduct(R);
       }
       Wb_ti=(L.transpose().triangularView<Upper>().solve(L.triangularView<Lower>().solve(dev_R_i))).transpose()-dev_R_i*R_inv_X_Xt_R_inv_X_inv_Xt_R_inv;
       ans[ti]=-0.5*Wb_ti.diagonal().sum()+(num_obs-q)/2.0*(output.transpose()*Wb_ti.transpose()*Q_output/S_2(0,0))(0,0); 
@@ -285,6 +534,117 @@ Eigen::VectorXd log_marginal_lik_deriv(const Eigen::VectorXd param,double nugget
       return ans;
 
 }
+
+
+
+// [[Rcpp::export]]
+Eigen::VectorXd log_profile_lik_deriv(const Eigen::VectorXd param,double nugget,  bool nugget_est, const List R0, const Eigen::Map<Eigen::MatrixXd> & X,const String zero_mean,const Eigen::Map<Eigen::MatrixXd> & output, Eigen::VectorXi kernel_type,const Eigen::VectorXd alpha){
+  
+  Eigen::VectorXd beta;
+  double nu=nugget;
+  int param_size=param.size();
+  if(nugget_est==false){//not sure about the logical stuff
+    beta= param.array().exp().matrix();
+  }else{
+    beta=param.head(param_size-1).array().exp().matrix(); 
+    nu=exp(param[param_size-1]); //nugget
+  }
+  int p=beta.size();
+  int num_obs=output.rows();
+  MatrixXd R= separable_multi_kernel(R0,beta,kernel_type,alpha);
+  MatrixXd R_ori=  R;  // this is the one without the nugget
+  
+  R=R+nu*MatrixXd::Identity(num_obs,num_obs);  //not sure 
+  
+  LLT<MatrixXd> lltOfR(R);
+  MatrixXd L = lltOfR.matrixL();
+  VectorXd ans=VectorXd::Ones(param_size);
+  
+  //String kernel_type_ti;
+  MatrixXd Vb_ti;
+  
+  if(zero_mean=="Yes"){
+    MatrixXd yt_R_inv= (L.transpose().triangularView<Upper>().solve(L.triangularView<Lower>().solve(output))).transpose(); 
+    MatrixXd S_2= (yt_R_inv*output);
+    //double log_S_2=log(S_2(0,0));
+    
+    
+    MatrixXd dev_R_i;
+    //allow different choices of kernels
+    for(int ti=0;ti<p;ti++){
+      //kernel_type_ti=kernel_type[ti];
+      if(kernel_type[ti]==3){
+        dev_R_i=matern_5_2_deriv( R0[ti],R_ori,beta[ti]);  //now here I have R_ori instead of R
+      }else if(kernel_type[ti]==2){
+        dev_R_i=matern_3_2_deriv( R0[ti],R_ori,beta[ti]);  //now here I have R_ori instead of R
+      }else if(kernel_type[ti]==1){
+        dev_R_i=pow_exp_deriv( R0[ti],R_ori,beta[ti],alpha[ti]);   //now here I have R_ori instead of R
+      }else if(kernel_type[ti]==4){
+        dev_R_i = (periodic_gauss_deriv(R0[ti],R_ori,beta[ti])).cwiseProduct(R);
+      }else if(kernel_type[ti]==5){
+        dev_R_i = (periodic_exp_deriv(R0[ti],R_ori,beta[ti])).cwiseProduct(R);
+      }
+      Vb_ti=L.transpose().triangularView<Upper>().solve(L.triangularView<Lower>().solve(dev_R_i));
+      ans[ti]=-0.5*Vb_ti.diagonal().sum()+(num_obs/2.0*output.transpose()*Vb_ti*yt_R_inv.transpose()/ S_2(0,0))(0,0) ;  
+    }
+    //the last one if the nugget exists
+    if(nugget_est){
+      dev_R_i=MatrixXd::Identity(num_obs,num_obs);
+      Vb_ti=L.transpose().triangularView<Upper>().solve(L.triangularView<Lower>().solve(dev_R_i));
+      ans[p]=-0.5*Vb_ti.diagonal().sum()+(num_obs/2.0*output.transpose()*Vb_ti*yt_R_inv.transpose()/ S_2(0,0))(0,0); 
+    }
+    
+  }else{
+   // int q=X.cols();
+    MatrixXd R_inv_X=L.transpose().triangularView<Upper>().solve(L.triangularView<Lower>().solve(X));
+    MatrixXd Xt_R_inv_X=X.transpose()*R_inv_X;
+    
+    LLT<MatrixXd> lltOfXRinvX(Xt_R_inv_X);
+    MatrixXd LX = lltOfXRinvX.matrixL();
+    MatrixXd R_inv_X_Xt_R_inv_X_inv_Xt_R_inv= R_inv_X*(LX.transpose().triangularView<Upper>().solve(LX.triangularView<Lower>().solve(R_inv_X.transpose())));
+    MatrixXd yt_R_inv= (L.transpose().triangularView<Upper>().solve(L.triangularView<Lower>().solve(output))).transpose();
+    MatrixXd S_2= (yt_R_inv*output-output.transpose()*R_inv_X_Xt_R_inv_X_inv_Xt_R_inv*output);
+    
+    MatrixXd Q_output= yt_R_inv.transpose()-R_inv_X_Xt_R_inv_X_inv_Xt_R_inv*output;
+    MatrixXd dev_R_i;
+    MatrixXd Wb_ti;
+    //allow different choices of kernels
+    
+    for(int ti=0;ti<p;ti++){
+      //kernel_type_ti=kernel_type[ti];
+      if(kernel_type[ti]==3){
+        dev_R_i=matern_5_2_deriv( R0[ti],R_ori,beta[ti]);  //now here I have R_ori instead of R
+      }else if(kernel_type[ti]==2){
+        dev_R_i=matern_3_2_deriv( R0[ti],R_ori,beta[ti]);  //now here I have R_ori instead of R
+      }else if(kernel_type[ti]==1){
+        dev_R_i=pow_exp_deriv( R0[ti],R_ori,beta[ti],alpha[ti]);   //now here I have R_ori instead of R
+      }else if(kernel_type[ti]==4){
+        dev_R_i = (periodic_gauss_deriv(R0[ti],R_ori,beta[ti])).cwiseProduct(R);
+      }else if(kernel_type[ti]==5){
+        dev_R_i = (periodic_exp_deriv(R0[ti],R_ori,beta[ti])).cwiseProduct(R);
+      }
+      Vb_ti=(L.transpose().triangularView<Upper>().solve(L.triangularView<Lower>().solve(dev_R_i)));
+      Wb_ti=Vb_ti.transpose()-dev_R_i*R_inv_X_Xt_R_inv_X_inv_Xt_R_inv;
+      ans[ti]=-0.5*Vb_ti.diagonal().sum()+(num_obs)/2.0*(output.transpose()*Wb_ti.transpose()*Q_output/S_2(0,0))(0,0); 
+    }
+    
+    if(nugget_est){
+      dev_R_i=MatrixXd::Identity(num_obs,num_obs);
+      Vb_ti=(L.transpose().triangularView<Upper>().solve(L.triangularView<Lower>().solve(dev_R_i)));
+      Wb_ti=Vb_ti.transpose()-dev_R_i*R_inv_X_Xt_R_inv_X_inv_Xt_R_inv;
+      ans[p]=-0.5*Vb_ti.diagonal().sum()+(num_obs)/2.0*(output.transpose()*Wb_ti.transpose()*Q_output/S_2(0,0))(0,0); 
+      
+      //Vb_ti=L.transpose().triangularView<Upper>().solve(L.triangularView<Lower>().solve(dev_R_i));
+      //ans[p]=-0.5*Vb_ti.diagonal().sum()+(num_obs/2.0*output.transpose()*Vb_ti*yt_R_inv.transpose()/ S_2(0,0))(0,0); 
+      
+    }
+    
+    
+  }
+  return ans;
+  
+}
+
 
 // [[Rcpp::export]]
 Eigen::VectorXd log_approx_ref_prior_deriv(const Vec param,double nugget, bool nugget_est, const Eigen::VectorXd CL,const double a,const double b ){
@@ -359,6 +719,10 @@ double log_ref_marginal_post(const Eigen::VectorXd param,double nugget, bool nug
         dev_R_i=matern_3_2_deriv( R0[ti],R_ori,beta[ti]);  //now here I have R_ori instead of R
       }else if(kernel_type[ti]==1){
         dev_R_i=pow_exp_deriv( R0[ti],R_ori,beta[ti],alpha[ti]);   //now here I have R_ori instead of R
+      }else if(kernel_type[ti]==4){
+        dev_R_i = (periodic_gauss_deriv(R0[ti],R_ori,beta[ti])).cwiseProduct(R);
+      }else if(kernel_type[ti]==5){
+        dev_R_i = (periodic_exp_deriv(R0[ti],R_ori,beta[ti])).cwiseProduct(R);
       }
       Vb[ti]=L.transpose().triangularView<Upper>().solve(L.triangularView<Lower>().solve(dev_R_i));
     }
@@ -410,6 +774,10 @@ double log_ref_marginal_post(const Eigen::VectorXd param,double nugget, bool nug
       dev_R_i=matern_3_2_deriv( R0[ti],R_ori,beta[ti]);  //now here I have R_ori instead of R
     }else if(kernel_type[ti]==1){
       dev_R_i=pow_exp_deriv( R0[ti],R_ori,beta[ti],alpha[ti]);   //now here I have R_ori instead of R
+    }else if(kernel_type[ti]==4){
+      dev_R_i = (periodic_gauss_deriv(R0[ti],R_ori,beta[ti])).cwiseProduct(R);
+    }else if(kernel_type[ti]==5){
+      dev_R_i = (periodic_exp_deriv(R0[ti],R_ori,beta[ti])).cwiseProduct(R);
     }
     Wb[ti]=(L.transpose().triangularView<Upper>().solve(L.triangularView<Lower>().solve(dev_R_i))).transpose()-dev_R_i*R_inv_X_Xt_R_inv_X_inv_Xt_R_inv;
   }
@@ -491,16 +859,41 @@ List construct_rgasp(const Eigen::VectorXd beta,const double nu,  const List R0,
 
 //this is a function to for prediction, including posterior mean, lower 95, upper 95 and standard deviation
 // [[Rcpp::export]]
-List pred_rgasp(const Eigen::VectorXd beta,const double nu, const  Eigen::Map<Eigen::MatrixXd> & input,  const Eigen::Map<Eigen::MatrixXd> & X,const  String zero_mean, const Eigen::Map<Eigen::MatrixXd> & output,const Eigen::Map<Eigen::MatrixXd> & testing_input, const Eigen::Map<Eigen::MatrixXd> & X_testing, const Eigen::Map<Eigen::MatrixXd> & L , Eigen::Map<Eigen::MatrixXd> & LX, Eigen::Map<Eigen::VectorXd> & theta_hat, double sigma2_hat,double qt_025, double qt_975, List r0,Eigen::VectorXi kernel_type,const Eigen::VectorXd alpha){
+List pred_rgasp(const Eigen::VectorXd beta,const double nu, const  Eigen::Map<Eigen::MatrixXd> & input,  const Eigen::Map<Eigen::MatrixXd> & X,const  String zero_mean, const Eigen::Map<Eigen::MatrixXd> & output,const Eigen::Map<Eigen::MatrixXd> & testing_input, const Eigen::Map<Eigen::MatrixXd> & X_testing,
+                const Eigen::Map<Eigen::MatrixXd> & L , Eigen::Map<Eigen::MatrixXd> & LX, Eigen::Map<Eigen::VectorXd> & theta_hat, double sigma2_hat,double q_025, double q_975, List r0,Eigen::VectorXi kernel_type,const Eigen::VectorXd alpha,const String method, const bool interval_data){
   List pred(4);
     
   int num_testing_input=testing_input.rows();
+  //int p=testing_input.cols();
+  
+  int p=beta.size();
+  
+  
   //int dim_inputs=input.cols();
   int num_obs=output.rows();
    
-
-  MatrixXd r= separable_multi_kernel(r0,beta, kernel_type,alpha);
+  //compute the vector for normalization for periodic 
+  Eigen::VectorXd priodic_const=Eigen::VectorXd::Ones(p);
+  for(int i_ker=0; i_ker<p;i_ker++){
+    
+    if(kernel_type[i_ker]==4){
+      priodic_const[i_ker]=1.0/(2.0*sqrt(PI*beta[i_ker]));
+      for(int ti=1; ti <11; ti++){
+        priodic_const[i_ker]=priodic_const[i_ker]+1.0/sqrt(PI*beta[i_ker])*exp(-pow(ti,2.0)/(4.0*beta[i_ker]));
+      }
+    }else if(kernel_type[i_ker]==5){
+      priodic_const[i_ker]=1.0/(PI*beta[i_ker]);
+      for(int ti=1; ti<11; ti++){
+        priodic_const[i_ker]=priodic_const[i_ker]+2.0*beta[i_ker]/((pow(beta[i_ker],2.0)+pow(ti,2.0))*PI);
+      }
+    }
+  }
   
+  //if(priodic_const.array().sum()==p ){
+  //   MatrixXd r= separable_multi_kernel(r0,beta, kernel_type,alpha);
+  //}else{
+  MatrixXd r= separable_multi_kernel_pred_periodic(r0,beta, kernel_type,alpha,priodic_const);
+  //}
     
   ////////I recalculate the following r
   /*
@@ -530,39 +923,95 @@ List pred_rgasp(const Eigen::VectorXd beta,const double nu, const  Eigen::Map<Ei
   
 
   if(zero_mean=="Yes"){
-    for(int i=0; i<num_testing_input;i++){
-      rtR_inv_r=(rt_R_inv.row(i)*r.row(i).transpose());
-      c_star_star[i]=1+nu-rtR_inv_r(0,0);
+    if(interval_data){
+      for(int i=0; i<num_testing_input;i++){
+        rtR_inv_r=(rt_R_inv.row(i)*r.row(i).transpose());
+        c_star_star[i]=1+nu-rtR_inv_r(0,0);
+      }
+    }else{
+      for(int i=0; i<num_testing_input;i++){
+        rtR_inv_r=(rt_R_inv.row(i)*r.row(i).transpose());
+        c_star_star[i]=1-rtR_inv_r(0,0);
+      }
     }
     VectorXd MU_testing=rt_R_inv*output;
     pred[0]=MU_testing;
     //VectorXd var=c_star_star*sigma2_hat;
     VectorXd var=c_star_star.array().abs().matrix()*sigma2_hat;  //when R is close to be singular, c_star_star can be very small negative
-    pred[1]=MU_testing+var.array().sqrt().matrix()*qt_025;
-    pred[2]=MU_testing+var.array().sqrt().matrix()*qt_975;
-    pred[3]=var*(num_obs)/(num_obs-2);
+    pred[1]=MU_testing+var.array().sqrt().matrix()*q_025;
+    pred[2]=MU_testing+var.array().sqrt().matrix()*q_975;
+    if((method=="post_mode") || (method=="mmle")){
+      pred[3]=var*(num_obs)/(num_obs-2);
+    }else if(method=="mle"){
+      pred[3]=var;
+    }
 
   }else{
 
-    int q=X.cols();
-    MatrixXd diff2;
-    MatrixXd  R_inv_X=L.transpose().triangularView<Upper>().solve(L.triangularView<Lower>().solve(X));  
-    MatrixXd X_testing_X_R_inv_r_i;
-    for(int i=0; i<num_testing_input;i++){
-      X_testing_X_R_inv_r_i=X_testing.row(i)-r.row(i)*R_inv_X;
-      diff2=X_testing_X_R_inv_r_i*(LX.transpose().triangularView<Upper>().solve(LX.triangularView<Lower>().solve(X_testing_X_R_inv_r_i.transpose())));
+    //MatrixXd diff2;
+    //MatrixXd X_testing_X_R_inv_r_i;
+    if((method=="post_mode") || (method=="mmle")){
+      int q=X.cols();
+      MatrixXd  R_inv_X=L.transpose().triangularView<Upper>().solve(L.triangularView<Lower>().solve(X));  
+      
+      MatrixXd diff2;
+      MatrixXd X_testing_X_R_inv_r_i;
+      
+      if(interval_data){
+        for(int i=0; i<num_testing_input;i++){
+          X_testing_X_R_inv_r_i=X_testing.row(i)-r.row(i)*R_inv_X;
+          diff2=X_testing_X_R_inv_r_i*(LX.transpose().triangularView<Upper>().solve(LX.triangularView<Lower>().solve(X_testing_X_R_inv_r_i.transpose())));
+    
+          rtR_inv_r=(rt_R_inv.row(i)*r.row(i).transpose());
+          c_star_star[i]=1+nu-rtR_inv_r(0,0)+diff2(0,0);
+        }
+      }else{
+        for(int i=0; i<num_testing_input;i++){
+          X_testing_X_R_inv_r_i=X_testing.row(i)-r.row(i)*R_inv_X;
+          diff2=X_testing_X_R_inv_r_i*(LX.transpose().triangularView<Upper>().solve(LX.triangularView<Lower>().solve(X_testing_X_R_inv_r_i.transpose())));
+          
+          rtR_inv_r=(rt_R_inv.row(i)*r.row(i).transpose());
+          c_star_star[i]=1-rtR_inv_r(0,0)+diff2(0,0);
+        }
+        
+      }
 
-      rtR_inv_r=(rt_R_inv.row(i)*r.row(i).transpose());
-      c_star_star[i]=1+nu-rtR_inv_r(0,0)+diff2(0,0);
+      VectorXd MU_testing=X_testing*theta_hat+rt_R_inv*(output-X*theta_hat);
+      pred[0]=MU_testing;
+      //VectorXd var=c_star_star*sigma2_hat;
+      VectorXd var=c_star_star.array().abs().matrix()*sigma2_hat;  //when R is close to be singular, c_star_star can be very small negative
+      pred[1]=MU_testing+var.array().sqrt().matrix()*q_025;
+      pred[2]=MU_testing+var.array().sqrt().matrix()*q_975;
+      pred[3]=var*(num_obs-q)/(num_obs-q-2);
+    }else if(method=="mle"){
+      if(interval_data){
+        for(int i=0; i<num_testing_input;i++){
+          //X_testing_X_R_inv_r_i=X_testing.row(i)-r.row(i)*R_inv_X;
+          //diff2=X_testing_X_R_inv_r_i*(LX.transpose().triangularView<Upper>().solve(LX.triangularView<Lower>().solve(X_testing_X_R_inv_r_i.transpose())));
+          
+          rtR_inv_r=(rt_R_inv.row(i)*r.row(i).transpose());
+          c_star_star[i]=1+nu-rtR_inv_r(0,0);
+        }
+        
+      }else{
+        for(int i=0; i<num_testing_input;i++){
+          //X_testing_X_R_inv_r_i=X_testing.row(i)-r.row(i)*R_inv_X;
+          //diff2=X_testing_X_R_inv_r_i*(LX.transpose().triangularView<Upper>().solve(LX.triangularView<Lower>().solve(X_testing_X_R_inv_r_i.transpose())));
+          
+          rtR_inv_r=(rt_R_inv.row(i)*r.row(i).transpose());
+          c_star_star[i]=1-rtR_inv_r(0,0);
+        }
+      }
+      
+      VectorXd MU_testing=X_testing*theta_hat+rt_R_inv*(output-X*theta_hat);
+      pred[0]=MU_testing;
+      //VectorXd var=c_star_star*sigma2_hat;
+      VectorXd var=c_star_star.array().abs().matrix()*sigma2_hat;  //when R is close to be singular, c_star_star can be very small negative
+      pred[1]=MU_testing+var.array().sqrt().matrix()*q_025;
+      pred[2]=MU_testing+var.array().sqrt().matrix()*q_975;
+      pred[3]=var;
+      
     }
-
-    VectorXd MU_testing=X_testing*theta_hat+rt_R_inv*(output-X*theta_hat);
-    pred[0]=MU_testing;
-    //VectorXd var=c_star_star*sigma2_hat;
-    VectorXd var=c_star_star.array().abs().matrix()*sigma2_hat;  //when R is close to be singular, c_star_star can be very small negative
-    pred[1]=MU_testing+var.array().sqrt().matrix()*qt_025;
-    pred[2]=MU_testing+var.array().sqrt().matrix()*qt_975;
-    pred[3]=var*(num_obs-q)/(num_obs-q-2);
   }
   return pred;
    
@@ -571,7 +1020,8 @@ List pred_rgasp(const Eigen::VectorXd beta,const double nu, const  Eigen::Map<Ei
 
 //this is a function to for prediction, including posterior mean, lower 95, upper 95 and standard deviation
 // [[Rcpp::export]]
-List generate_predictive_mean_cov(const Eigen::VectorXd beta,const double nu, const  Eigen::Map<Eigen::MatrixXd> & input,  const Eigen::Map<Eigen::MatrixXd> & X,const String zero_mean,const Eigen::Map<Eigen::MatrixXd> & output,const Eigen::Map<Eigen::MatrixXd> & testing_input, const Eigen::Map<Eigen::MatrixXd> & X_testing, const Eigen::Map<Eigen::MatrixXd> & L , Eigen::Map<Eigen::MatrixXd> & LX, Eigen::Map<Eigen::VectorXd> & theta_hat, double sigma2_hat,List rr0, List r0,Eigen::VectorXi kernel_type,const Eigen::VectorXd alpha){
+List generate_predictive_mean_cov(const Eigen::VectorXd beta,const double nu, const  Eigen::Map<Eigen::MatrixXd> & input,  const Eigen::Map<Eigen::MatrixXd> & X,const String zero_mean,const Eigen::Map<Eigen::MatrixXd> & output,const Eigen::Map<Eigen::MatrixXd> & testing_input, const Eigen::Map<Eigen::MatrixXd> & X_testing, const Eigen::Map<Eigen::MatrixXd> & L , Eigen::Map<Eigen::MatrixXd> & LX, Eigen::Map<Eigen::VectorXd> & theta_hat,
+                                  double sigma2_hat,List rr0, List r0,Eigen::VectorXi kernel_type,const Eigen::VectorXd alpha,const String method,const bool sample_data){
   List mean_var(2);
     
   int num_testing_input=testing_input.rows();
@@ -586,8 +1036,13 @@ List generate_predictive_mean_cov(const Eigen::VectorXd beta,const double nu, co
   MatrixXd rt_R_inv= (L.transpose().triangularView<Upper>().solve(L.triangularView<Lower>().solve(r.transpose()))).transpose();
   MatrixXd  rtR_inv_r= rt_R_inv*r.transpose();
   
+  MatrixXd  C_star_star;
   if(zero_mean=="Yes"){
-    MatrixXd  C_star_star= rr+nu*MatrixXd::Identity(num_testing_input,num_testing_input)-rtR_inv_r;
+    if(sample_data){
+         C_star_star= rr+nu*MatrixXd::Identity(num_testing_input,num_testing_input)-rtR_inv_r;
+    }else{
+        C_star_star= rr-rtR_inv_r;
+    }
     VectorXd MU_testing=rt_R_inv*output;
     mean_var[0]=MU_testing;
 
@@ -599,19 +1054,32 @@ List generate_predictive_mean_cov(const Eigen::VectorXd beta,const double nu, co
 
   }else{
     MatrixXd  R_inv_X=L.transpose().triangularView<Upper>().solve(L.triangularView<Lower>().solve(X));
-
-    MatrixXd  X_testing_X_R_inv_r=X_testing-r*R_inv_X;
-    MatrixXd  diff2=X_testing_X_R_inv_r*(LX.transpose().triangularView<Upper>().solve(LX.triangularView<Lower>().solve(X_testing_X_R_inv_r.transpose())));
-
-    MatrixXd  C_star_star= rr+nu*MatrixXd::Identity(num_testing_input,num_testing_input)-rtR_inv_r+diff2;
     VectorXd MU_testing=X_testing*theta_hat+rt_R_inv*(output-X*theta_hat);
-
-    mean_var[0]=MU_testing;
-
-
+    
+    if((method=="post_mode") || (method=="mmle")){
+      MatrixXd  X_testing_X_R_inv_r=X_testing-r*R_inv_X;
+      MatrixXd  diff2=X_testing_X_R_inv_r*(LX.transpose().triangularView<Upper>().solve(LX.triangularView<Lower>().solve(X_testing_X_R_inv_r.transpose())));
+      if(sample_data){
+         C_star_star= rr+nu*MatrixXd::Identity(num_testing_input,num_testing_input)-rtR_inv_r+diff2;
+      }else{
+        C_star_star= rr-rtR_inv_r+diff2;
+      }
+    }else if(method=="mle"){
+      //MatrixXd  X_testing_X_R_inv_r=X_testing-r*R_inv_X;
+      //MatrixXd  diff2=X_testing_X_R_inv_r*(LX.transpose().triangularView<Upper>().solve(LX.triangularView<Lower>().solve(X_testing_X_R_inv_r.transpose())));
+      if(sample_data){
+         C_star_star= rr+nu*MatrixXd::Identity(num_testing_input,num_testing_input)-rtR_inv_r;
+      }else{
+        C_star_star= rr-rtR_inv_r;
+        
+      }
+    }
+    
     LLT<MatrixXd> lltOfC_star_star(C_star_star);
     MatrixXd LC_star_star = lltOfC_star_star.matrixL();
-
+    
+    
+    mean_var[0]=MU_testing;
     mean_var[1]=sqrt(sigma2_hat)*LC_star_star;
   
     //  mean_var[0]=r;
@@ -676,12 +1144,16 @@ double log_marginal_lik_ppgasp(const Vec param,double nugget, const bool nugget_
     MatrixXd R_inv_X_Xt_R_inv_X_inv_Xt_R_inv= R_inv_X*(LX.transpose().triangularView<Upper>().solve(LX.triangularView<Lower>().solve(R_inv_X.transpose())));          //compute  R_inv_X_Xt_R_inv_X_inv_Xt_R_inv through one forward and one backward solve
     MatrixXd yt_R_inv= (L.transpose().triangularView<Upper>().solve(L.triangularView<Lower>().solve(output))).transpose(); 
     
+    //double log_S_2=((yt_R_inv.array()*output.array()).rowwise().sum().log()).sum();
+    
     
     double log_S_2=0;
     
     for(int loc_i=0;loc_i<k;loc_i++){
       log_S_2=log_S_2+log((yt_R_inv.row(loc_i)*output.col(loc_i))(0,0)-(output.col(loc_i).transpose()*R_inv_X_Xt_R_inv_X_inv_Xt_R_inv*output.col(loc_i))(0,0));
     }
+    
+    
     // double log_S_2=log(S_2);
     
     //MatrixXd S_2= (yt_R_inv*output-output.transpose()*R_inv_X_Xt_R_inv_X_inv_Xt_R_inv*output);
@@ -691,6 +1163,80 @@ double log_marginal_lik_ppgasp(const Vec param,double nugget, const bool nugget_
   
   
 }
+
+
+
+// [[Rcpp::export]]
+double log_profile_lik_ppgasp(const Vec param,double nugget, const bool nugget_est, const List R0, const Eigen::Map<Eigen::MatrixXd> & X,const String zero_mean,const Eigen::Map<Eigen::MatrixXd> & output, Eigen::VectorXi kernel_type,const Eigen::VectorXd alpha ){
+  Eigen::VectorXd beta;
+  double nu=nugget;
+  int k=output.cols();
+  int param_size=param.size();
+  if(!nugget_est){
+    beta= param.array().exp().matrix();
+    // nu=0;
+  }else{
+    beta=param.head(param_size-1).array().exp().matrix(); 
+    nu=exp(param[param_size-1]); //nugget
+  }
+  
+  int num_obs=output.rows();
+  MatrixXd R= separable_multi_kernel(R0,beta, kernel_type,alpha);
+  R=R+nu*MatrixXd::Identity(num_obs,num_obs);  //not sure 
+  
+  LLT<MatrixXd> lltOfR(R);             // compute the cholesky decomposition of R called lltofR
+  MatrixXd L = lltOfR.matrixL();   //retrieve factor L  in the decomposition
+  
+  if(zero_mean=="Yes"){
+    
+    MatrixXd yt_R_inv= (L.transpose().triangularView<Upper>().solve(L.triangularView<Lower>().solve(output))).transpose(); 
+    
+    double log_S_2=0;
+    
+    for(int loc_i=0;loc_i<k;loc_i++){
+      log_S_2=log_S_2+log((yt_R_inv.row(loc_i)*output.col(loc_i))(0,0));
+    }
+    
+    //double log_S_2=log(S_2);
+    
+    return (-k*(L.diagonal().array().log().matrix().sum())-(num_obs)/2.0*log_S_2);
+    
+  }else{
+    
+    //int q=X.cols();
+    
+    MatrixXd R_inv_X=L.transpose().triangularView<Upper>().solve(L.triangularView<Lower>().solve(X)); //one forward and one backward to compute R.inv%*%X
+    MatrixXd Xt_R_inv_X=X.transpose()*R_inv_X; //Xt%*%R.inv%*%X
+    
+    LLT<MatrixXd> lltOfXRinvX(Xt_R_inv_X); // cholesky decomposition of Xt_R_inv_X called lltOfXRinvX
+    MatrixXd LX = lltOfXRinvX.matrixL();  //  retrieve factor LX  in the decomposition 
+    MatrixXd R_inv_X_Xt_R_inv_X_inv_Xt_R_inv= R_inv_X*(LX.transpose().triangularView<Upper>().solve(LX.triangularView<Lower>().solve(R_inv_X.transpose())));          //compute  R_inv_X_Xt_R_inv_X_inv_Xt_R_inv through one forward and one backward solve
+    MatrixXd yt_R_inv= (L.transpose().triangularView<Upper>().solve(L.triangularView<Lower>().solve(output))).transpose(); 
+    
+    
+    //double log_S_2=((yt_R_inv.array()*output.array()).rowwise().sum().log()).sum();
+    
+    
+    double log_S_2=0;
+    for(int loc_i=0;loc_i<k;loc_i++){
+      log_S_2=log_S_2+log((yt_R_inv.row(loc_i)*output.col(loc_i))(0,0)-(output.col(loc_i).transpose()*R_inv_X_Xt_R_inv_X_inv_Xt_R_inv*output.col(loc_i))(0,0));
+    }
+     
+    // double log_S_2=log(S_2);
+    
+    //MatrixXd S_2= (yt_R_inv*output-output.transpose()*R_inv_X_Xt_R_inv_X_inv_Xt_R_inv*output);
+    //double log_S_2=log(S_2(0,0));
+    
+    //profile likelihood
+    //return -k*(L.diagonal().array().log().matrix().sum())-k*(LX.diagonal().array().log().matrix().sum())-(num_obs-q)/2.0*log_S_2;
+    
+    return (-k*(L.diagonal().array().log().matrix().sum())-(num_obs)/2.0*log_S_2);
+    
+  }
+  
+  
+}
+
 
 
 
@@ -745,6 +1291,10 @@ double log_ref_marginal_post_ppgasp(const Eigen::VectorXd param,double nugget, b
         dev_R_i=matern_3_2_deriv( R0[ti],R_ori,beta[ti]);  //now here I have R_ori instead of R
       }else if(kernel_type[ti]==1){
         dev_R_i=pow_exp_deriv( R0[ti],R_ori,beta[ti],alpha[ti]);   //now here I have R_ori instead of R
+      }else if(kernel_type[ti]==4){
+        dev_R_i = (periodic_gauss_deriv(R0[ti],R_ori,beta[ti])).cwiseProduct(R);
+      }else if(kernel_type[ti]==5){
+        dev_R_i = (periodic_exp_deriv(R0[ti],R_ori,beta[ti])).cwiseProduct(R);
       }
       Vb[ti]=L.transpose().triangularView<Upper>().solve(L.triangularView<Lower>().solve(dev_R_i));
     }
@@ -783,11 +1333,17 @@ double log_ref_marginal_post_ppgasp(const Eigen::VectorXd param,double nugget, b
     MatrixXd yt_R_inv= (L.transpose().triangularView<Upper>().solve(L.triangularView<Lower>().solve(output))).transpose();
     //MatrixXd S_2= (yt_R_inv*output-output.transpose()*R_inv_X_Xt_R_inv_X_inv_Xt_R_inv*output);
     
-    double log_S_2=0;
+    
+    //double log_S_2=((yt_R_inv.array()*output.array()).rowwise().sum().log()).sum();
+    
+    
+     
+     double log_S_2=0;
     
     for(int loc_i=0;loc_i<k;loc_i++){
       log_S_2=log_S_2+log((yt_R_inv.row(loc_i)*output.col(loc_i))(0,0)-(output.col(loc_i).transpose()*R_inv_X_Xt_R_inv_X_inv_Xt_R_inv*output.col(loc_i))(0,0));
     }
+    
     
     //double log_S_2=log(S_2);
     
@@ -804,6 +1360,10 @@ double log_ref_marginal_post_ppgasp(const Eigen::VectorXd param,double nugget, b
         dev_R_i=matern_3_2_deriv( R0[ti],R_ori,beta[ti]);  //now here I have R_ori instead of R
       }else if(kernel_type[ti]==1){
         dev_R_i=pow_exp_deriv( R0[ti],R_ori,beta[ti],alpha[ti]);   //now here I have R_ori instead of R
+      }else if(kernel_type[ti]==4){
+        dev_R_i = (periodic_gauss_deriv(R0[ti],R_ori,beta[ti])).cwiseProduct(R);
+      }else if(kernel_type[ti]==5){
+        dev_R_i = (periodic_exp_deriv(R0[ti],R_ori,beta[ti])).cwiseProduct(R);
       }
       Wb[ti]=(L.transpose().triangularView<Upper>().solve(L.triangularView<Lower>().solve(dev_R_i))).transpose()-dev_R_i*R_inv_X_Xt_R_inv_X_inv_Xt_R_inv;
     }
@@ -885,6 +1445,10 @@ Eigen::VectorXd log_marginal_lik_deriv_ppgasp(const Eigen::VectorXd param,double
         dev_R_i=matern_3_2_deriv( R0[ti],R_ori,beta[ti]);  //now here I have R_ori instead of R
       }else if(kernel_type[ti]==1){
         dev_R_i=pow_exp_deriv( R0[ti],R_ori,beta[ti],alpha[ti]);   //now here I have R_ori instead of R
+      }else if(kernel_type[ti]==4){
+        dev_R_i = (periodic_gauss_deriv(R0[ti],R_ori,beta[ti])).cwiseProduct(R);
+      }else if(kernel_type[ti]==5){
+        dev_R_i = (periodic_exp_deriv(R0[ti],R_ori,beta[ti])).cwiseProduct(R);
       }
       Vb_ti=L.transpose().triangularView<Upper>().solve(L.triangularView<Lower>().solve(dev_R_i));
       
@@ -948,6 +1512,10 @@ Eigen::VectorXd log_marginal_lik_deriv_ppgasp(const Eigen::VectorXd param,double
         dev_R_i=matern_3_2_deriv( R0[ti],R_ori,beta[ti]);  //now here I have R_ori instead of R
       }else if(kernel_type[ti]==1){
         dev_R_i=pow_exp_deriv( R0[ti],R_ori,beta[ti],alpha[ti]);   //now here I have R_ori instead of R
+      }else if(kernel_type[ti]==4){
+        dev_R_i = (periodic_gauss_deriv(R0[ti],R_ori,beta[ti])).cwiseProduct(R);
+      }else if(kernel_type[ti]==5){
+        dev_R_i = (periodic_exp_deriv(R0[ti],R_ori,beta[ti])).cwiseProduct(R);
       }
       Wb_ti=(L.transpose().triangularView<Upper>().solve(L.triangularView<Lower>().solve(dev_R_i))).transpose()-dev_R_i*R_inv_X_Xt_R_inv_X_inv_Xt_R_inv;
       
@@ -992,6 +1560,177 @@ Eigen::VectorXd log_marginal_lik_deriv_ppgasp(const Eigen::VectorXd param,double
   
 }
 
+
+// [[Rcpp::export]]
+Eigen::VectorXd log_profile_lik_deriv_ppgasp(const Eigen::VectorXd param,double nugget,  bool nugget_est, const List R0, const Eigen::Map<Eigen::MatrixXd> & X,const String zero_mean,const Eigen::Map<Eigen::MatrixXd> & output, Eigen::VectorXi kernel_type,const Eigen::VectorXd alpha){
+  
+  Eigen::VectorXd beta;
+  double nu=nugget;
+  int k=output.cols();
+  int param_size=param.size();
+  if(nugget_est==false){//not sure about the logical stuff
+    beta= param.array().exp().matrix();
+  }else{
+    beta=param.head(param_size-1).array().exp().matrix(); 
+    nu=exp(param[param_size-1]); //nugget
+  }
+  int p=beta.size();
+  int num_obs=output.rows();
+  MatrixXd R= separable_multi_kernel(R0,beta,kernel_type,alpha);
+  MatrixXd R_ori=  R;  // this is the one without the nugget
+  
+  R=R+nu*MatrixXd::Identity(num_obs,num_obs);  //not sure 
+  
+  LLT<MatrixXd> lltOfR(R);
+  MatrixXd L = lltOfR.matrixL();
+  VectorXd ans=VectorXd::Ones(param_size);
+  
+  //String kernel_type_ti;
+  MatrixXd Vb_ti;
+  
+  if(zero_mean=="Yes"){
+    MatrixXd yt_R_inv= (L.transpose().triangularView<Upper>().solve(L.triangularView<Lower>().solve(output))).transpose(); 
+    //MatrixXd S_2= (yt_R_inv*output);
+    
+    //double log_S_2=log(S_2(0,0));
+    VectorXd S_2_vec=VectorXd::Zero(k);
+    
+    for(int loc_i=0;loc_i<k;loc_i++){
+      S_2_vec[loc_i]=(yt_R_inv.row(loc_i)*output.col(loc_i))(0,0);
+      
+    }
+    MatrixXd dev_R_i;
+    //allow different choices of kernels
+    for(int ti=0;ti<p;ti++){
+      //kernel_type_ti=kernel_type[ti];
+      if(kernel_type[ti]==3){
+        dev_R_i=matern_5_2_deriv( R0[ti],R_ori,beta[ti]);  //now here I have R_ori instead of R
+      }else if(kernel_type[ti]==2){
+        dev_R_i=matern_3_2_deriv( R0[ti],R_ori,beta[ti]);  //now here I have R_ori instead of R
+      }else if(kernel_type[ti]==1){
+        dev_R_i=pow_exp_deriv( R0[ti],R_ori,beta[ti],alpha[ti]);   //now here I have R_ori instead of R
+      }else if(kernel_type[ti]==4){
+        dev_R_i = (periodic_gauss_deriv(R0[ti],R_ori,beta[ti])).cwiseProduct(R);
+      }else if(kernel_type[ti]==5){
+        dev_R_i = (periodic_exp_deriv(R0[ti],R_ori,beta[ti])).cwiseProduct(R);
+      }
+      Vb_ti=L.transpose().triangularView<Upper>().solve(L.triangularView<Lower>().solve(dev_R_i));
+      
+      
+      double ratio=0;
+      
+      for(int loc_i=0;loc_i<k;loc_i++){
+        ratio=ratio+((output.col(loc_i).transpose()*Vb_ti*(yt_R_inv.transpose()).col(loc_i) )(0,0))/S_2_vec[loc_i];
+      }
+      ans[ti]=-0.5*k*Vb_ti.diagonal().sum()+num_obs/2.0*ratio;
+      
+      //ans[ti]=-0.5*Vb_ti.diagonal().sum()+(num_obs/2.0*output.transpose()*Vb_ti*yt_R_inv.transpose()/ S_2(0,0))(0,0) ;  
+    }
+    //the last one if the nugget exists
+    if(nugget_est){
+      dev_R_i=MatrixXd::Identity(num_obs,num_obs);
+      Vb_ti=L.transpose().triangularView<Upper>().solve(L.triangularView<Lower>().solve(dev_R_i));
+      
+      double ratio=0;
+      for(int loc_i=0;loc_i<k;loc_i++){
+        ratio=ratio+((output.col(loc_i).transpose()*Vb_ti*(yt_R_inv.transpose()).col(loc_i))(0,0))/S_2_vec[loc_i];
+      }
+      ans[p]=-0.5*k*Vb_ti.diagonal().sum()+num_obs/2.0*ratio;
+      //ans[p]=-0.5*Vb_ti.diagonal().sum()+(num_obs/2.0*output.transpose()*Vb_ti*yt_R_inv.transpose()/ S_2(0,0))(0,0); 
+      
+    }
+    
+  }else{
+    //int q=X.cols();
+    MatrixXd R_inv_X=L.transpose().triangularView<Upper>().solve(L.triangularView<Lower>().solve(X));
+    MatrixXd Xt_R_inv_X=X.transpose()*R_inv_X;
+    
+    LLT<MatrixXd> lltOfXRinvX(Xt_R_inv_X);
+    MatrixXd LX = lltOfXRinvX.matrixL();
+    MatrixXd R_inv_X_Xt_R_inv_X_inv_Xt_R_inv= R_inv_X*(LX.transpose().triangularView<Upper>().solve(LX.triangularView<Lower>().solve(R_inv_X.transpose())));
+    MatrixXd yt_R_inv= (L.transpose().triangularView<Upper>().solve(L.triangularView<Lower>().solve(output))).transpose();
+    MatrixXd dev_R_i;
+    MatrixXd Wb_ti;
+    //allow different choices of kernels
+    
+    
+    VectorXd S_2_vec=VectorXd::Zero(k);
+    
+    for(int loc_i=0;loc_i<k;loc_i++){
+      S_2_vec[loc_i]=(yt_R_inv.row(loc_i)*output.col(loc_i))(0,0)-(output.col(loc_i).transpose()*R_inv_X_Xt_R_inv_X_inv_Xt_R_inv*output.col(loc_i))(0,0);
+    }
+    
+    
+    // double log_S_2=0;
+    
+    //for(int loc_i=0;loc_i<k;loc_i++){
+    //  log_S_2=log_S_2+log((yt_R_inv.row(loc_i)*output.col(loc_i))(0,0)-(output.col(loc_i).transpose()*R_inv_X_Xt_R_inv_X_inv_Xt_R_inv*output.col(loc_i))(0,0));
+    //}
+    
+    
+    for(int ti=0;ti<p;ti++){
+      //kernel_type_ti=kernel_type[ti];
+      if(kernel_type[ti]==3){
+        dev_R_i=matern_5_2_deriv( R0[ti],R_ori,beta[ti]);  //now here I have R_ori instead of R
+      }else if(kernel_type[ti]==2){
+        dev_R_i=matern_3_2_deriv( R0[ti],R_ori,beta[ti]);  //now here I have R_ori instead of R
+      }else if(kernel_type[ti]==1){
+        dev_R_i=pow_exp_deriv( R0[ti],R_ori,beta[ti],alpha[ti]);   //now here I have R_ori instead of R
+      }else if(kernel_type[ti]==4){
+        dev_R_i = (periodic_gauss_deriv(R0[ti],R_ori,beta[ti])).cwiseProduct(R);
+      }else if(kernel_type[ti]==5){
+        dev_R_i = (periodic_exp_deriv(R0[ti],R_ori,beta[ti])).cwiseProduct(R);
+      }
+      
+      Vb_ti=(L.transpose().triangularView<Upper>().solve(L.triangularView<Lower>().solve(dev_R_i)));
+      Wb_ti=Vb_ti.transpose()-dev_R_i*R_inv_X_Xt_R_inv_X_inv_Xt_R_inv;
+      //ans[ti]=-0.5*Vb_ti.diagonal().sum()+(num_obs)/2.0*(output.transpose()*Wb_ti.transpose()*Q_output/S_2(0,0))(0,0); 
+      
+      
+     // Wb_ti=(L.transpose().triangularView<Upper>().solve(L.triangularView<Lower>().solve(dev_R_i))).transpose()-dev_R_i*R_inv_X_Xt_R_inv_X_inv_Xt_R_inv;
+      
+      double ratio=0;
+      
+      for(int loc_i=0;loc_i<k;loc_i++){
+        ratio=ratio+((output.col(loc_i).transpose()*Wb_ti.transpose()*(yt_R_inv.row(loc_i).transpose()-R_inv_X_Xt_R_inv_X_inv_Xt_R_inv*output.col(loc_i)))(0,0))/S_2_vec[loc_i];
+      }
+      
+      
+      
+      //MatrixXd S_2= (yt_R_inv*output-output.transpose()*R_inv_X_Xt_R_inv_X_inv_Xt_R_inv*output);
+      
+      //MatrixXd Q_output= yt_R_inv.transpose()-R_inv_X_Xt_R_inv_X_inv_Xt_R_inv*output;
+      
+      ans[ti]=-0.5*k*Vb_ti.diagonal().sum()+(num_obs)/2.0*ratio; 
+      
+      //ans[ti]=-0.5*Wb_ti.diagonal().sum()+(num_obs-q)/2.0*(output.transpose()*Wb_ti.transpose()*Q_output/S_2(0,0))(0,0); 
+    }
+    
+    
+    
+    if(nugget_est){
+      dev_R_i=MatrixXd::Identity(num_obs,num_obs);
+      
+      Vb_ti=(L.transpose().triangularView<Upper>().solve(L.triangularView<Lower>().solve(dev_R_i)));
+      Wb_ti=Vb_ti.transpose()-dev_R_i*R_inv_X_Xt_R_inv_X_inv_Xt_R_inv;
+      
+      //Wb_ti=(L.transpose().triangularView<Upper>().solve(L.triangularView<Lower>().solve(dev_R_i))).transpose()-dev_R_i*R_inv_X_Xt_R_inv_X_inv_Xt_R_inv;
+      
+      //double S_2_dev=0;
+      double ratio=0;
+      
+      for(int loc_i=0;loc_i<k;loc_i++){
+        ratio=ratio+((output.col(loc_i).transpose()*Wb_ti.transpose()*(yt_R_inv.row(loc_i).transpose()-R_inv_X_Xt_R_inv_X_inv_Xt_R_inv*output.col(loc_i)))(0,0))/S_2_vec[loc_i];
+      }
+      ans[p]=-0.5*k*Vb_ti.diagonal().sum()  +(num_obs)/2.0*ratio; 
+      //ans[p]=-0.5*Wb_ti.diagonal().sum()+(num_obs-q)/2.0*(output.transpose()*Wb_ti.transpose()*Q_output/S_2(0,0))(0,0); 
+    }
+    
+    
+  }
+  return ans;
+  
+}
 
 
 //this is a function to output a list, including theta_hat L (chlosky decomcoposition of R), LX(cholosky decomposition of Xt%*%R),  (the trend parameter), S2 (estimated sigma^2)
@@ -1052,18 +1791,42 @@ List construct_ppgasp(const Eigen::VectorXd beta,const double nu,  const List R0
 
 // [[Rcpp::export]]
 List pred_ppgasp(const Eigen::VectorXd beta,const double nu, const  Eigen::Map<Eigen::MatrixXd> & input,  const Eigen::Map<Eigen::MatrixXd> & X,const  String zero_mean, const Eigen::Map<Eigen::MatrixXd> & output,const Eigen::Map<Eigen::MatrixXd> & testing_input, const Eigen::Map<Eigen::MatrixXd> & X_testing, 
-                 const Eigen::Map<Eigen::MatrixXd> & L , Eigen::Map<Eigen::MatrixXd> & LX, Eigen::Map<Eigen::MatrixXd> & theta_hat,    const Eigen::Map<Eigen::VectorXd> &  sigma2_hat,double qt_025, double qt_975, List r0,Eigen::VectorXi kernel_type,const Eigen::VectorXd alpha){
+                 const Eigen::Map<Eigen::MatrixXd> & L , Eigen::Map<Eigen::MatrixXd> & LX, Eigen::Map<Eigen::MatrixXd> & theta_hat,    const Eigen::Map<Eigen::VectorXd> &  sigma2_hat,double q_025, double q_975, List r0,Eigen::VectorXi kernel_type,const Eigen::VectorXd alpha, const  String method, const bool interval_data){
   List pred(4);
   
   int num_testing_input=testing_input.rows();
+  //int p=testing_input.cols();
+  int p=beta.size();
+  
   //int dim_inputs=input.cols();
   int num_obs=output.rows();
   int k=output.cols();
   
   
-  MatrixXd r= separable_multi_kernel(r0,beta, kernel_type,alpha);
+  //compute the vector for normalization for periodic 
+  Eigen::VectorXd priodic_const=Eigen::VectorXd::Ones(p);
+  for(int i_ker=0; i_ker<p;i_ker++){
+    
+    if(kernel_type[i_ker]==4){
+      priodic_const[i_ker]=1.0/(2.0*sqrt(PI*beta[i_ker]));
+      for(int ti=1; ti <11; ti++){
+        priodic_const[i_ker]=priodic_const[i_ker]+1.0/sqrt(PI*beta[i_ker])*exp(-pow(ti,2.0)/(4.0*beta[i_ker]));
+      }
+    }else if(kernel_type[i_ker]==5){
+      priodic_const[i_ker]=1.0/(PI*beta[i_ker]);
+      for(int ti=1; ti<11; ti++){
+        priodic_const[i_ker]=priodic_const[i_ker]+2.0*beta[i_ker]/((pow(beta[i_ker],2.0)+pow(ti,2.0))*PI);
+      }
+    }
+  }
   
-  
+  //if(priodic_const.array().sum()==p ){
+    //   MatrixXd r= separable_multi_kernel(r0,beta, kernel_type,alpha);
+    //}else{
+  MatrixXd r= separable_multi_kernel_pred_periodic(r0,beta, kernel_type,alpha,priodic_const);
+    //}
+    
+
 
   MatrixXd rt_R_inv= (L.transpose().triangularView<Upper>().solve(L.triangularView<Lower>().solve(r.transpose()))).transpose();
   VectorXd c_star_star(num_testing_input);
@@ -1072,9 +1835,17 @@ List pred_ppgasp(const Eigen::VectorXd beta,const double nu, const  Eigen::Map<E
   
   
   if(zero_mean=="Yes"){
-    for(int i_loc=0; i_loc<num_testing_input;i_loc++){
-      rtR_inv_r=(rt_R_inv.row(i_loc)*r.row(i_loc).transpose());
-      c_star_star[i_loc]=1+nu-rtR_inv_r(0,0);
+    if(interval_data){
+      for(int i_loc=0; i_loc<num_testing_input;i_loc++){
+        rtR_inv_r=(rt_R_inv.row(i_loc)*r.row(i_loc).transpose());
+        c_star_star[i_loc]=1+nu-rtR_inv_r(0,0);
+      }
+    }else{
+      for(int i_loc=0; i_loc<num_testing_input;i_loc++){
+        rtR_inv_r=(rt_R_inv.row(i_loc)*r.row(i_loc).transpose());
+        c_star_star[i_loc]=1-rtR_inv_r(0,0);
+      }
+      
     }
     MatrixXd MU_testing=rt_R_inv*output;
     pred[0]=MU_testing;
@@ -1085,44 +1856,111 @@ List pred_ppgasp(const Eigen::VectorXd beta,const double nu, const  Eigen::Map<E
       pred_var.col(loc_i)=  sigma2_hat[loc_i]*c_star_star.array().abs().matrix();
     }
     //VectorXd var=c_star_star.array().abs().matrix()*sigma2_hat;  //when R is close to be singular, c_star_star can be very small negative
-    pred[1]=MU_testing+pred_var*qt_025;
-    pred[2]=MU_testing+pred_var*qt_975;
-    pred[3]=pred_var*(num_obs)/(num_obs-2);
+    pred[1]=MU_testing+pred_var*q_025;
+    pred[2]=MU_testing+pred_var*q_975;
+    //pred[3]=pred_var*(num_obs)/(num_obs-2);
+    
+    if( (method=="post_mode") || (method=="mmle") ){
+      pred[3]=pred_var*(num_obs)/(num_obs-2);
+    }else if(method=="mle"){
+      pred[3]=pred_var;
+    }
     
   }else{
     
-    int q=X.cols();
-    MatrixXd diff2;
-    MatrixXd  R_inv_X=L.transpose().triangularView<Upper>().solve(L.triangularView<Lower>().solve(X));  
-    MatrixXd X_testing_X_R_inv_r_i;
-    for(int i=0; i<num_testing_input;i++){
-      X_testing_X_R_inv_r_i=X_testing.row(i)-r.row(i)*R_inv_X;
-      diff2=X_testing_X_R_inv_r_i*(LX.transpose().triangularView<Upper>().solve(LX.triangularView<Lower>().solve(X_testing_X_R_inv_r_i.transpose())));
+    if((method=="post_mode") || (method=="mmle")){
+      int q=X.cols();
+      MatrixXd diff2;
+      MatrixXd  R_inv_X=L.transpose().triangularView<Upper>().solve(L.triangularView<Lower>().solve(X));  
+      MatrixXd X_testing_X_R_inv_r_i;
+      if(interval_data){
+        for(int i=0; i<num_testing_input;i++){
+          X_testing_X_R_inv_r_i=X_testing.row(i)-r.row(i)*R_inv_X;
+          diff2=X_testing_X_R_inv_r_i*(LX.transpose().triangularView<Upper>().solve(LX.triangularView<Lower>().solve(X_testing_X_R_inv_r_i.transpose())));
+          
+          rtR_inv_r=(rt_R_inv.row(i)*r.row(i).transpose());
+          c_star_star[i]=1+nu-rtR_inv_r(0,0)+diff2(0,0);
+        }
+      }else{
+        for(int i=0; i<num_testing_input;i++){
+          X_testing_X_R_inv_r_i=X_testing.row(i)-r.row(i)*R_inv_X;
+          diff2=X_testing_X_R_inv_r_i*(LX.transpose().triangularView<Upper>().solve(LX.triangularView<Lower>().solve(X_testing_X_R_inv_r_i.transpose())));
+          
+          rtR_inv_r=(rt_R_inv.row(i)*r.row(i).transpose());
+          c_star_star[i]=1-rtR_inv_r(0,0)+diff2(0,0);
+        }
+      }
+      MatrixXd MU_testing=X_testing*theta_hat+rt_R_inv*(output-X*theta_hat);
+      pred[0]=MU_testing;
+      //VectorXd var=c_star_star*sigma2_hat;
+      //VectorXd var=c_star_star.array().abs().matrix()*sigma2_hat;  //when R is close to be singular, c_star_star can be very small negative
       
-      rtR_inv_r=(rt_R_inv.row(i)*r.row(i).transpose());
-      c_star_star[i]=1+nu-rtR_inv_r(0,0)+diff2(0,0);
+      MatrixXd pred_var=MatrixXd::Zero(num_testing_input,k);
+      
+      for(int loc_i=0;loc_i<k;loc_i++){
+        pred_var.col(loc_i)=  sigma2_hat[loc_i]*c_star_star.array().abs().matrix();
+      }
+      
+      pred[1]=MU_testing+pred_var.array().sqrt().matrix()*q_025;
+      pred[2]=MU_testing+pred_var.array().sqrt().matrix()*q_975;
+      pred[3]=pred_var*(num_obs-q)/(num_obs-q-2);
+    
+    }else if(method=="mle"){
+      if(interval_data){
+        for(int i=0; i<num_testing_input;i++){
+  
+          rtR_inv_r=(rt_R_inv.row(i)*r.row(i).transpose());
+          c_star_star[i]=1+nu-rtR_inv_r(0,0);
+        }
+      }else{
+        for(int i=0; i<num_testing_input;i++){
+          rtR_inv_r=(rt_R_inv.row(i)*r.row(i).transpose());
+          c_star_star[i]=1-rtR_inv_r(0,0);
+        }
+      }
+      MatrixXd MU_testing=X_testing*theta_hat+rt_R_inv*(output-X*theta_hat);
+      pred[0]=MU_testing;
+      
+      MatrixXd pred_var=MatrixXd::Zero(num_testing_input,k);
+      
+      for(int loc_i=0;loc_i<k;loc_i++){
+        pred_var.col(loc_i)=  sigma2_hat[loc_i]*c_star_star.array().abs().matrix();
+      }
+      pred[1]=MU_testing+pred_var.array().sqrt().matrix()*q_025;
+      pred[2]=MU_testing+pred_var.array().sqrt().matrix()*q_975;
+      pred[3]=pred_var;
+      
     }
-    
-    MatrixXd MU_testing=X_testing*theta_hat+rt_R_inv*(output-X*theta_hat);
-    pred[0]=MU_testing;
-    //VectorXd var=c_star_star*sigma2_hat;
-    //VectorXd var=c_star_star.array().abs().matrix()*sigma2_hat;  //when R is close to be singular, c_star_star can be very small negative
-    
-    MatrixXd pred_var=MatrixXd::Zero(num_testing_input,k);
-    
-    for(int loc_i=0;loc_i<k;loc_i++){
-      pred_var.col(loc_i)=  sigma2_hat[loc_i]*c_star_star.array().abs().matrix();
-    }
-    
-    pred[1]=MU_testing+pred_var.array().sqrt().matrix()*qt_025;
-    pred[2]=MU_testing+pred_var.array().sqrt().matrix()*qt_975;
-    pred[3]=pred_var*(num_obs-q)/(num_obs-q-2);
-    
-    
-    
+
    //pred[3]=c_star_star; //test
   }
   return pred;
   
 }
+
+
+// [[Rcpp::export]]
+bool test_const_column (const MapMat &d){
+  
+  int nrow = d.rows();
+  int ncol = d.cols();
+  bool res=false;//false means no constant column and true means yes
+  double cur_value;
+  for(int i=0; i<ncol; i++){
+    cur_value=d(0,i);
+    for(int j=1; j<nrow; j++){
+      if(d(j,i)!=cur_value ){
+        cur_value=d(j,i);
+        break;
+      }
+    }
+    if(cur_value==d(0,i)){
+       res=true;
+       break;
+    }
+    
+  }
+   return res;
+}
+
 

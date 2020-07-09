@@ -13,7 +13,8 @@ Prediction for Robust GaSP model
 Function to make prediction on the robust GaSP model after the robust GaSP model has been constructed.
 }
 \usage{
-\S4method{predict}{rgasp}(object, testing_input, testing_trend= matrix(1,dim(testing_input)[1],1),
+\S4method{predict}{rgasp}(object,testing_input,testing_trend= matrix(1,dim(testing_input)[1],1),
+r0=NA,interval_data=T,
 outasS3 = T,...)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -21,6 +22,12 @@ outasS3 = T,...)
   \item{object}{ an object of  class \code{rgasp}.}
   \item{testing_input}{a matrix containing the inputs where the \code{rgasp} is to perform prediction.}
   \item{testing_trend}{a matrix of mean/trend for prediction.}
+  \item{r0}{
+  the distance between input and testing input. If the value is \code{NA}, it will be calculated later. It can also be specified by the user. If specified by user, it is either a \code{matrix} or \code{list}. The default value is \code{NA}.
+  }
+\item{interval_data}{
+   a boolean value. If \code{T}, the interval of the data will be calculated. Otherwise, the interval of the mean of the data will be calculted.
+}
   \item{outasS3}{a boolean parameter indicating whether the output of the function should be as an \code{S3 object}.}
   \item{...}{Extra arguments to be passed to the function (not implemented yet).}
 }
@@ -214,13 +221,38 @@ Maintainer: \packageMaintainer{RobustGaSP}
   sqrt(MSE_emulator/mean((testing_output-mean(output))^2 ))
 
 
+    ###here try the isotropic kernel (a function of Euclidean distance)
+  m2_isotropic<- rgasp(design = input, response = output,trend =X,  
+             lower_bound=FALSE,isotropic=TRUE)
+  
+  m2_isotropic.predict<-predict(m2_isotropic, testing_input,testing_trend=testing_X)
+  
+  # compute the MSE, average coverage and average length
+  # out of sample MSE
+  MSE_emulator_isotropic <- sum((m2_isotropic.predict$mean-testing_output)^2)/(num_testing_input)
+  
+  # proportion covered by 95\% posterior predictive credible interval
+  prop_emulator_isotropic <- length(which((m2_isotropic.predict$lower95<=testing_output)
+                                &(m2_isotropic.predict$upper95>=testing_output)))/num_testing_input
+  
+  # average length of  posterior predictive credible interval
+  length_emulator_isotropic <- sum(m2_isotropic.predict$upper95-
+  m2_isotropic.predict$lower95)/num_testing_input
+  
+  MSE_emulator_isotropic
+  prop_emulator_isotropic
+  length_emulator_isotropic
+  ##the result of isotropic kernel is not as good as the product kernel for this example
+
+
   #--------------------------------------------------------------------------------------
   # an 8 dimensional example using only a subset inputs and a noise with unknown variance
   #--------------------------------------------------------------------------------------
+  set.seed(1)
   # dimensional of the inputs
   dim_inputs <- 8    
   # number of the inputs
-  num_obs <- 30       
+  num_obs <- 50       
   
   # uniform samples of design
   input <-matrix(runif(num_obs*dim_inputs), num_obs,dim_inputs) 

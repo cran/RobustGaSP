@@ -14,7 +14,9 @@ Function to sample Robust GaSP after the Robust GaSP model has been constructed.
 }
 \usage{
 \S4method{Sample}{rgasp}(object, testing_input, num_sample=1,
-testing_trend= matrix(1,dim(testing_input)[1],1),...)
+testing_trend= matrix(1,dim(testing_input)[1],1),
+r0=NA, rr0=NA, sample_data=T,
+...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -22,6 +24,16 @@ testing_trend= matrix(1,dim(testing_input)[1],1),...)
   \item{testing_input}{a matrix containing the inputs where the \code{rgasp} is to sample.}
     \item{num_sample}{number of samples one wants. }
   \item{testing_trend}{a matrix of mean/trend for prediction.}
+      \item{r0}{
+  the distance between input and testing input. If the value is \code{NA}, it will be calculated later. It can also be specified by the user. If specified by user, it is either a \code{matrix} or \code{list}. The default value is \code{NA}.
+  }
+      \item{rr0}{
+  the distance between testing input and testing input. If the value is \code{NA}, it will be calculated later. It can also be specified by the user. If specified by user, it is either a \code{matrix} or \code{list}. The default value is \code{NA}.
+  }
+
+\item{interval_data}{
+   a boolean value. If \code{T}, the interval of the data will be calculated. Otherwise, the interval of the mean of the data will be calculted.
+}
   \item{...}{Extra arguments to be passed to the function (not implemented yet).}
 }
 

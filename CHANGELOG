@@ -1,3 +1,14 @@
+##change / RobustGaSP 0.6.0
+ *Implement the periodic folding technique of exponential and Gaussian kernel for periodic inputs 
+ *Implement the profile likelihood estimator and marginal likelihood estimator 
+ *Implement the isotropic kernel with Euclidean distance 
+ *Fix the issue when the input is not a matrix 
+ *Fix the issue to check the output is not all the same for particular location in PP GaSP 
+ *Allow lower95 and upper95 predictive interval for both data and mean 
+ *Allow sample the predictive process without noise 
+ *Implement 'Neld-Mead' and 'Brent' methods for optimization
+ *Include user-specified R0 and r0 when estimating the parameters 
+
 ##change / RobustGaSP 0.5.7
  *Implement the Parallel partial Gaussian stochastic process through the ppgasp() function. Implements the ppgasp-class, predppgasp-class ppgasp.predict(), show.ppgasp().
  *Include the data set humanity_model.rda. The document of the ppgasp()  function uses it as an example. 

@@ -139,6 +139,24 @@ neg_log_marginal_post_approx_ref <- function(param,nugget, nugget.est,R0,X,zero_
 
 }
 
+neg_log_profile_lik <- function(param,nugget, nugget.est,R0,X,zero_mean,output,CL,a,b,kernel_type,alpha) {
+  #####this has mean X, we should also include the case where X is not zero
+  #####
+  lpl=log_profile_lik(param,nugget,nugget.est,R0,X,zero_mean,output,kernel_type,alpha);
+
+  -lpl
+  
+}
+
+neg_log_marginal_lik <- function(param,nugget, nugget.est,R0,X,zero_mean,output,CL,a,b,kernel_type,alpha) {
+  #####this has mean X, we should also include the case where X is not zero
+  #####
+  lml=log_marginal_lik(param,nugget,nugget.est,R0,X,zero_mean,output,kernel_type,alpha);
+  
+  -lml
+  
+}
+
 
 ####################
 neg_log_marginal_post_approx_ref_ppgasp <- function(param,nugget, nugget.est,R0,X,zero_mean,output,CL,a,b,kernel_type,alpha) {
@@ -152,6 +170,28 @@ neg_log_marginal_post_approx_ref_ppgasp <- function(param,nugget, nugget.est,R0,
   -(lml+lp)
   
 }
+
+neg_log_profile_lik_ppgasp <- function(param,nugget, nugget.est,R0,X,zero_mean,output,CL,a,b,kernel_type,alpha) {
+  #####this has mean X, we should also include the case where X is not zero
+  #####
+  lpl=log_profile_lik_ppgasp(param,nugget,nugget.est,R0,X,zero_mean,output,kernel_type,alpha);
+  #print(param)
+  #print(-(lml+lp))
+  
+  -lpl
+}
+
+neg_log_marginal_lik_ppgasp <- function(param,nugget, nugget.est,R0,X,zero_mean,output,CL,a,b,kernel_type,alpha) {
+  #####this has mean X, we should also include the case where X is not zero
+  #####
+  lml=log_marginal_lik_ppgasp(param,nugget,nugget.est,R0,X,zero_mean,output,kernel_type,alpha);
+  #print(param)
+  #print(-(lml+lp))
+  
+  -lml
+}
+
+
 
 ####################
 neg_log_marginal_post_ref<- function(param,nugget, nugget.est,R0,X,zero_mean,output,prior_choice,kernel_type,alpha) {
@@ -207,6 +247,23 @@ neg_log_marginal_post_approx_ref_deriv<- function(param,nugget,nugget.est,R0,X,z
     
 }
 
+
+neg_log_profile_lik_deriv<- function(param,nugget,nugget.est,R0,X,zero_mean,output,CL,a,b,kernel_type,alpha) {
+  lpl_dev=log_profile_lik_deriv(param,nugget,nugget.est,R0,X,zero_mean,output,kernel_type,alpha)
+
+  -(lpl_dev)*exp(param)
+  
+}
+
+
+neg_log_marginal_lik_deriv<- function(param,nugget,nugget.est,R0,X,zero_mean,output,CL,a,b,kernel_type,alpha) {
+  lml_dev=log_marginal_lik_deriv(param,nugget,nugget.est,R0,X,zero_mean,output,kernel_type,alpha)
+  
+  -(lml_dev)*exp(param)
+  
+}
+
+
 #######################ppgasp
 neg_log_marginal_post_approx_ref_deriv_ppgasp<- function(param,nugget,nugget.est,R0,X,zero_mean,output,CL,a,b,kernel_type,alpha) {
   lml_dev=log_marginal_lik_deriv_ppgasp(param,nugget,nugget.est,R0,X,zero_mean,output,kernel_type,alpha)
@@ -215,6 +272,22 @@ neg_log_marginal_post_approx_ref_deriv_ppgasp<- function(param,nugget,nugget.est
   -(lml_dev+lp_dev)*exp(param)
   
 }
+
+
+neg_log_profile_lik_deriv_ppgasp<- function(param,nugget,nugget.est,R0,X,zero_mean,output,CL,a,b,kernel_type,alpha) {
+  lpl_dev=log_profile_lik_deriv_ppgasp(param,nugget,nugget.est,R0,X,zero_mean,output,kernel_type,alpha)
+
+  -(lpl_dev)*exp(param)
+  
+}
+
+neg_log_marginal_lik_deriv_ppgasp<- function(param,nugget,nugget.est,R0,X,zero_mean,output,CL,a,b,kernel_type,alpha) {
+  lml_dev=log_marginal_lik_deriv_ppgasp(param,nugget,nugget.est,R0,X,zero_mean,output,kernel_type,alpha)
+  
+  -(lml_dev)*exp(param)
+  
+}
+
 
 #############this is a function to search the lower bounds for range parameters beta
 #####need R0 in the function
@@ -228,9 +301,18 @@ search_LB_prob<-function(param, R0,COND_NUM_UB,p,kernel_type,alpha,nugget){
   
   R=separable_multi_kernel(R0,exp(LB),kernel_type,alpha)  
   
+  # if(!isotropic){
+  #   R=separable_multi_kernel(R0,exp(LB),kernel_type,alpha)  
+  # }else{
+  #   R=pow_exp_funct(R0[[1]],exp(LB),1)  
+  # }
   R=as.matrix(R)
   R=R+nugget*diag(num_obs)
+  
   (kappa(R)-COND_NUM_UB)^2
+  ##one might change it to
+  ##(kappa(R,exact=T)-COND_NUM_UB)^2
+  
 }
 
 ###leave one out 
@@ -266,14 +348,22 @@ leave_one_out_rgasp<-function(object){
       mean[i]=object@X[i,]%*%theta_hat+r_sub_t_R_sub_inv%*%tilde_output
       
       
-      sigma2_hat=t(tilde_output)%*%backsolve(t(L_sub),forwardsolve(L_sub,tilde_output ))/(object@num_obs-1-object@q)
-      
-      c_star=(R_tilde[i,i]-r_sub_t_R_sub_inv%*%r_sub)
-      
-
-      h_hat=object@X[i,]-t(object@X[-i,])%*%t(r_sub_t_R_sub_inv)
-      c_star_star= c_star+ t(h_hat)%*%backsolve(t(L_X),forwardsolve(L_X,h_hat))
-      sigma_2[i]=sigma2_hat*(c_star_star)
+      if( (object@method=='post_mode') |(object@method=='mmle') ){
+        sigma2_hat=t(tilde_output)%*%backsolve(t(L_sub),forwardsolve(L_sub,tilde_output ))/(object@num_obs-1-object@q)
+        
+        c_star=(R_tilde[i,i]-r_sub_t_R_sub_inv%*%r_sub)
+        
+  
+        h_hat=object@X[i,]-t(object@X[-i,])%*%t(r_sub_t_R_sub_inv)
+        c_star_star= c_star+ t(h_hat)%*%backsolve(t(L_X),forwardsolve(L_X,h_hat))
+        sigma_2[i]=sigma2_hat*(c_star_star)
+      }else if(object@method=='mle'){
+        sigma2_hat=t(tilde_output)%*%backsolve(t(L_sub),forwardsolve(L_sub,tilde_output ))/(object@num_obs-1)
+        
+        c_star=(R_tilde[i,i]-r_sub_t_R_sub_inv%*%r_sub)
+        
+        sigma_2[i]=sigma2_hat*(c_star)
+      }
       #sigma_2[i]=object@sigma2_hat*(c_star)
       
     }

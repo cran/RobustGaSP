@@ -1,27 +1,27 @@
-\name{log_marginal_lik_deriv}
-\alias{log_marginal_lik_deriv}
+\name{log_profile_lik_ppgasp}
+\alias{log_profile_lik_ppgasp}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 %%  ~~function to do ... ~~
-Derivative of natural logarithm of the marginal likelihood
+Natural logarithm of profile likelihood of the PP GaSP model
 }
 \description{
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
-The derivative of natural logarithm of marginal likelihood of the Robust GaSP model with regard to inverse range parameters and nugget-variance ratio parameter after marginalizing out the mean (trend) and variance parameters the location-scale prior. When the nugget is fixed, it only computes the derivative with regard to the inverse range parameter; otherwise it produces derivative with regard to inverse range parameter and nugget-variance ratio parameter.
+This function computes the natural logarithm of profile likelihood of the PP GaSP model after plugging in the maximum likelihood estimator of the mean (trend) and variance parameters.
 }
 \usage{
-log_marginal_lik_deriv(param, nugget, nugget_est, R0, X, zero_mean, 
-output, kernel_type, alpha)
+log_profile_lik_ppgasp(param, nugget, nugget_est, R0, X, zero_mean
+,output,kernel_type, alpha)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{param}{
 %%     ~~Describe \code{param} here~~
-A vector of natural logarithm of inverse-range parameters and natural logarithm of the nugget-variance ratio parameter.
+a vector of natural logarithm of inverse-range parameters and natural logarithm of the nugget-variance ratio parameter.
 }
   \item{nugget}{
 %%     ~~Describe \code{nugget} here~~
-The nugget-variance ratio parameter if this parameter is fixed.
+the nugget-variance ratio parameter if this parameter is fixed.
 }
   \item{nugget_est}{
 %%     ~~Describe \code{nugget.est} here~~
@@ -29,20 +29,20 @@ Boolean value of whether the nugget is estimated or fixed.
 }
   \item{R0}{
 %%     ~~Describe \code{R0} here~~
-A list of matrix where the j-th matrix is an absolute difference matrix of the j-th input vector.
+a List of matrix where the j-th matrix is an absolute difference matrix of the j-th input vector.
 }
   \item{X}{
 %%     ~~Describe \code{X} here~~
-The mean basis function i.e. the trend function.
+the mean basis function i.e. the trend function.
 }
   \item{zero_mean}{
 %%     ~~Describe \code{zero_mean} here~~
-The mean basis function is zero or not.
+the mean basis function is zero or not.
 }
 
   \item{output}{
 %%     ~~Describe \code{output} here~~
-The output vector.
+a matrix where each row is one runs of the computer model output.
 }
   \item{kernel_type}{
 %%     ~~Describe \code{kernel_type} here~~
@@ -50,7 +50,7 @@ A vector specifying the type of kernels of each coordinate of the input. \code{m
 }
   \item{alpha}{
 %%     ~~Describe \code{alpha} here~~
-Roughness parameters in the kernel functions.
+roughness parameters in the kernel functions.
 }
 }
 %\details{
@@ -62,10 +62,12 @@ Roughness parameters in the kernel functions.
 %%  \item{comp1 }{Description of 'comp1'}
 %%  \item{comp2 }{Description of 'comp2'}
 %% ...
-The numerical value of the derivative of natural logarithm of marginal likelihood with regard to range and nugget-variance ratio parameter (if not fixed). When the nugget is fixed, the derivative is on inverse-range parameters.
+The numerical value of natural logarithm of the profile likelihood.
 }
 \references{
-M. Gu. (2016). Robust uncertainty quantification and scalable computation for computer models with massive output. Ph.D. thesis. Duke University.
+M. Gu. and J.O. Berger (2016). Parallel partial Gaussian process emulation for computer models with massive output. \emph{Annals of Applied Statistics}, 10(3), 1317-1347.
+
+M. Gu. (2016). Robust Uncertainty Quantification and Scalable Computation for Computer Models with Massive Output. Ph.D. thesis. Duke University.
 }
 \author{
 %%  ~~who you are~~
@@ -79,9 +81,10 @@ Maintainer: \packageMaintainer{RobustGaSP}
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
-\seealso{
- \code{\link{log_marginal_lik}}.
-}
+%\seealso{
+%% ~~objects to See Also as \code{\link{help}}, ~~~
+%}
+
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
 %\keyword{ ~kwd1 }% use one of  RShowDoc("KEYWORDS")

@@ -10,9 +10,9 @@ A C++ function to generate predictive mean and cholesky decomposition of the sca
 The function computes predictive mean and cholesky decomposition of the scaled covariance function.
 }
 \usage{
-generate_predictive_mean_cov(beta, nu, input, X,zero_mean,output, testing_input, 
-                             X_testing, L, LX, theta_hat, sigma2_hat,
-                             rr0,r0,kernel_type,alpha)
+generate_predictive_mean_cov(beta, nu, input, X,zero_mean,output,  
+testing_input,X_testing, L, LX, theta_hat, sigma2_hat,rr0,r0, 
+kernel_type,alpha,method,sample_data)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -84,8 +84,12 @@ Type of kernel. \code{matern_3_2} and \code{matern_5_2} are \code{Matern kernel}
 %%     ~~Describe \code{alpha} here~~
 Roughness parameters in the kernel functions.
 }
+\item{method}{  method of parameter estimation. \code{post_mode} means the marginal posterior mode is used for estimation. \code{mle} means the maximum likelihood estimation is used. \code{mmle} means the maximum marginal likelihood estimation is used. The \code{post_mode}  is the default method. }
+\item{sample_data}{
+ a boolean value. If true, the data (which may contain noise) is sampled. If false, the the mean of the data is sampled.  
+}}
 
-}
+
 %\details{
 %%  ~~ If necessary, more details than the description above ~~
 %}

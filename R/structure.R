@@ -40,6 +40,8 @@ setClass("rgasp",
            nugget.est="logical",         ### nugget is estimated or fixed
            kernel_type="vector",       #####type of kernel to specify
            alpha="vector",                 ####roughness parameter in the kernel
+           method="character",          ##### post_mode, MLE, MMLE
+           isotropic="logical",          ##isotropic or separable kernel
            call = "language"         ## user call
          ), 
          validity = function(object) {
@@ -116,9 +118,12 @@ if(!isGeneric("predict")) {
 
 setMethod("predict", "rgasp",
           definition=function(object, testing_input, testing_trend=matrix(1,dim(testing_input)[1],1),
+                              r0=NA, 
+                              interval_data=T,
                               outasS3 = T, ...) {
             predict.rgasp(object = object, testing_input = testing_input, 
-                          testing_trend=testing_trend , outasS3 = outasS3,...)
+                          testing_trend=testing_trend , r0=r0, 
+                          interval_data=T,outasS3 = outasS3,...)
           }
 )
 
@@ -132,9 +137,12 @@ if(!isGeneric("simulate")) {
 }
 
 setMethod("simulate", "rgasp",
-          definition=function(object, testing_input, num_sample=1,testing_trend=matrix(1,dim(testing_input)[1],1), ...) {
+          definition=function(object, testing_input, num_sample=1,testing_trend=matrix(1,dim(testing_input)[1],1), 
+                              r0=NA, rr0=NA,
+                              sample_data=T,...) {
             simulate.rgasp(object = object, testing_input = testing_input, num_sample=num_sample,
-                          testing_trend=testing_trend , ...)
+                           testing_trend=testing_trend,
+                           r0=r0, rr0=rr0,sample_data=sample_data, ...)
           }
 )
 
@@ -145,9 +153,12 @@ if(!isGeneric("Sample")) {
 }
 
 setMethod("Sample", "rgasp",
-          definition=function(object, testing_input, num_sample=1,testing_trend=matrix(1,dim(testing_input)[1],1), ...) {
+          definition=function(object, testing_input, num_sample=1,
+                              testing_trend=matrix(1,dim(testing_input)[1],1), 
+                              r0=NA, rr0=NA,sample_data=T,...) {
             simulate.rgasp(object = object, testing_input = testing_input, num_sample=num_sample,
-                         testing_trend=testing_trend , ...)
+                           testing_trend=testing_trend,r0=r0, rr0=rr0,sample_data=sample_data,
+                           ...)
           }
 )
 
@@ -211,6 +222,8 @@ setClass("ppgasp",
            nugget.est="logical",         ### nugget is estimated or fixed
            kernel_type="vector",       #####type of kernel to specify
            alpha="vector",                 ####roughness parameter in the kernel
+           method="character",          ##### post_mode, MLE, MMLE
+           isotropic="logical",          ##isotropic or separable kernel
            call = "language"         ## user call
          ), 
          validity = function(object) {
@@ -266,8 +279,11 @@ setMethod("show", "ppgasp",
 
 setMethod("predict", "ppgasp",
           definition=function(object, testing_input, testing_trend=matrix(1,dim(testing_input)[1],1),
+                              r0=NA, 
+                              interval_data=T,
                               outasS3 = T,...) {
-            predict.ppgasp(object = object, testing_input = testing_input,
+            predict.ppgasp(object = object, testing_input = testing_input,r0=r0, 
+                           interval_data=interval_data,
                           testing_trend=testing_trend, outasS3 = outasS3,...)
           }
 )

@@ -31,6 +31,8 @@ Objects of this class are created and initialized with the function \code{\link{
     \item{\code{nugget.est}:}{A \code{logical} object of whether the nugget is estimated (T) or fixed (F).}
     \item{\code{kernel_type}:}{A \code{vector} of \code{character} to specify the type of kernel to use.}
     \item{\code{alpha}:}{Object of class \code{vector} with dimension p x 1 for the roughness parameters in the kernel.}
+        \item{\code{method}:}{Object of class \code{character} to specify the method of parameter estimation. There are three values: \code{post_mode}, \code{mle} and \code{mmle}.}
+        \item{\code{isotropic}:}{Object of class \code{logical} to specify whether the kernel is isotropic. }
     \item{\code{call}:}{The \code{call} to \code{rgasp} function to create the object.}
     }
   }

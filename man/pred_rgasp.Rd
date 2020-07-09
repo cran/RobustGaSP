@@ -12,7 +12,7 @@ A function to make prediction on robust GaSP models after the robust GaSP model 
 \usage{
 pred_rgasp(beta, nu, input, X, zero_mean,output, testing_input,
            X_testing, L, LX, theta_hat, sigma2_hat, 
-           qt_025, qt_975, r0, kernel_type, alpha)
+           q_025, q_975, r0, kernel_type, alpha,method,interval_data)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -66,11 +66,11 @@ estimated mean/trend parameters.
 %%     ~~Describe \code{sigma2_hat} here~~
 estimated variance parameter.
 }
-  \item{qt_025}{
+  \item{q_025}{
 %%     ~~Describe \code{qt_025} here~~
 0.025 quantile of \code{t} distribution.
 }
-  \item{qt_975}{
+  \item{q_975}{
 %%     ~~Describe \code{qt_975} here~~
 0.975 quantile of \code{t} distribution.
 }
@@ -80,11 +80,17 @@ a matrix of absolute difference between inputs and testing inputs.
 }
   \item{kernel_type}{
 %%     ~~Describe \code{kernel_type} here~~
-Type of kernel. \code{matern_3_2} and \code{matern_5_2} are \code{Matern kernel} with roughness parameter 3/2 and 5/2 respectively. \code{pow_exp} is power exponential kernel with roughness parameter alpha. If \code{pow_exp} is to be used, one needs to specify its roughness parameter alpha.
+type of kernel. \code{matern_3_2} and \code{matern_5_2} are \code{Matern kernel} with roughness parameter 3/2 and 5/2 respectively. \code{pow_exp} is power exponential kernel with roughness parameter alpha. If \code{pow_exp} is to be used, one needs to specify its roughness parameter alpha.
 }
   \item{alpha}{
 %%     ~~Describe \code{alpha} here~~
 Roughness parameters in the kernel functions.
+}
+\item{method}{  
+method of parameter estimation. \code{post_mode} means the marginal posterior mode is used for estimation. \code{mle} means the maximum likelihood estimation is used. \code{mmle} means the maximum marginal likelihood estimation is used. The \code{post_mode}  is the default method. 
+}
+\item{interval_data}{
+a boolean value. If \code{T}, the interval of the data will be calculated. If \code{F}, the  interval of the mean of the data will be calculated. 
 }
 }
 %\details{

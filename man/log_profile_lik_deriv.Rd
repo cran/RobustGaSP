@@ -1,16 +1,16 @@
-\name{log_marginal_lik_deriv}
-\alias{log_marginal_lik_deriv}
+\name{log_profile_lik_deriv}
+\alias{log_profile_lik_deriv}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 %%  ~~function to do ... ~~
-Derivative of natural logarithm of the marginal likelihood
+Derivative of natural logarithm of the profile likelihood
 }
 \description{
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
-The derivative of natural logarithm of marginal likelihood of the Robust GaSP model with regard to inverse range parameters and nugget-variance ratio parameter after marginalizing out the mean (trend) and variance parameters the location-scale prior. When the nugget is fixed, it only computes the derivative with regard to the inverse range parameter; otherwise it produces derivative with regard to inverse range parameter and nugget-variance ratio parameter.
+The derivative of natural logarithm of profile likelihood of the Robust GaSP model with regard to inverse range parameters and nugget-variance ratio parameter after plugging in the maximum likelihood estimator of the mean (trend) and variance parameters. When the nugget parameter is fixed, it only computes the derivative with regard to the inverse range parameter; otherwise it produces derivative with regard to inverse range parameter and nugget-variance ratio parameter.
 }
 \usage{
-log_marginal_lik_deriv(param, nugget, nugget_est, R0, X, zero_mean, 
+log_profile_lik_deriv(param, nugget, nugget_est, R0, X, zero_mean, 
 output, kernel_type, alpha)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -80,7 +80,7 @@ Maintainer: \packageMaintainer{RobustGaSP}
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
- \code{\link{log_marginal_lik}}.
+ \code{\link{log_profile_lik}}.
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
