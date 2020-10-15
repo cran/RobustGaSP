@@ -214,16 +214,28 @@ rgasp <- function(design, response,trend=matrix(1,length(response),1),zero.mean=
     
     COND_NUM_UB = 10^{16}  ###maximum condition number, this might be a little too large
     
-    LB_all = optimize(search_LB_prob, interval=c(-5,12), maximum = FALSE, R0=model@R0,COND_NUM_UB= COND_NUM_UB,
-                      p=model@p,kernel_type=kernel_type_num,alpha=model@alpha,nugget=nugget) ###find a lower bound for parameter beta
-    
-    LB_prob = exp(LB_all$minimum)/(exp(LB_all$minimum)+1)
-    
-    LB = NULL
-    
-    for( i_LB in 1:model@p){
-      LB = c(LB, log(-log(LB_prob)/(max(model@R0[[i_LB]]))))    ###LB is lower bound for log beta, may consider to have it related to p
+    if(lower_bound==T){
+      LB_all = optimize(search_LB_prob, interval=c(-5,12), maximum = FALSE, R0=model@R0,COND_NUM_UB= COND_NUM_UB,
+                        p=model@p,kernel_type=kernel_type_num,alpha=model@alpha,nugget=nugget) ###find a lower bound for parameter beta
+      
+      LB_prob = exp(LB_all$minimum)/(exp(LB_all$minimum)+1)
+      
+      LB = NULL
+      
+      for( i_LB in 1:model@p){
+        LB = c(LB, log(-log(LB_prob)/(max(model@R0[[i_LB]]))))    ###LB is lower bound for log beta, may consider to have it related to p
+      }
+    }else{
+      ##give some empirical bound that passes the initial values if lower bound is F
+      ##could can change the first initial value if not search the bound
+      LB = NULL
+      
+      for( i_LB in 1:model@p){
+        LB = c(LB, -log(0.1)/((max(model@input[,i_LB])-min(model@input[,i_LB]))*model@p))    
+      }
+      
     }
+    
     
     if(lower_bound==T){
       if(model@nugget.est){
@@ -499,9 +511,9 @@ rgasp <- function(design, response,trend=matrix(1,length(response),1),zero.mean=
   if((method=='post_mode') | (method=='mmle') ){
      model@sigma2_hat=list_return[[4]];
   }else if (method=='mle'){
-    if(model@q>0){
+    #if(model@q>0){
        model@sigma2_hat=list_return[[4]]*(model@num_obs-model@q)/model@num_obs;
-    }
+    #}
   }
   return(model)
 }

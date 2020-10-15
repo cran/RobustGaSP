@@ -24,7 +24,7 @@ The range parameters.
   \item{kernel_type}{
 %%     ~~Describe \code{kernel_type} here~~
 A vector of \code{integer} specifying the type of kernels of each coordinate of the input. 
-In each coordinate of the vector, 1 means the \code{pow_exp} kernel with roughness parameter specified in alpha. 2 means  \code{matern_3_2}  kernel and 3 means \code{matern_5_2}  kernel.
+In each coordinate of the vector, 1 means the \code{pow_exp} kernel with roughness parameter specified in alpha; 2 means  \code{matern_3_2}  kernel; 3 means \code{matern_5_2}  kernel; 5 means \code{periodic_gauss} kernel; 5 means \code{periodic_exp} kernel. 
 }
   \item{alpha}{
 %%     ~~Describe \code{alpha} here~~

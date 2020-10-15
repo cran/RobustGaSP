@@ -1,3 +1,8 @@
+##change / RobustGaSP 0.6.1
+ *update the description of the kernel in the likelihood functions
+ *correct the typo of estimating sigma_2_0_hat for method mle when mean is zero
+ *change the setting of the lower_bound=F in rgasp() and ppgasp(); now we will not search lower bound for inverse range parameters if lower_bound=F. The first initial values for optimization is changed
+
 ##change / RobustGaSP 0.6.0
  *Implement the periodic folding technique of exponential and Gaussian kernel for periodic inputs 
  *Implement the profile likelihood estimator and marginal likelihood estimator 

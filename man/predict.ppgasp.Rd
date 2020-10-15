@@ -99,7 +99,7 @@ Maintainer: \packageMaintainer{RobustGaSP}
   
   set.seed(1)
   #Here the sample size is very small. Consider to use more observations 
-  n=100
+  n=80
   p=4
   ##using the latin hypercube will be better
   #library(lhs)
@@ -111,12 +111,12 @@ Maintainer: \packageMaintainer{RobustGaSP}
   input[,3]=0.01+input_samples[,3]*2.99
   input[,4]=30.01+input_samples[,4]*0.285
   
-  k=400
+  k=300
   output=matrix(0,n,k)
   ##environ.4.data is an environmental model on a spatial-time vector
   ##? environ.4.data
   for(i in 1:n){
-    output[i,]=environ.4.data(input[i,],s=seq(0.15,3,0.15),t=seq(3,60,3)  )
+    output[i,]=environ.4.data(input[i,],s=seq(0.15,3,0.15),t=seq(4,60,4)  )
   }
   
   ##samples some test inputs
@@ -134,7 +134,7 @@ Maintainer: \packageMaintainer{RobustGaSP}
   
   for(i in 1:n_star){
     testing_output[i,]=environ.4.data(testing_input[i,],s=seq(0.15,3,0.15
-    ),t=seq(3,60,3) )
+    ),t=seq(4,60,4) )
   }
   
   ##we do a transformation of the output 
@@ -143,6 +143,7 @@ Maintainer: \packageMaintainer{RobustGaSP}
   #since we have lots of output, we use 'nelder-mead' for optimization
   m.ppgasp=ppgasp(design=input,response=log_output_1,kernel_type
                   ='pow_exp',num_initial_values=2,optimization='nelder-mead')
+  
   m_pred.ppgasp=predict(m.ppgasp,testing_input)
   ##we transform back for the prediction
   m_pred_ppgasp_median=exp(m_pred.ppgasp$mean)-1
