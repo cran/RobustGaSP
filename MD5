@@ -1,5 +1,5 @@
-36a10cc716da2eb49b9fcb40f7a810a4 *CHANGELOG
-a137fe896fb0bd76abe4a312a6567afc *DESCRIPTION
+1e9c8ec60ab2cc2eb438db2d75be9c5e *CHANGELOG
+8db54aa67f67b49dc1ca00f778005380 *DESCRIPTION
 2e6e5b7ae67c21e841dac5988f9cdbb1 *NAMESPACE
 4d9333ebba191910cc23fddaddcf8bf4 *R/RcppExports.R
 042ebb24541eff1130a2267f881c29f8 *R/functions.R
@@ -10,11 +10,11 @@ a137fe896fb0bd76abe4a312a6567afc *DESCRIPTION
 04cc79b47ad8dd226b76f9c48d361fe9 *R/rgasp.R
 72171e52d64a3d8fde963009847a840e *R/simulate.R
 1679fe3c04b2d9919ad243276256b0bd *R/structure.R
-abc83f13bfe0f35a54a5d0ed9312dad4 *build/partial.rdb
+6a9baa0c7b09e4f03b58ccd51dbbc09c *build/partial.rdb
 165bed2f06659a6b7eb52a60d613309e *data/humanity_model.rda
 3589e3aff4f3d471a75320ea2ad6cfaa *inst/extdata/example.r
 483ee894b66abcf00e793ec90841b5c8 *inst/include/RobustGaSP.h
-37992cea54408f8acf3cdb04192fbf30 *man/RobustGaSP-package.Rd
+d2418c9a6a955aca51cf40d1a42ae964 *man/RobustGaSP-package.Rd
 649f7dad6a2541693b9af3e18a613d13 *man/Sample.rgasp.Rd
 18831c1b3e7b2a17bf991a0a7ce25d79 *man/as.S3prediction.Rd
 5164e433e0be3d5d7769e55bcb57ac59 *man/as.S4prediction.Rd
@@ -27,7 +27,7 @@ e8959acbe585a9560c740f675736e9d3 *man/dettepepel.3.data.Rd
 6bfd6c5b2448e27241e372cc69533149 *man/findInertInputs.Rd
 f455738fa2de088158df1029236a41c0 *man/friedman.5.data.Rd
 df2eb3cfbb0c79f4342a80f507063109 *man/generate_predictive_mean_cov.Rd
-e9f4f60e6ae4d2f543621080ae82302e *man/higdon.1.data.Rd
+c5dfbf511ce4fa6c1080c6abb1697d32 *man/higdon.1.data.Rd
 f2b1c4797421ef71a2e4da4466ae9324 *man/humanity_model.Rd
 d1d209fb46d58a1dac4384110e67f335 *man/leave_one_out_rgasp.Rd
 d2906841141f6b64e82f5b2c041c1cac *man/limetal.2.data.Rd
@@ -63,8 +63,8 @@ ec5d9b8419865f1c11471d98352548f3 *man/pow_exp_deriv.Rd
 1d5fc7dc35bfbe9961ec58c51d9a86ee *man/ppgasp-class.Rd
 72b3d692ab41ef3ac6cb1a0321c7b4c3 *man/ppgasp.Rd
 860db2c4eec8d72ad0b6204fbaf5702d *man/pred_rgasp.Rd
-29658cd3514b10b46f2a87b770046899 *man/predict.ppgasp.Rd
-aedb50b26f554e07089201604260b8aa *man/predict.rgasp.Rd
+446615b8cc632c83422212b9f5c406a3 *man/predict.ppgasp.Rd
+733e06e4a20d31d728992e2b128cba55 *man/predict.rgasp.Rd
 8e3a3aee39943f91687c23484f135fac *man/predppgasp-class.Rd
 06cb4b7f56e9db6c8bb0190a3afaa92d *man/predrgasp-class.Rd
 3bff5c86c10bafc5e4739ea26e242fb0 *man/rgasp-class.Rd

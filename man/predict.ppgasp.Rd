@@ -132,9 +132,11 @@ Maintainer: \packageMaintainer{RobustGaSP}
   
   testing_output=matrix(0,n_star,k)
   
+  s=seq(0.15,3,0.15)
+  t=seq(4,60,4) 
+  
   for(i in 1:n_star){
-    testing_output[i,]=environ.4.data(testing_input[i,],s=seq(0.15,3,0.15
-    ),t=seq(4,60,4) )
+    testing_output[i,]=environ.4.data(testing_input[i,],s=s,t=t )
   }
   
   ##we do a transformation of the output 
@@ -154,8 +156,6 @@ Maintainer: \packageMaintainer{RobustGaSP}
   
   ##makes plots for the testing 
   par(mfrow=c(1,2))
-  t=seq(3,60,3)
-  s=seq(0.15,3,0.15)
   testing_plot_1=matrix(testing_output[1,],  length(t), length(s) )
   
   max_testing_plot_1=max(testing_plot_1)
@@ -175,6 +175,7 @@ Maintainer: \packageMaintainer{RobustGaSP}
                                               by = (max_ppgasp_plot_1-min_ppgasp_plot_1)/5),
           add = TRUE, col = "brown")
   dev.off()
+  
 
 }
 

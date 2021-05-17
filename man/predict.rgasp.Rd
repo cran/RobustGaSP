@@ -126,7 +126,7 @@ Maintainer: \packageMaintainer{RobustGaSP}
   # Perform prediction
   m1.predict<-predict(m1, testing_input)
   # Predictive mean
-  m1.predict$mean  
+  # m1.predict$mean  
   
   # The following tests how good the prediction is 
   testing_output <- matrix(0,num_testing_input,1)

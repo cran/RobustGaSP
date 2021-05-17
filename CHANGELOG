@@ -1,3 +1,8 @@
+##change / RobustGaSP 0.6.2
+ *fix the data length problem in the example of predict.ppgasp.Rd
+ *remove printing too much from examples
+ *fix a reference problem in higdon.1.data.Rd
+
 ##change / RobustGaSP 0.6.1
  *update the description of the kernel in the likelihood functions
  *correct the typo of estimating sigma_2_0_hat for method mle when mean is zero

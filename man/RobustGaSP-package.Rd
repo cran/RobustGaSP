@@ -91,7 +91,7 @@ J. Sacks, W.J. Welch, T.J. Mitchell, and H.P. Wynn (1989), \emph{Design and anal
   # Perform prediction
   m1.predict<-predict(m1, testing_input, outasS3 = FALSE)
   # Predictive mean
-  m1.predict@mean  
+  #m1.predict@mean  
   
   # The following tests how good the prediction is 
   testing_output <- matrix(0,num_testing_input,1)

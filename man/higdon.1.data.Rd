@@ -24,7 +24,7 @@ higdon.1.data(s)
 }
 \details{
 %%  ~~ If necessary, more details than the description above ~~
-For more details, see Higdon D. (2002) Space and Space-Time Modeling using Process Convolutions. In: Anderson C.W., Barnett V., Chatwin P.C., El-Shaarawi A.H. (eds) Quantitative Methods for Current Environmental Issues. Springer, London. DOI:\url{https://doi.org/10.1007/978-1-4471-0657-9_2}.
+For more details, see Higdon D. (2002) Space and Space-Time Modeling using Process Convolutions. In: Anderson C.W., Barnett V., Chatwin P.C., El-Shaarawi A.H. (eds) Quantitative Methods for Current Environmental Issues. Springer, London. 
 }
 \value{
 %%  ~Describe the value returned
@@ -41,7 +41,6 @@ For more details, see Higdon D. (2002) Space and Space-Time Modeling using Proce
 %% ~put references to the literature/web site here ~
 
 Higdon, D. (2002). Space and space-time modeling using process convolutions. In Quantitative methods for current environmental issues (pp. 37-56). Springer London.
-\url{https://doi.org/10.1007/978-1-4471-0657-9_2}
 
 S. Surjanovic, D. Bingham, Virtual Library of Simulation Experiments:  Test Functions
 and Datasets, retrieved March 29, 2016, from \url{https://www.sfu.ca/~ssurjano/hig02.html}.
