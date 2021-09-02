@@ -21,6 +21,7 @@
 // <http://www.gnu.org/licenses/>.
 */
 
+
 #ifndef _robustgasp_ctools_H
 #define _robustgasp_ctools_H
 #include <RcppEigen.h>

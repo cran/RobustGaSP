@@ -1,5 +1,5 @@
-1e9c8ec60ab2cc2eb438db2d75be9c5e *CHANGELOG
-8db54aa67f67b49dc1ca00f778005380 *DESCRIPTION
+43fd9296235e5fa94d488a1a2b9ce2fd *CHANGELOG
+aa9bcb617e06c0d878aecb99175f97d5 *DESCRIPTION
 2e6e5b7ae67c21e841dac5988f9cdbb1 *NAMESPACE
 4d9333ebba191910cc23fddaddcf8bf4 *R/RcppExports.R
 042ebb24541eff1130a2267f881c29f8 *R/functions.R
@@ -9,11 +9,11 @@
 0febc19a847cd0f7ca2627a9bab0eed9 *R/predict.R
 04cc79b47ad8dd226b76f9c48d361fe9 *R/rgasp.R
 72171e52d64a3d8fde963009847a840e *R/simulate.R
-1679fe3c04b2d9919ad243276256b0bd *R/structure.R
-6a9baa0c7b09e4f03b58ccd51dbbc09c *build/partial.rdb
+fd4a1af73e4f8a24996d42678fd2bc71 *R/structure.R
+b6318faba1dde0d23e7db842f47d4a53 *build/partial.rdb
 165bed2f06659a6b7eb52a60d613309e *data/humanity_model.rda
 3589e3aff4f3d471a75320ea2ad6cfaa *inst/extdata/example.r
-483ee894b66abcf00e793ec90841b5c8 *inst/include/RobustGaSP.h
+36803c2612a1c80afeaf2ae542c71225 *inst/include/RobustGaSP.h
 d2418c9a6a955aca51cf40d1a42ae964 *man/RobustGaSP-package.Rd
 649f7dad6a2541693b9af3e18a613d13 *man/Sample.rgasp.Rd
 18831c1b3e7b2a17bf991a0a7ce25d79 *man/as.S3prediction.Rd
@@ -77,5 +77,5 @@ c6c7183171cdde3e528205d2a9d2dc74 *man/show.rgasp.Rd
 1f384e442791edcfe88be4fe8ac61147 *man/simulate.rgasp.Rd
 4ad58faa92f4f50216e20d5d1f667486 *src/RcppExports.cpp
 6a2415f178333e83afcbfc3da2c70a22 *src/ctools.h
-835bf8dea9e4449aa42b51f34162696f *src/functions.cpp
+f616b7131fab2fadc24744d75d78b2f1 *src/functions.cpp
 1b103afd5e032a42e79815899f8b9b0a *src/init.c

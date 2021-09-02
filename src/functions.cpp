@@ -1,6 +1,8 @@
 
 // -*- mode: C++; c-indent-level: 4; c-basic-offset: 4; indent-tabs-mode: nil; -*-
 
+#define STRICT_R_HEADERS
+
 #include <RcppEigen.h>
 #include <Rcpp.h>
 #include <cmath>
@@ -58,11 +60,11 @@ Eigen::MatrixXd periodic_gauss_funct(const MapMat &d, double beta_i){
   int Rnrow = d.rows();
   int Rncol = d.cols();
   
-  Eigen::MatrixXd R=1.0/(2.0*sqrt(PI*beta_i))*Eigen::MatrixXd::Ones(Rnrow,Rncol);
+  Eigen::MatrixXd R=1.0/(2.0*sqrt(M_PI*beta_i))*Eigen::MatrixXd::Ones(Rnrow,Rncol);
     double two_beta_i=2*beta_i;
     int n_ti=std::min(std::max(11.0, two_beta_i),101.0);
     for(int ti=1; ti <n_ti; ti++){
-      R=R+1.0/sqrt(PI*beta_i)*exp(-pow(ti,2.0)/(4.0*beta_i))* (ti*d).array().cos().matrix();
+      R=R+1.0/sqrt(M_PI*beta_i)*exp(-pow(ti,2.0)/(4.0*beta_i))* (ti*d).array().cos().matrix();
   }
   R=R/R(0,0);
   return R;
@@ -77,11 +79,11 @@ Eigen::MatrixXd periodic_gauss_funct_fixed_normalized_const(const MapMat &d, dou
   int Rnrow = d.rows();
   int Rncol = d.cols();
   
-  Eigen::MatrixXd R=1.0/(2.0*sqrt(PI*beta_i))*Eigen::MatrixXd::Ones(Rnrow,Rncol);
+  Eigen::MatrixXd R=1.0/(2.0*sqrt(M_PI*beta_i))*Eigen::MatrixXd::Ones(Rnrow,Rncol);
   double two_beta_i=2*beta_i;
   int n_ti=std::min(std::max(11.0, two_beta_i),101.0);
   for(int ti=1; ti <n_ti; ti++){
-    R=R+1.0/sqrt(PI*beta_i)*exp(-pow(ti,2.0)/(4.0*beta_i))* (ti*d).array().cos().matrix();
+    R=R+1.0/sqrt(M_PI*beta_i)*exp(-pow(ti,2.0)/(4.0*beta_i))* (ti*d).array().cos().matrix();
   }
   R=R/perid_const_i;
   return R;
@@ -94,12 +96,12 @@ Eigen::MatrixXd periodic_exp_funct(const MapMat &d, double beta_i){
   int Rnrow = d.rows();
   int Rncol = d.cols();
   
-  Eigen::MatrixXd R=1.0/(PI*beta_i)*Eigen::MatrixXd::Ones(Rnrow,Rncol);
+  Eigen::MatrixXd R=1.0/(M_PI*beta_i)*Eigen::MatrixXd::Ones(Rnrow,Rncol);
 
   double five_beta_i=5*beta_i;
   int n_ti=std::min(std::max(21.0, five_beta_i),201.0);
   for(int ti=1; ti <n_ti; ti++){
-    R=R+2.0*beta_i/((pow(beta_i,2.0)+pow(ti,2.0))*PI)*(ti*d).array().cos().matrix();
+    R=R+2.0*beta_i/((pow(beta_i,2.0)+pow(ti,2.0))*M_PI)*(ti*d).array().cos().matrix();
   }
   R=R/R(0,0);
   return R;
@@ -114,12 +116,12 @@ Eigen::MatrixXd periodic_exp_funct_fixed_normalized_const(const MapMat &d, doubl
   int Rnrow = d.rows();
   int Rncol = d.cols();
   
-  Eigen::MatrixXd R=1.0/(PI*beta_i)*Eigen::MatrixXd::Ones(Rnrow,Rncol);
+  Eigen::MatrixXd R=1.0/(M_PI*beta_i)*Eigen::MatrixXd::Ones(Rnrow,Rncol);
   
   double five_beta_i=5*beta_i;
   int n_ti=std::min(std::max(21.0, five_beta_i),201.0);
   for(int ti=1; ti <n_ti; ti++){
-    R=R+2.0*beta_i/((pow(beta_i,2.0)+pow(ti,2.0))*PI)*(ti*d).array().cos().matrix();
+    R=R+2.0*beta_i/((pow(beta_i,2.0)+pow(ti,2.0))*M_PI)*(ti*d).array().cos().matrix();
   }
   R=R/perid_const_i;
   return R;
@@ -166,14 +168,14 @@ Eigen::MatrixXd periodic_gauss_deriv(const MapMat &R0_i, const Eigen::MatrixXd &
   int Rnrow = R0_i.rows();
   int Rncol = R0_i.cols();
   
-  Eigen::MatrixXd R_here=1.0/(2.0*sqrt(PI*beta_i))*Eigen::MatrixXd::Ones(Rnrow,Rncol);
+  Eigen::MatrixXd R_here=1.0/(2.0*sqrt(M_PI*beta_i))*Eigen::MatrixXd::Ones(Rnrow,Rncol);
   
-  Eigen::MatrixXd R_partial=-pow(beta_i,-1.5)/(4*sqrt(PI))*R.Ones(Rnrow,Rncol);
+  Eigen::MatrixXd R_partial=-pow(beta_i,-1.5)/(4*sqrt(M_PI))*R.Ones(Rnrow,Rncol);
   double two_beta_i=2*beta_i;
   int n_ti=std::min(std::max(11.0, two_beta_i),101.0);
   for(int ti=1; ti <n_ti; ti++){
-    R_here=R_here+1.0/sqrt(PI*beta_i)*exp(-pow(ti,2.0)/(4.0*beta_i))* (ti*R0_i).array().cos().matrix();
-    R_partial=R_partial+ exp(-pow(ti,2.0)/(4.0*beta_i) )*pow(beta_i,-1.5)/(2*sqrt(PI))*(pow(ti,2.0)/(beta_i*2.0)-1 )*(ti*R0_i).array().cos().matrix();
+    R_here=R_here+1.0/sqrt(M_PI*beta_i)*exp(-pow(ti,2.0)/(4.0*beta_i))* (ti*R0_i).array().cos().matrix();
+    R_partial=R_partial+ exp(-pow(ti,2.0)/(4.0*beta_i) )*pow(beta_i,-1.5)/(2*sqrt(M_PI))*(pow(ti,2.0)/(beta_i*2.0)-1 )*(ti*R0_i).array().cos().matrix();
   }
   
   double c_norm=R_here(0,0);
@@ -190,14 +192,14 @@ Eigen::MatrixXd periodic_exp_deriv(const MapMat &R0_i, const Eigen::MatrixXd & R
   int Rnrow = R0_i.rows();
   int Rncol = R0_i.cols();
   
-  Eigen::MatrixXd R_here=1.0/(PI*beta_i)*Eigen::MatrixXd::Ones(Rnrow,Rncol);
+  Eigen::MatrixXd R_here=1.0/(M_PI*beta_i)*Eigen::MatrixXd::Ones(Rnrow,Rncol);
   
-  Eigen::MatrixXd R_partial=-1.0/(PI*pow(beta_i,2.0) )*R.Ones(Rnrow,Rncol);
+  Eigen::MatrixXd R_partial=-1.0/(M_PI*pow(beta_i,2.0) )*R.Ones(Rnrow,Rncol);
   double five_beta_i=5*beta_i;
   int n_ti=std::min(std::max(21.0, five_beta_i),201.0);
   for(int ti=1; ti <n_ti; ti++){
-    R_here=R_here+2.0*beta_i/((pow(beta_i,2.0)+pow(ti,2.0))*PI)*(ti*R0_i).array().cos().matrix();
-    R_partial=R_partial+ 2.0*(pow(ti,2.0)-pow(beta_i,2.0) )/(PI*(pow(beta_i,2.0)+pow(ti,2.0) ))*(ti*R0_i).array().cos().matrix();
+    R_here=R_here+2.0*beta_i/((pow(beta_i,2.0)+pow(ti,2.0))*M_PI)*(ti*R0_i).array().cos().matrix();
+    R_partial=R_partial+ 2.0*(pow(ti,2.0)-pow(beta_i,2.0) )/(M_PI*(pow(beta_i,2.0)+pow(ti,2.0) ))*(ti*R0_i).array().cos().matrix();
   }
   
   double c_norm=R_here(0,0);
@@ -877,14 +879,14 @@ List pred_rgasp(const Eigen::VectorXd beta,const double nu, const  Eigen::Map<Ei
   for(int i_ker=0; i_ker<p;i_ker++){
     
     if(kernel_type[i_ker]==4){
-      priodic_const[i_ker]=1.0/(2.0*sqrt(PI*beta[i_ker]));
+      priodic_const[i_ker]=1.0/(2.0*sqrt(M_PI*beta[i_ker]));
       for(int ti=1; ti <11; ti++){
-        priodic_const[i_ker]=priodic_const[i_ker]+1.0/sqrt(PI*beta[i_ker])*exp(-pow(ti,2.0)/(4.0*beta[i_ker]));
+        priodic_const[i_ker]=priodic_const[i_ker]+1.0/sqrt(M_PI*beta[i_ker])*exp(-pow(ti,2.0)/(4.0*beta[i_ker]));
       }
     }else if(kernel_type[i_ker]==5){
-      priodic_const[i_ker]=1.0/(PI*beta[i_ker]);
+      priodic_const[i_ker]=1.0/(M_PI*beta[i_ker]);
       for(int ti=1; ti<11; ti++){
-        priodic_const[i_ker]=priodic_const[i_ker]+2.0*beta[i_ker]/((pow(beta[i_ker],2.0)+pow(ti,2.0))*PI);
+        priodic_const[i_ker]=priodic_const[i_ker]+2.0*beta[i_ker]/((pow(beta[i_ker],2.0)+pow(ti,2.0))*M_PI);
       }
     }
   }
@@ -1808,14 +1810,14 @@ List pred_ppgasp(const Eigen::VectorXd beta,const double nu, const  Eigen::Map<E
   for(int i_ker=0; i_ker<p;i_ker++){
     
     if(kernel_type[i_ker]==4){
-      priodic_const[i_ker]=1.0/(2.0*sqrt(PI*beta[i_ker]));
+      priodic_const[i_ker]=1.0/(2.0*sqrt(M_PI*beta[i_ker]));
       for(int ti=1; ti <11; ti++){
-        priodic_const[i_ker]=priodic_const[i_ker]+1.0/sqrt(PI*beta[i_ker])*exp(-pow(ti,2.0)/(4.0*beta[i_ker]));
+        priodic_const[i_ker]=priodic_const[i_ker]+1.0/sqrt(M_PI*beta[i_ker])*exp(-pow(ti,2.0)/(4.0*beta[i_ker]));
       }
     }else if(kernel_type[i_ker]==5){
-      priodic_const[i_ker]=1.0/(PI*beta[i_ker]);
+      priodic_const[i_ker]=1.0/(M_PI*beta[i_ker]);
       for(int ti=1; ti<11; ti++){
-        priodic_const[i_ker]=priodic_const[i_ker]+2.0*beta[i_ker]/((pow(beta[i_ker],2.0)+pow(ti,2.0))*PI);
+        priodic_const[i_ker]=priodic_const[i_ker]+2.0*beta[i_ker]/((pow(beta[i_ker],2.0)+pow(ti,2.0))*M_PI);
       }
     }
   }

@@ -1,3 +1,7 @@
+##change / RobustGaSP 0.6.3
+ *fix the issue related to STRICT_R_HEADERS in Rcpp.h
+ *fix the issue related to interval_data=T and interval_data=F in predict()
+ 
 ##change / RobustGaSP 0.6.2
  *fix the data length problem in the example of predict.ppgasp.Rd
  *remove printing too much from examples

@@ -123,7 +123,7 @@ setMethod("predict", "rgasp",
                               outasS3 = T, ...) {
             predict.rgasp(object = object, testing_input = testing_input, 
                           testing_trend=testing_trend , r0=r0, 
-                          interval_data=T,outasS3 = outasS3,...)
+                          interval_data=interval_data,outasS3 = outasS3,...)
           }
 )
 
