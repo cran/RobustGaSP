@@ -281,9 +281,9 @@ setMethod("predict", "ppgasp",
           definition=function(object, testing_input, testing_trend=matrix(1,dim(testing_input)[1],1),
                               r0=NA, 
                               interval_data=T,
-                              outasS3 = T,...) {
+                              outasS3 = T, loc_index=NA,...) {
             predict.ppgasp(object = object, testing_input = testing_input,r0=r0, 
                            interval_data=interval_data,
-                          testing_trend=testing_trend, outasS3 = outasS3,...)
+                          testing_trend=testing_trend, outasS3 = outasS3,loc_index=loc_index,...)
           }
 )

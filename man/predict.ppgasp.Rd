@@ -16,7 +16,7 @@ Function to make prediction on the PP GaSP model after the PP GaSP model has bee
 \S4method{predict}{ppgasp}(object, testing_input, 
 testing_trend= matrix(1,dim(testing_input)[1],1),r0=NA, 
 interval_data=T,
-outasS3 = T, ...)
+outasS3 = T,loc_index=NA, ...)
 %- maybe also 'usage' for other objects documented here.
 }
 \arguments{
@@ -35,6 +35,7 @@ outasS3 = T, ...)
    be calculted.
 }
   \item{outasS3}{a boolean parameter indicating whether the output of the function should be as an \code{S3 object}.}
+  \item{loc_index}{specified coodinate index of the prediction. The default value is code{NA} and prediction will be computed for all coordinates. If e.g. loc_index=\code{c(3,5)}, it means the prediction will be computed on only the third and fifth coordinates, corresponding the coordinates of the third and fifth columns of the output matrix. }
   \item{...}{Extra arguments to be passed to the function (not implemented yet).}
 }
 

@@ -147,7 +147,7 @@ as.S4prediction.predict <- function(object){
 
 predict.ppgasp <- function (object, testing_input, testing_trend= matrix(1,dim(testing_input)[1],1), 
                             r0=NA,
-                            interval_data=T,outasS3 = T, ...){
+                            interval_data=T,outasS3 = T, loc_index=NA,...){
 
   if (!outasS3) {
     output.pred <- new("predppgasp")
@@ -239,19 +239,32 @@ predict.ppgasp <- function (object, testing_input, testing_trend= matrix(1,dim(t
   #pred_list=pred_ppgasp(object@beta_hat,object@nugget,object@input,object@X,object@zero_mean,object@output,
   #                     testing_input,testing_trend,object@L,object@LX,object@theta_hat,
   #                     object@sigma2_hat,qt_025,qt_975,r0,kernel_type_num,object@alpha)
+  if(is.na(loc_index[1])){
+    pred_loc_index=1:dim(object@output)[2]
+  }else{
+    pred_loc_index=loc_index
+    if(min(loc_index)<1 |max(loc_index)>dim(object@output)[2] ){
+      stop("loc_index should not be smaler than 1 or larger than the number of columns of output \n")
+    }
+  }
+    if(dim(object@theta_hat)[1]==1){
+      theta_hat_pred_loc=t(as.matrix(object@theta_hat[,pred_loc_index]))
+    }else{
+      theta_hat_pred_loc=as.matrix(object@theta_hat[,pred_loc_index])
+    }
 
   if((object@method=='post_mode')|(object@method=='mmle')){
     qt_025=qt(0.025,df=(object@num_obs-object@q))
     qt_975=qt(0.975,df=(object@num_obs-object@q))
-    pred_list=pred_ppgasp(object@beta_hat,object@nugget,object@input,object@X,object@zero_mean,object@output,
-                          testing_input,testing_trend,object@L,object@LX,object@theta_hat,
-                          object@sigma2_hat,qt_025,qt_975,r0,kernel_type_num,object@alpha,object@method,interval_data)
+    pred_list=pred_ppgasp(object@beta_hat,object@nugget,object@input,object@X,object@zero_mean,as.matrix(object@output[,pred_loc_index]),
+                          testing_input,testing_trend,object@L,object@LX,theta_hat_pred_loc,
+                          object@sigma2_hat[pred_loc_index],qt_025,qt_975,r0,kernel_type_num,object@alpha,object@method,interval_data)
   }else if(object@method=='mle'){
     qn_025=qnorm(0.025,mean=0,sd=1)
     qn_975=qnorm(0.975,mean=0,sd=1)
-    pred_list=pred_ppgasp(object@beta_hat,object@nugget,object@input,object@X,object@zero_mean,object@output,
-                          testing_input,testing_trend,object@L,object@LX,object@theta_hat,
-                          object@sigma2_hat,qn_025,qn_975,r0,kernel_type_num,object@alpha,object@method,interval_data)
+    pred_list=pred_ppgasp(object@beta_hat,object@nugget,object@input,object@X,object@zero_mean,as.matrix(object@output[,pred_loc_index]),
+                          testing_input,testing_trend,object@L,object@LX,theta_hat_pred_loc,
+                          object@sigma2_hat[pred_loc_index],qn_025,qn_975,r0,kernel_type_num,object@alpha,object@method,interval_data)
   }
   
   output.list <- list()

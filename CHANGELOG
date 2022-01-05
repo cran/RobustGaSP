@@ -1,4 +1,7 @@
 ##change / RobustGaSP 0.6.3
+ *allow user to predict a subset of the location in ppgasp for prediction
+
+##change / RobustGaSP 0.6.3
  *fix the issue related to STRICT_R_HEADERS in Rcpp.h
  *fix the issue related to interval_data=T and interval_data=F in predict()
  
