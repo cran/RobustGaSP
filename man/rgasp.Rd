@@ -151,7 +151,7 @@ Maintainer: \packageMaintainer{RobustGaSP}
   # dimensional of the inputs
   dim_inputs <- 3    
   # number of the inputs
-  num_obs <- 30       
+  num_obs <- 50       
   # uniform samples of design
   input <- matrix(runif(num_obs*dim_inputs), num_obs,dim_inputs) 
   
@@ -191,7 +191,7 @@ Maintainer: \packageMaintainer{RobustGaSP}
   ##root of mean square error
   sqrt(mean( (m1_pred$mean-test_output)^2))
   sqrt(mean( (m2_pred$mean-test_output)^2))
-
+  sd(test_output)
   #---------------------------------------
   # a 1 dimensional example with zero mean
   #---------------------------------------

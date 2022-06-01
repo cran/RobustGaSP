@@ -43,7 +43,7 @@ predict.rgasp <- function (object, testing_input, testing_trend= matrix(1,dim(as
     ##form the r0 matrix
     p_x <- dim(object@input)[2]
     
-    if(class(r0)=='logical'){
+    if(is.na(r0)[1]){
       if(!object@isotropic){
         r0 = as.list(1:object@p)
         for(i in 1:object@p){
@@ -61,11 +61,11 @@ predict.rgasp <- function (object, testing_input, testing_trend= matrix(1,dim(as
           r0[[1]]=euclidean_distance(testing_input,object@input)
         }
       }
-    }else if(class(r0)=='matrix'){
+    }else if(class(r0)[1]=='matrix'){
       r0_here=r0
       r0 = as.list(1)
       r0[[1]]=r0_here
-    }else if(class(r0)!='list'){
+    }else if(class(r0)[1]!='list'){
       stop("r0 should be either a matrix or a list \n")
     }
     
@@ -184,7 +184,7 @@ predict.ppgasp <- function (object, testing_input, testing_trend= matrix(1,dim(t
   ##form the r0 matrix
   p_x <- dim(object@input)[2]
   
-  if(class(r0)=='logical'){
+  if(is.na(r0)[1]){
     if(!object@isotropic){
       r0 = as.list(1:object@p)
       for(i in 1:object@p){
@@ -202,11 +202,11 @@ predict.ppgasp <- function (object, testing_input, testing_trend= matrix(1,dim(t
         r0[[1]]=euclidean_distance(testing_input,object@input)
       }
     }
-  }else if(class(r0)=='matrix'){
+  }else if(class(r0)[1]=='matrix'){
     r0_here=r0
     r0 = as.list(1)
     r0[[1]]=r0_here
-  }else if(class(r0)!='list'){
+  }else if(class(r0)[1]!='list'){
     stop("r0 should be either a matrix or a list \n")
   }
   

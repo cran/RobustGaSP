@@ -3,6 +3,9 @@
 
 #define STRICT_R_HEADERS
 
+// line to fix the warining at Linus Debian g++
+//#define PKG_CXXFLAGS=-DEIGEN_DONT_VECTORIZE -DEIGEN_DISABLE_UNALIGNED_ARRAY_ASSERT
+  
 #include <RcppEigen.h>
 #include <Rcpp.h>
 #include <cmath>
@@ -133,7 +136,7 @@ Eigen::MatrixXd periodic_exp_funct_fixed_normalized_const(const MapMat &d, doubl
 
 //////derivative of kernel functions with regard to inverse range parameter
 // [[Rcpp::export]]
- Eigen::MatrixXd  matern_5_2_deriv(const MapMat & R0_i,  const Mat R, double beta_i){
+ Eigen::MatrixXd  matern_5_2_deriv(const MapMat & R0_i,  const Eigen::MatrixXd & R, double beta_i){
    
   const double sqrt_5 = sqrt(5.0);
 
@@ -148,7 +151,7 @@ Eigen::MatrixXd periodic_exp_funct_fixed_normalized_const(const MapMat &d, doubl
 //inline static Eigen::MatrixXd
 
 // [[Rcpp::export]]
- Eigen::MatrixXd  matern_3_2_deriv(const Eigen::Map<Eigen::MatrixXd> & R0_i,  const Eigen::MatrixXd R, double beta_i){
+ Eigen::MatrixXd  matern_3_2_deriv(const Eigen::Map<Eigen::MatrixXd> & R0_i,  const Eigen::MatrixXd  & R, double beta_i){
    
   const double sqrt_3 = sqrt(3.0);
 
@@ -158,7 +161,7 @@ Eigen::MatrixXd periodic_exp_funct_fixed_normalized_const(const MapMat &d, doubl
 
 
 // [[Rcpp::export]]
-Eigen::MatrixXd pow_exp_deriv(const MapMat & R0_i,  const Eigen::MatrixXd R, const double beta_i, const double alpha_i){
+Eigen::MatrixXd pow_exp_deriv(const MapMat & R0_i,  const Eigen::MatrixXd & R, const double beta_i, const double alpha_i){
  return  -(R.array()*(R0_i.array().pow(alpha_i))).matrix()*alpha_i*pow(beta_i,alpha_i-1);
 }
 
@@ -213,7 +216,7 @@ Eigen::MatrixXd periodic_exp_deriv(const MapMat &R0_i, const Eigen::MatrixXd & R
 
 //this one is used in the old version and I still keep it here if other packages depends on it
 // [[Rcpp::export]]
-Eigen::MatrixXd separable_kernel (List R0, Eigen::VectorXd beta,String kernel_type, Eigen::VectorXd alpha ){
+Eigen::MatrixXd separable_kernel (List R0, const Eigen::VectorXd  & beta,String kernel_type, const Eigen::VectorXd  & alpha ){
   Eigen::MatrixXd R0element = R0[0];
   int Rnrow = R0element.rows();
   int Rncol = R0element.cols();
@@ -249,7 +252,7 @@ Eigen::MatrixXd separable_kernel (List R0, Eigen::VectorXd beta,String kernel_ty
 }
 
 // [[Rcpp::export]]
-Eigen::MatrixXd separable_multi_kernel (List R0, Eigen::VectorXd beta,Eigen::VectorXi kernel_type, Eigen::VectorXd alpha ){
+Eigen::MatrixXd separable_multi_kernel (List R0, const Eigen::VectorXd  & beta,const Eigen::VectorXi  & kernel_type,const Eigen::VectorXd  & alpha ){
   Eigen::MatrixXd R0element = R0[0];
   int Rnrow = R0element.rows();
   int Rncol = R0element.cols();
@@ -276,7 +279,7 @@ Eigen::MatrixXd separable_multi_kernel (List R0, Eigen::VectorXd beta,Eigen::Vec
 
 ////this is the for the normalizing constant in prediction
 // [[Rcpp::export]]
-Eigen::MatrixXd separable_multi_kernel_pred_periodic (const List R0, const Eigen::VectorXd beta,const Eigen::VectorXi kernel_type, const Eigen::VectorXd alpha, const Eigen::VectorXd perid_const){
+Eigen::MatrixXd separable_multi_kernel_pred_periodic (const List R0, const Eigen::VectorXd &  beta,const Eigen::VectorXi  & kernel_type, const Eigen::VectorXd  & alpha, const Eigen::VectorXd  & perid_const){
   Eigen::MatrixXd R0element = R0[0];
   int Rnrow = R0element.rows();
   int Rncol = R0element.cols();
@@ -322,7 +325,7 @@ Eigen::MatrixXd euclidean_distance(const MapMat & input1,const MapMat & input2){
 
 
 // [[Rcpp::export]]
-double log_marginal_lik(const Vec param,double nugget, const bool nugget_est, const List R0, const Eigen::Map<Eigen::MatrixXd> & X,const String zero_mean,const Eigen::Map<Eigen::MatrixXd> & output, Eigen::VectorXi kernel_type,const Eigen::VectorXd alpha ){
+double log_marginal_lik(const Eigen::VectorXd  & param,double nugget, const bool nugget_est, const List R0, const Eigen::Map<Eigen::MatrixXd> & X,const String zero_mean,const Eigen::Map<Eigen::MatrixXd> & output,const Eigen::VectorXi & kernel_type,const Eigen::VectorXd & alpha ){
   Eigen::VectorXd beta;
   double nu=nugget;
   int param_size=param.size();
@@ -368,7 +371,7 @@ double log_marginal_lik(const Vec param,double nugget, const bool nugget_est, co
 
 
 // [[Rcpp::export]]
-double log_profile_lik(const Vec param,double nugget, const bool nugget_est, const List R0, const Eigen::Map<Eigen::MatrixXd> & X,const String zero_mean,const Eigen::Map<Eigen::MatrixXd> & output, Eigen::VectorXi kernel_type,const Eigen::VectorXd alpha ){
+double log_profile_lik(const Eigen::VectorXd & param,double nugget, const bool nugget_est, const List R0, const Eigen::Map<Eigen::MatrixXd> & X,const String zero_mean,const Eigen::Map<Eigen::MatrixXd> & output,const Eigen::VectorXi & kernel_type,const Eigen::VectorXd & alpha ){
   Eigen::VectorXd beta;
   double nu=nugget;
   int param_size=param.size();
@@ -418,7 +421,7 @@ double log_profile_lik(const Vec param,double nugget, const bool nugget_est, con
 
 
 // [[Rcpp::export]]
-double log_approx_ref_prior(const Vec param,double nugget, bool nugget_est, const Eigen::VectorXd CL,const double a,const double b ){
+double log_approx_ref_prior(const Eigen::VectorXd & param,double nugget, bool nugget_est, const Eigen::VectorXd & CL,const double a,const double b ){
 
   Eigen::VectorXd beta;
   double nu=nugget;
@@ -436,7 +439,7 @@ double log_approx_ref_prior(const Vec param,double nugget, bool nugget_est, cons
 }
 
 // [[Rcpp::export]]
-Eigen::VectorXd log_marginal_lik_deriv(const Eigen::VectorXd param,double nugget,  bool nugget_est, const List R0, const Eigen::Map<Eigen::MatrixXd> & X,const String zero_mean,const Eigen::Map<Eigen::MatrixXd> & output, Eigen::VectorXi kernel_type,const Eigen::VectorXd alpha){
+Eigen::VectorXd log_marginal_lik_deriv(const Eigen::VectorXd & param,double nugget,  bool nugget_est, const List R0, const Eigen::Map<Eigen::MatrixXd> & X,const String zero_mean,const Eigen::Map<Eigen::MatrixXd> & output, Eigen::VectorXi & kernel_type,const Eigen::VectorXd & alpha){
     
   Eigen::VectorXd beta;
   double nu=nugget;
@@ -540,7 +543,7 @@ Eigen::VectorXd log_marginal_lik_deriv(const Eigen::VectorXd param,double nugget
 
 
 // [[Rcpp::export]]
-Eigen::VectorXd log_profile_lik_deriv(const Eigen::VectorXd param,double nugget,  bool nugget_est, const List R0, const Eigen::Map<Eigen::MatrixXd> & X,const String zero_mean,const Eigen::Map<Eigen::MatrixXd> & output, Eigen::VectorXi kernel_type,const Eigen::VectorXd alpha){
+Eigen::VectorXd log_profile_lik_deriv(const Eigen::VectorXd & param,double nugget,  bool nugget_est, const List R0, const Eigen::Map<Eigen::MatrixXd> & X,const String zero_mean,const Eigen::Map<Eigen::MatrixXd> & output,   const Eigen::VectorXi & kernel_type,const Eigen::VectorXd & alpha){
   
   Eigen::VectorXd beta;
   double nu=nugget;
@@ -649,7 +652,7 @@ Eigen::VectorXd log_profile_lik_deriv(const Eigen::VectorXd param,double nugget,
 
 
 // [[Rcpp::export]]
-Eigen::VectorXd log_approx_ref_prior_deriv(const Vec param,double nugget, bool nugget_est, const Eigen::VectorXd CL,const double a,const double b ){
+Eigen::VectorXd log_approx_ref_prior_deriv(const Eigen::VectorXd & param,double nugget, bool nugget_est, const Eigen::VectorXd & CL,const double a,const double b ){
 
   Eigen::VectorXd beta;
   Eigen::VectorXd return_vec;
@@ -679,7 +682,7 @@ Eigen::VectorXd log_approx_ref_prior_deriv(const Vec param,double nugget, bool n
 }
 
 // [[Rcpp::export]]
-double log_ref_marginal_post(const Eigen::VectorXd param,double nugget, bool nugget_est, const List R0, const Eigen::Map<Eigen::MatrixXd> & X,const String zero_mean,const Eigen::Map<Eigen::MatrixXd> & output, Eigen::VectorXi kernel_type,const Eigen::VectorXd alpha){
+double log_ref_marginal_post(const Eigen::VectorXd & param,double nugget, bool nugget_est, const List R0, const Eigen::Map<Eigen::MatrixXd> & X,const String zero_mean,const Eigen::Map<Eigen::MatrixXd> & output, const Eigen::VectorXi & kernel_type,const Eigen::VectorXd & alpha){
     
   Eigen::VectorXd beta;
   double nu=nugget;
@@ -816,7 +819,7 @@ double log_ref_marginal_post(const Eigen::VectorXd param,double nugget, bool nug
 
 //this is a function to output a list, including theta_hat L (chlosky decomcoposition of R), LX(cholosky decomposition of Xt%*%R),  (the trend parameter), S2 (estimated sigma^2)
 // [[Rcpp::export]]
-List construct_rgasp(const Eigen::VectorXd beta,const double nu,  const List R0, const Eigen::Map<Eigen::MatrixXd> & X,const  String zero_mean,const Eigen::Map<Eigen::MatrixXd> & output,Eigen::VectorXi kernel_type,const Eigen::VectorXd alpha){
+List construct_rgasp(const Eigen::VectorXd & beta,const double nu,  const List R0, const Eigen::Map<Eigen::MatrixXd> & X,const  String zero_mean,const Eigen::Map<Eigen::MatrixXd> & output,const Eigen::VectorXi & kernel_type,const Eigen::VectorXd & alpha){
   List list_return(4);
 
   //similar to marginal likelihood
@@ -861,8 +864,8 @@ List construct_rgasp(const Eigen::VectorXd beta,const double nu,  const List R0,
 
 //this is a function to for prediction, including posterior mean, lower 95, upper 95 and standard deviation
 // [[Rcpp::export]]
-List pred_rgasp(const Eigen::VectorXd beta,const double nu, const  Eigen::Map<Eigen::MatrixXd> & input,  const Eigen::Map<Eigen::MatrixXd> & X,const  String zero_mean, const Eigen::Map<Eigen::MatrixXd> & output,const Eigen::Map<Eigen::MatrixXd> & testing_input, const Eigen::Map<Eigen::MatrixXd> & X_testing,
-                const Eigen::Map<Eigen::MatrixXd> & L , Eigen::Map<Eigen::MatrixXd> & LX, Eigen::Map<Eigen::VectorXd> & theta_hat, double sigma2_hat,double q_025, double q_975, List r0,Eigen::VectorXi kernel_type,const Eigen::VectorXd alpha,const String method, const bool interval_data){
+List pred_rgasp(const Eigen::VectorXd & beta,const double nu, const  Eigen::Map<Eigen::MatrixXd> & input,  const Eigen::Map<Eigen::MatrixXd> & X,const  String zero_mean, const Eigen::Map<Eigen::MatrixXd> & output,const Eigen::Map<Eigen::MatrixXd> & testing_input, const Eigen::Map<Eigen::MatrixXd> & X_testing,
+                const Eigen::Map<Eigen::MatrixXd> & L , Eigen::Map<Eigen::MatrixXd> & LX, Eigen::Map<Eigen::VectorXd> & theta_hat, double sigma2_hat,double q_025, double q_975, List r0,const Eigen::VectorXi & kernel_type,const Eigen::VectorXd &alpha,const String method, const bool interval_data){
   List pred(4);
     
   int num_testing_input=testing_input.rows();
@@ -1022,8 +1025,8 @@ List pred_rgasp(const Eigen::VectorXd beta,const double nu, const  Eigen::Map<Ei
 
 //this is a function to for prediction, including posterior mean, lower 95, upper 95 and standard deviation
 // [[Rcpp::export]]
-List generate_predictive_mean_cov(const Eigen::VectorXd beta,const double nu, const  Eigen::Map<Eigen::MatrixXd> & input,  const Eigen::Map<Eigen::MatrixXd> & X,const String zero_mean,const Eigen::Map<Eigen::MatrixXd> & output,const Eigen::Map<Eigen::MatrixXd> & testing_input, const Eigen::Map<Eigen::MatrixXd> & X_testing, const Eigen::Map<Eigen::MatrixXd> & L , Eigen::Map<Eigen::MatrixXd> & LX, Eigen::Map<Eigen::VectorXd> & theta_hat,
-                                  double sigma2_hat,List rr0, List r0,Eigen::VectorXi kernel_type,const Eigen::VectorXd alpha,const String method,const bool sample_data){
+List generate_predictive_mean_cov(const Eigen::VectorXd & beta,const double nu, const  Eigen::Map<Eigen::MatrixXd> & input,  const Eigen::Map<Eigen::MatrixXd> & X,const String zero_mean,const Eigen::Map<Eigen::MatrixXd> & output,const Eigen::Map<Eigen::MatrixXd> & testing_input, const Eigen::Map<Eigen::MatrixXd> & X_testing, const Eigen::Map<Eigen::MatrixXd> & L ,const Eigen::Map<Eigen::MatrixXd> & LX,const Eigen::Map<Eigen::VectorXd> & theta_hat,
+                                  double sigma2_hat,List rr0, List r0,const Eigen::VectorXi & kernel_type,const Eigen::VectorXd & alpha,const String method,const bool sample_data){
   List mean_var(2);
     
   int num_testing_input=testing_input.rows();
@@ -1098,7 +1101,7 @@ List generate_predictive_mean_cov(const Eigen::VectorXd beta,const double nu, co
 
 
 // [[Rcpp::export]]
-double log_marginal_lik_ppgasp(const Vec param,double nugget, const bool nugget_est, const List R0, const Eigen::Map<Eigen::MatrixXd> & X,const String zero_mean,const Eigen::Map<Eigen::MatrixXd> & output, Eigen::VectorXi kernel_type,const Eigen::VectorXd alpha ){
+double log_marginal_lik_ppgasp(const Eigen::VectorXd &  param,double nugget, const bool nugget_est, const List R0, const Eigen::Map<Eigen::MatrixXd> & X,const String zero_mean,const Eigen::Map<Eigen::MatrixXd> & output, const Eigen::VectorXi  &kernel_type,const Eigen::VectorXd & alpha ){
   Eigen::VectorXd beta;
   double nu=nugget;
   int k=output.cols();
@@ -1169,7 +1172,7 @@ double log_marginal_lik_ppgasp(const Vec param,double nugget, const bool nugget_
 
 
 // [[Rcpp::export]]
-double log_profile_lik_ppgasp(const Vec param,double nugget, const bool nugget_est, const List R0, const Eigen::Map<Eigen::MatrixXd> & X,const String zero_mean,const Eigen::Map<Eigen::MatrixXd> & output, Eigen::VectorXi kernel_type,const Eigen::VectorXd alpha ){
+double log_profile_lik_ppgasp(const Eigen::VectorXd &   param,double nugget, const bool nugget_est, const List R0, const Eigen::Map<Eigen::MatrixXd> & X,const String zero_mean,const Eigen::Map<Eigen::MatrixXd> & output,const Eigen::VectorXi &kernel_type,const Eigen::VectorXd &alpha ){
   Eigen::VectorXd beta;
   double nu=nugget;
   int k=output.cols();
@@ -1243,7 +1246,7 @@ double log_profile_lik_ppgasp(const Vec param,double nugget, const bool nugget_e
 
 
 // [[Rcpp::export]]
-double log_ref_marginal_post_ppgasp(const Eigen::VectorXd param,double nugget, bool nugget_est, const List R0, const Eigen::Map<Eigen::MatrixXd> & X,const String zero_mean,const Eigen::Map<Eigen::MatrixXd> & output, Eigen::VectorXi kernel_type,const Eigen::VectorXd alpha){
+double log_ref_marginal_post_ppgasp(const Eigen::VectorXd & param,double nugget, bool nugget_est, const List R0, const Eigen::Map<Eigen::MatrixXd> & X,const String zero_mean,const Eigen::Map<Eigen::MatrixXd> & output,const Eigen::VectorXi & kernel_type,const Eigen::VectorXd & alpha){
   
   Eigen::VectorXd beta;
   double nu=nugget;
@@ -1400,7 +1403,7 @@ double log_ref_marginal_post_ppgasp(const Eigen::VectorXd param,double nugget, b
 
 
 // [[Rcpp::export]]
-Eigen::VectorXd log_marginal_lik_deriv_ppgasp(const Eigen::VectorXd param,double nugget,  bool nugget_est, const List R0, const Eigen::Map<Eigen::MatrixXd> & X,const String zero_mean,const Eigen::Map<Eigen::MatrixXd> & output, Eigen::VectorXi kernel_type,const Eigen::VectorXd alpha){
+Eigen::VectorXd log_marginal_lik_deriv_ppgasp(const Eigen::VectorXd & param,double nugget,  bool nugget_est, const List R0, const Eigen::Map<Eigen::MatrixXd> & X,const String zero_mean,const Eigen::Map<Eigen::MatrixXd> & output, const Eigen::VectorXi & kernel_type,const Eigen::VectorXd & alpha){
   
   Eigen::VectorXd beta;
   double nu=nugget;
@@ -1564,7 +1567,7 @@ Eigen::VectorXd log_marginal_lik_deriv_ppgasp(const Eigen::VectorXd param,double
 
 
 // [[Rcpp::export]]
-Eigen::VectorXd log_profile_lik_deriv_ppgasp(const Eigen::VectorXd param,double nugget,  bool nugget_est, const List R0, const Eigen::Map<Eigen::MatrixXd> & X,const String zero_mean,const Eigen::Map<Eigen::MatrixXd> & output, Eigen::VectorXi kernel_type,const Eigen::VectorXd alpha){
+Eigen::VectorXd log_profile_lik_deriv_ppgasp(const Eigen::VectorXd & param,double nugget,  bool nugget_est, const List R0, const Eigen::Map<Eigen::MatrixXd> & X,const String zero_mean,const Eigen::Map<Eigen::MatrixXd> & output, const Eigen::VectorXi & kernel_type,const Eigen::VectorXd & alpha){
   
   Eigen::VectorXd beta;
   double nu=nugget;
@@ -1737,7 +1740,7 @@ Eigen::VectorXd log_profile_lik_deriv_ppgasp(const Eigen::VectorXd param,double 
 
 //this is a function to output a list, including theta_hat L (chlosky decomcoposition of R), LX(cholosky decomposition of Xt%*%R),  (the trend parameter), S2 (estimated sigma^2)
 // [[Rcpp::export]]
-List construct_ppgasp(const Eigen::VectorXd beta,const double nu,  const List R0, const Eigen::Map<Eigen::MatrixXd> & X,const  String zero_mean,const Eigen::Map<Eigen::MatrixXd> & output,Eigen::VectorXi kernel_type,const Eigen::VectorXd alpha){
+List construct_ppgasp(const Eigen::VectorXd & beta,const double nu,  const List R0, const Eigen::Map<Eigen::MatrixXd> & X,const  String zero_mean,const Eigen::Map<Eigen::MatrixXd> & output,const Eigen::VectorXi & kernel_type,const Eigen::VectorXd & alpha){
   List list_return(4);
   
   //similar to marginal likelihood
@@ -1793,7 +1796,7 @@ List construct_ppgasp(const Eigen::VectorXd beta,const double nu,  const List R0
 
 // [[Rcpp::export]]
 List pred_ppgasp(const Eigen::VectorXd beta,const double nu, const  Eigen::Map<Eigen::MatrixXd> & input,  const Eigen::Map<Eigen::MatrixXd> & X,const  String zero_mean, const Eigen::Map<Eigen::MatrixXd> & output,const Eigen::Map<Eigen::MatrixXd> & testing_input, const Eigen::Map<Eigen::MatrixXd> & X_testing, 
-                 const Eigen::Map<Eigen::MatrixXd> & L , Eigen::Map<Eigen::MatrixXd> & LX, Eigen::Map<Eigen::MatrixXd> & theta_hat,    const Eigen::Map<Eigen::VectorXd> &  sigma2_hat,double q_025, double q_975, List r0,Eigen::VectorXi kernel_type,const Eigen::VectorXd alpha, const  String method, const bool interval_data){
+                 const Eigen::Map<Eigen::MatrixXd> & L ,const Eigen::Map<Eigen::MatrixXd> & LX, const Eigen::Map<Eigen::MatrixXd> & theta_hat,    const Eigen::Map<Eigen::VectorXd> &  sigma2_hat,double q_025, double q_975, List r0,Eigen::VectorXi kernel_type,const Eigen::VectorXd alpha, const  String method, const bool interval_data){
   List pred(4);
   
   int num_testing_input=testing_input.rows();

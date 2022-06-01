@@ -38,7 +38,7 @@ simulate.rgasp <- function (object, testing_input, num_sample=1,
   
   p_x <- dim(object@input)[2]
   
-  if(class(r0)=='logical'){
+  if(is.na(r0)[1]){ ##no given value
     if(!object@isotropic){
       r0 = as.list(1:object@p)
       for(i in 1:object@p){
@@ -56,11 +56,11 @@ simulate.rgasp <- function (object, testing_input, num_sample=1,
         r0[[1]]=euclidean_distance(testing_input,object@input)
       }
     }
-  }else if(class(r0)=='matrix'){
+  }else if(class(r0)[1]=='matrix'){
     r0_here=r0
     r0 = as.list(1)
     r0[[1]]=r0_here
-  }else if(class(r0)!='list'){
+  }else if(class(r0)[1]!='list'){
     stop("r0 should be either a matrix or a list \n")
   }
   
@@ -74,7 +74,7 @@ simulate.rgasp <- function (object, testing_input, num_sample=1,
   
   ###form matrix for rr0
   
-  if(class(rr0)=='logical'){
+  if(is.na(rr0)[1]){
     if(!object@isotropic){
       rr0 = as.list(1:object@p)
       for(i in 1:object@p){
@@ -92,11 +92,11 @@ simulate.rgasp <- function (object, testing_input, num_sample=1,
         rr0[[1]]=euclidean_distance(testing_input,testing_input)
       }
     }
-  }else if(class(rr0)=='matrix'){
+  }else if(class(rr0)[1]=='matrix'){
     rr0_here=rr0
     rr0 = as.list(1)
     rr0[[1]]=rr0_here
-  }else if(class(rr0)!='list'){
+  }else if(class(rr0)[1]!='list'){
     stop("r0 should be either a matrix or a list \n")
   }
   

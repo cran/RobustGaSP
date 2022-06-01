@@ -46,12 +46,6 @@ J. Sacks, W.J. Welch, T.J. Mitchell, and H.P. Wynn (1989), \emph{Design and anal
 \keyword{computer model}
 \keyword{emulation}
 \keyword{simulation}
-%\seealso{
-%%~~ Optional links to other man pages, e.g. ~~
-%%~~ \code{\link[<pkg>:<pkg>-package]{<pkg>}} ~~
-%\code{\link[RobustGaSP]{RobustGaSP}}
-%%\code{\link[RobustGaSP]{RobustGaSP-class}}
-%}
 \examples{
   #------------------------
   # a 3 dimensional example

@@ -32,7 +32,7 @@ rgasp <- function(design, response,trend=matrix(1,length(response),1),zero.mean=
     stop("one cannot fix and estimate the nugget at the same time \n")  
   }
   
-  if(!is.na(range.par)){  
+  if(!is.na(range.par)[1]){  
     if(length(range.par)!=dim(as.matrix(design))[2]){
       stop("range.par should either be fixed or estimated.")    
     }
@@ -155,7 +155,7 @@ rgasp <- function(design, response,trend=matrix(1,length(response),1),zero.mean=
   ####################correlation matrix
   
   model@nugget.est <- nugget.est
-  if(class(R0)=='logical'){
+  if(is.na(R0)[1]){ ##no given value
     if(!model@isotropic){
       model@R0 = as.list(1:model@p)
       for(i in 1:model@p){
@@ -173,10 +173,10 @@ rgasp <- function(design, response,trend=matrix(1,length(response),1),zero.mean=
         model@R0[[1]]=euclidean_distance(model@input,model@input)
       }
     }
-  }else if(class(R0)=='matrix'){
+  }else if(class(R0)[1]=='matrix'){
     model@R0 = as.list(1)
     model@R0[[1]]=R0
-  }else if(class(R0)=='list'){
+  }else if(class(R0)[1]=='list'){
     model@R0=R0
   }else{
     stop("R0 should be either a matrix or a list \n")
@@ -207,7 +207,7 @@ rgasp <- function(design, response,trend=matrix(1,length(response),1),zero.mean=
   }
   
   
-  if(is.na(range.par)){
+  if(is.na(range.par)[1]){
     ########this also depends on the kernel
     ##get some initial values of beta that we can start from a good set of range parameters to optimize
     
@@ -328,7 +328,8 @@ rgasp <- function(design, response,trend=matrix(1,length(response),1),zero.mean=
                                       nl.info = FALSE, control = list(maxeval=max_eval)),TRUE)
           
         }
-        if(class(tt_all)!="try-error"){
+        #if(class(tt_all)!="try-error"){
+          if(class(tt_all)[1]!="try-error"){
           if(model@nugget.est==F){
             nugget_par=nugget
           }else{
@@ -399,7 +400,7 @@ rgasp <- function(design, response,trend=matrix(1,length(response),1),zero.mean=
         #  stop(tt_all)
         #}
         
-        if(class(tt_all)!="try-error"){
+        if(class(tt_all)[1]!="try-error"){
           if(model@nugget.est==F){
             nugget_par=nugget
           }else{
@@ -467,7 +468,7 @@ rgasp <- function(design, response,trend=matrix(1,length(response),1),zero.mean=
             
           }
           
-          if(class(tt_all)!="try-error"){
+          if(class(tt_all)[1]!="try-error"){
             # if(model@nugget.est==F){
             #   nugget_par=nugget
             # }else{

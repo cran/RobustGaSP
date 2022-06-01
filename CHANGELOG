@@ -1,5 +1,9 @@
-##change / RobustGaSP 0.6.3
- *allow user to predict a subset of the location in ppgasp for prediction
+##change / RobustGaSP 0.6.5
+ * fix the problem relevant to the "if" argument
+ * fix the problem in C++ code relevant to using & in Eigen objects for removing the warning from the Linux Debian system
+
+##change / RobustGaSP 0.6.4
+ *allow user to predict a subset of the locations in ppgasp for prediction
 
 ##change / RobustGaSP 0.6.3
  *fix the issue related to STRICT_R_HEADERS in Rcpp.h
