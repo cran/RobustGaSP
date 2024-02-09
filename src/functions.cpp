@@ -1861,8 +1861,12 @@ List pred_ppgasp(const Eigen::VectorXd beta,const double nu, const  Eigen::Map<E
       pred_var.col(loc_i)=  sigma2_hat[loc_i]*c_star_star.array().abs().matrix();
     }
     //VectorXd var=c_star_star.array().abs().matrix()*sigma2_hat;  //when R is close to be singular, c_star_star can be very small negative
-    pred[1]=MU_testing+pred_var*q_025;
-    pred[2]=MU_testing+pred_var*q_975;
+    //pred[1]=MU_testing+pred_var*q_025;
+    //pred[2]=MU_testing+pred_var*q_975;
+    
+    pred[1]=MU_testing+pred_var.array().sqrt().matrix()*q_025;
+    pred[2]=MU_testing+pred_var.array().sqrt().matrix()*q_975;
+    
     //pred[3]=pred_var*(num_obs)/(num_obs-2);
     
     if( (method=="post_mode") || (method=="mmle") ){

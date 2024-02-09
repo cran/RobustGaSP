@@ -32,9 +32,11 @@ rgasp <- function(design, response,trend=matrix(1,length(response),1),zero.mean=
     stop("one cannot fix and estimate the nugget at the same time \n")  
   }
   
-  if(!is.na(range.par)[1]){  
-    if(length(range.par)!=dim(as.matrix(design))[2]){
-      stop("range.par should either be fixed or estimated.")    
+  if(!is.na(range.par)[1]){
+    if(isotropic==F){##anisotropic
+      if(length(range.par)!=dim(as.matrix(design))[2]){
+        stop("range.par should either be fixed or estimated.")    
+      }
     }
     if(nugget.est){
       stop("We do not support fixing range parameters while estimating the nugget.")      

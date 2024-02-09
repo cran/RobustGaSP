@@ -1,7 +1,7 @@
 \name{neg_log_marginal_post_approx_ref_ppgasp}
 \alias{neg_log_marginal_post_approx_ref_ppgasp}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{ Natural logarithm of approximate reference marginal posterior density of the PP GaSP model
+\title{Natural logarithm of approximate reference marginal posterior density of the PP GaSP model
 %%  ~~function to do ... ~~
 }
 \description{
@@ -9,9 +9,8 @@
 Natural logarithm of marginal posterior density with the jointly robust prior of inverse range parameter of the PP GaSP model after marginalizing out the mean (trend) and variance parameters  by the location-scale prior.
 }
 \usage{
-neg_log_marginal_post_approx_ref(param, nugget, nugget.est, 
-                                  R0, X, zero_mean,output, CL, a, b, 
-                                  kernel_type, alpha)
+neg_log_marginal_post_approx_ref_ppgasp(param, nugget, 
+nugget.est, R0, X, zero_mean,output, CL, a, b,kernel_type, alpha)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

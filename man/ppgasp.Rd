@@ -38,7 +38,7 @@ Setting up the parallel partial GaSP model for estimating the parameters (if the
 %%     ~~Describe \code{nugget} here~~
 }
   \item{nugget.est}{ boolean value. \code{T} means nugget should be estimated and \code{F} means nugget is fixed
-  or not estimated. The default value is F \code{F}.
+  or not estimated. The default value is \code{F}.
 %%     ~~Describe \code{nugget.est} here~~
 }
   \item{range.par}{ either \code{NA} or a \code{vector}. If it is \code{NA}, it means range parameters are estimated; otherwise range parameters are given. The default value is \code{NA}.

@@ -9,9 +9,8 @@
 Natural logarithm of marginal posterior density with the approximate reference prior of inverse range parameter after marginalizing out the mean (trend) and variance parameters  by the location-scale prior.
 }
 \usage{
-neg_log_marginal_post_approx_ref(param, nugget, nugget.est, 
-                                  R0, X, zero_mean,output, CL, a, b, 
-                                  kernel_type, alpha)
+neg_log_marginal_post_approx_ref(param, nugget, nugget.est
+,R0, X, zero_mean,output, CL, a, b,kernel_type, alpha)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

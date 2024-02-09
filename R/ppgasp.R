@@ -29,8 +29,10 @@ ppgasp <- function(design, response,trend=matrix(1,dim(response)[1],1),zero.mean
   }
   
   if(!is.na(range.par)[1]){  
-    if(length(range.par)!=dim(as.matrix(design))[2]){
-      stop("range.par should either be fixed or estimated.")    
+    if(isotropic==F){##anisotropic
+      if(length(range.par)!=dim(as.matrix(design))[2]){
+        stop("range.par should either be fixed or estimated.")    
+      }
     }
     if(nugget.est){
       stop("We do not support fixing range parameters while estimating the nugget.")      

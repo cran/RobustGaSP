@@ -13,9 +13,8 @@ parameterization) of the PP GaSP model with reference prior of inverse range par
 by the location-scale prior.
 }
 \usage{
-neg_log_marginal_post_ref_ppgasp(param, nugget, nugget.est, 
-                          R0, X, zero_mean,output, prior_choice, 
-                          kernel_type, alpha)
+neg_log_marginal_post_ref_ppgasp(param, nugget, nugget.est
+,R0, X, zero_mean,output, prior_choice,kernel_type, alpha)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

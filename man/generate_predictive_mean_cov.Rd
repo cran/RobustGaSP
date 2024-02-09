@@ -55,8 +55,7 @@ a lower triangular matrix for the cholesky decomposition of \code{R}, the correl
 }
   \item{LX}{
 %%     ~~Describe \code{LX} here~~
-a lower triangular matrix for the cholesky decomposition of $X^tR^{-1}X$.
-\ifelse{html}{\out{X^tR^{-1}X}}{\eqn{4(X^tR^{-1}X}{X^tR^{-1}X}}
+a lower triangular matrix for the cholesky decomposition of \ifelse{html}{\out{X^tR^{-1}X}}{\eqn{X^tR^{-1}X}{X^tR^{-1}X}}.
 }
   \item{theta_hat}{
 %%     ~~Describe \code{theta_hat} here~~

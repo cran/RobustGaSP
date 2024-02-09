@@ -33,7 +33,7 @@ object@p*object@beta_hat*object@CL/sum(object@beta_hat*object@CL)
 
 for each input to identify the inert outputs. The average estimated normalized inverse range parameters will be 1. If the estimated normalized inverse range parameters of an input is close to 0, it means this input might be an inert input. 
 
-In this method, a prior that has shrinkage effects is suggested to use, .e.g the jointly robust prior (i.e. one should set prior_choice='ref_approx' in rgasp() to obtain the use code{rgasp} object before using this function). Moreover, one may not add a lower bound of the range parameters to perform this method (i.e. one should set lower_bound=F in rgasp()).  For more details see Chapter 4 in 
+In this method, a prior that has shrinkage effects is suggested to use, .e.g the jointly robust prior (i.e. one should set \code{prior_choice='ref_approx'} in \code{rgasp()} to obtain the use \code{rgasp} object before using this function). Moreover, one may not add a lower bound of the range parameters to perform this method, i.e. one should set \code{lower_bound=F} in \code{rgasp()}.  For more details see Chapter 4 in the reference below.
 
 Mengyang Gu. (2016). Robust Uncertainty Quantification and Scalable Computation for Computer Models with Massive Output. Ph.D. thesis. Duke University.
 

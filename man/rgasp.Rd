@@ -46,7 +46,7 @@ Setting up the robust GaSP model for estimating the parameters (if the parameter
 }
 \item{method}{  method of parameter estimation. \code{post_mode} means the marginal posterior mode is used for estimation. \code{mle} means the maximum likelihood estimation is used. \code{mmle} means the maximum marginal likelihood estimation is used. The \code{post_mode}  is the default method. 
 }
-  \item{prior_choice}{ the choice of prior for range parameters and noise-variance parameters. \code{ref_xi} and \code{ref_gamma} means the reference prior with reference prior with the log of inverse range parameterization \ifelse{html}{\out{&xi;}}{\eqn{\mathbf{\xi}}{xi}} or range parameterization \ifelse{html}{\out{&gamma;}}{\eqn{\mathbf{\gamma}}{gamma}}. \code{ref_approx} uses the jointly robust prior to approximate the reference prior. The default choice is \code{ref_approx}.
+  \item{prior_choice}{the choice of prior for range parameters and noise-variance parameters. \code{ref_xi} and \code{ref_gamma} means the reference prior with reference prior with the log of inverse range parameterization \ifelse{html}{\out{&xi;}}{\eqn{\mathbf{\xi}}{xi}} or range parameterization \ifelse{html}{\out{&gamma;}}{\eqn{\mathbf{\gamma}}{gamma}}. \code{ref_approx} uses the jointly robust prior to approximate the reference prior. The default choice is \code{ref_approx}.
 %%     ~~Describe \code{prior_choice} here~~
 }
   \item{a}{

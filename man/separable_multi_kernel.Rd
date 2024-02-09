@@ -9,7 +9,7 @@
 Function to construct the product correlation matrix with the product form. The kernel can be different for each coordinate of the input. 
 }
 \usage{
-separable_kernel(R0, beta, kernel_type, alpha)
+separable_multi_kernel(R0, beta, kernel_type, alpha)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

@@ -1,3 +1,8 @@
+##change / RobustGaSP 0.6.6
+ * fix the problem that enables fixing range parameter and nugget for isotropic input space for ppgasp
+ * fix the predictive variance for ppgasp with the zero mean scenario
+ * fix the issues in some Rd files
+
 ##change / RobustGaSP 0.6.5
  * fix the problem relevant to the "if" argument
  * fix the problem in C++ code relevant to using & in Eigen objects for removing the warning from the Linux Debian system

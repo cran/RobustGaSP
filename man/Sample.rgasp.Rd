@@ -31,9 +31,6 @@ r0=NA, rr0=NA, sample_data=T,
   the distance between testing input and testing input. If the value is \code{NA}, it will be calculated later. It can also be specified by the user. If specified by user, it is either a \code{matrix} or \code{list}. The default value is \code{NA}.
   }
 
-\item{interval_data}{
-   a boolean value. If \code{T}, the interval of the data will be calculated. Otherwise, the interval of the mean of the data will be calculted.
-}
   \item{...}{Extra arguments to be passed to the function (not implemented yet).}
 }
 
