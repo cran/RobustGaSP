@@ -1,3 +1,9 @@
+##change / RobustGaSP 0.6.8
+ * fix the problem for ppgasp when the mean is zero
+ * change any term similar to (0,0) to .coeff(0,0) and when we assign a value from a matrix to a double in function.cpp
+ * change any 1x1 matrix to double in function.cpp
+ * change rtR_inv_r to double and modify relevant computation, including using cwiseProduct for row products 
+
 ##change / RobustGaSP 0.6.6
  * fix the problem that enables fixing range parameter and nugget for isotropic input space for ppgasp
  * fix the predictive variance for ppgasp with the zero mean scenario
